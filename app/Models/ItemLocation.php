@@ -9,6 +9,8 @@ class ItemLocation extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+
     protected $table = 'item_location';
 
     protected $primaryKey = 'itemLocID';

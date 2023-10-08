@@ -9,6 +9,8 @@ class Vendor extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+
     protected $table = 'vendor';
 
     protected $primaryKey = 'vendorID';

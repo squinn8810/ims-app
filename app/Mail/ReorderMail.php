@@ -15,14 +15,14 @@ class ReorderMail extends Mailable
     use Queueable, SerializesModels;
 
 
-    public array $message;
+    public array $transaction;
 
     /**
      * Create a new message instance.
      */
-    public function __construct(array $message)
+    public function __construct(array $transaction)
     {
-        $this->message = $message;
+        $this->transaction = $transaction;
     }
 
       /**
@@ -34,10 +34,10 @@ class ReorderMail extends Mailable
     {
         return $this
             ->from('SFDSupplies@gmail.com', 'SFD EMS Supplies')
-            ->subject('EMS Supplies Notification')
+            ->subject('Low Supply Notification')
             ->markdown('mail.restock-notification')
             ->with([
-                'messages' => $this->message,
+                'transactions' => $this->transaction,
                 'url' => 'https://www.boundtree.com',
             ]);
     }

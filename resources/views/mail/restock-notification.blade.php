@@ -1,11 +1,15 @@
 
 <x-mail::message>
 
-SFD Supply Message
+Low Supply: the following items have been scanned...
 
-@foreach ($messages as $message)
-    {{ $message }}
-@endforeach
+
+<ul>
+    @foreach ($transactions as $transaction)
+        <li>{{ $transaction->getMessage() }}</li>
+    @endforeach
+</ul>
+
 
 Check available inventory in overflow supply room or click below to place an order with Boundtree. 
 
