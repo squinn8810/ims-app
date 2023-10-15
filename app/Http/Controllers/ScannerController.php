@@ -34,8 +34,6 @@ class ScannerController extends Controller
                 'itemLocID' => $itemLocID, 
                 'employeeID' => auth()->user()->id
             ]);
-          
-
             //$itemLoc = ItemLocation::find($itemLocID);
             //$locId = $itemLoc->locID;
             //$location = Location::find($locId);
@@ -63,7 +61,7 @@ class ScannerController extends Controller
         } catch (\Exception $e) {
 
             // Handle any exceptions that may occur
-            //return response()->json(['error' => 'An error occurred'], 500);
+            return response()->json(['error' => 'An error occurred'], 500);
         }
     }
 }

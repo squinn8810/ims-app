@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\InventoryManagerController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ScannerController;
@@ -22,19 +23,29 @@ Route::get('/', function () {
 });
 */
 
+/**
+ * Routes executed by the scanner. 
+ */
 Route::group(['middleware' => ['auth', 'verified']], function () {
-
     Route::get('/notify', [NotificationController::class, 'restockNotification'])
     ->name('restock-notification');
-
     Route::get('/scan/{scanActive?}', function ($scanActive = true) {
         return view('scan');
     })->name('scan');
-
-
-    Route::post('/scan', [ScannerController::class, 'analyze']);
-    
+    Route::post('/scan', [ScannerController::class, 'analyze']);    
 });
+
+/**
+ * Routes executed by the inventory manager.
+ */
+Route::group(['middleware' => ['auth', 'verified']], function () {
+    Route::get('/inventory', [InventoryManagerController::class, 'createItem'])->name('inventory.add');
+    Route::post('/inventory', [InventoryManagerController::class, 'storeItem']);
+
+
+});
+
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
