@@ -10,6 +10,9 @@ use Illuminate\Support\Facades\Session;
 class NotificationController extends Controller
 {
 
+    /**
+     * 
+     */
     public function restockNotification(Request $request)
     {
 
@@ -33,6 +36,9 @@ class NotificationController extends Controller
         return redirect()->route('scan');
     }
 
+    /**
+     * 
+     */
     public function makeNotification(array $list)
     {
         $email = new ReorderMail($list);

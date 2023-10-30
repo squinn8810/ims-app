@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\InventoryManagerController;
+use App\Http\Controllers\ItemManager;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ScannerController;
@@ -39,8 +39,8 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
  * Routes executed by the inventory manager.
  */
 Route::group(['middleware' => ['auth', 'verified']], function () {
-    Route::get('/inventory', [InventoryManagerController::class, 'createItem'])->name('inventory.add');
-    Route::post('/inventory', [InventoryManagerController::class, 'storeItem']);
+    Route::get('/inventory', [ItemManager::class, 'createItem'])->name('inventory.add');
+    Route::post('/inventory', [ItemManager::class, 'storeItem']);
 
 
 });

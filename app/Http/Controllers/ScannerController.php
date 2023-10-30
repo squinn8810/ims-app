@@ -16,6 +16,9 @@ use Illuminate\Support\Facades\Session;
 class ScannerController extends Controller
 {
 
+    /**
+     * 
+     */
     public function analyze(Request $request)
     {
 
@@ -34,16 +37,6 @@ class ScannerController extends Controller
                 'itemLocID' => $itemLocID, 
                 'employeeID' => auth()->user()->id
             ]);
-            //$itemLoc = ItemLocation::find($itemLocID);
-            //$locId = $itemLoc->locID;
-            //$location = Location::find($locId);
-            //$locName = $location->locName;
-            //$itemNum = $itemLoc->itemNum;
-            //$item = Item::find($itemNum);
-            //$itemName = $item->itemName;
-
-            //Session::put('locations', $locName);
-            //Session::put('items', $itemName);
             
             //create the shopping list in the session as an array, update the array for multiple items
             if(Session::has('scannedList')) {
