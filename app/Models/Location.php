@@ -11,14 +11,26 @@ class Location extends Model
 
     public $timestamps = false;
 
+    /**
+     * 
+     */
     protected $table = 'location';
 
+    /**
+     * 
+     */
     protected $primaryKey = 'locID';
 
+    /**
+     * 
+     */
     protected $fillable = [
         'locName', 'locAddress', 'locCity', 'locState', 'locZip',
     ];
 
+    /**
+     * 
+     */
     public function items()
     {
         return $this->hasMany(ItemLocation::class, 'locID');

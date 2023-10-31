@@ -11,15 +11,26 @@ class Vendor extends Model
 
     public $timestamps = false;
 
+    /**
+     * 
+     */
     protected $table = 'vendor';
 
+    /**
+     * 
+     */
     protected $primaryKey = 'vendorID';
 
-
+    /** 
+     * 
+    */
     protected $fillable = [
         'vendorName', 'vendorEmail', 'vendorPhone', 'vendorURL',
     ];
 
+    /**
+     * 
+     */
     public function items()
     {
         return $this->hasMany(Item::class, 'vendorID');

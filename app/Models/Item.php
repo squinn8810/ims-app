@@ -11,19 +11,34 @@ class Item extends Model
 
     public $timestamps = false;
 
+    /**
+     * 
+     */
     protected $table = 'item';
 
+    /**
+     * 
+     */
     protected $primaryKey = 'itemNum';
 
+    /**
+     * 
+     */
     protected $fillable = [
         'itemNum', 'itemName', 'itemURL', 'vendorName', 'vendorID',
     ];
 
+    /**
+     * 
+     */
     public function vendor()
     {
         return $this->belongsTo(Vendor::class, 'vendorID');
     }
 
+    /**
+     * 
+     */
     public function locations()
     {
         return $this->hasMany(ItemLocation::class, 'itemLocID');

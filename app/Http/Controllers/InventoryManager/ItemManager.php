@@ -13,7 +13,7 @@ use App\Providers\RouteServiceProvider;
 
 class InventoryManagerController extends Controller
 {
-      /**
+    /**
      * Display the form view.
      */
     public function createItem(): View

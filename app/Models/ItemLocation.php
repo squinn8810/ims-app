@@ -15,11 +15,16 @@ class ItemLocation extends Model
 
     protected $primaryKey = 'itemLocID';
 
-
+    /**
+     * 
+     */
     protected $fillable = [
         'itemNum', 'itemReorderQty', 'locID',
     ];
 
+    /**
+     * 
+     */
     public function item()
     {
         return $this->belongsTo(Item::class, 'itemNum');
