@@ -30,6 +30,9 @@ class ItemLocation extends Model
         return $this->belongsTo(Item::class, 'itemNum');
     }
 
+    /**
+     * 
+     */
     public function location()
     {
         return $this->belongsTo(Location::class, 'locID');
