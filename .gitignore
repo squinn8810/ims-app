@@ -18,5 +18,3 @@ yarn-error.log
 /.idea
 /.vscode
 .DS_Store
-docker-compose.yml 
-/vendor/laravel/sail/runtimes/8.2/Dockerfile
