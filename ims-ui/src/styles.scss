@@ -1,0 +1,62 @@
+// Custom Theming for Angular Material
+// For more information: https://material.angular.io/guide/theming
+@use '@angular/material' as mat;
+// Plus imports for other components in your app.
+
+// Include the common styles for Angular Material. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+// Be sure that you only ever include this mixin once!
+@include mat.core();
+
+@import '../src/themes/custom-colors.scss';
+
+// Define the palettes for your theme using the Material Design palettes available in palette.scss
+// (imported above). For each palette, you can optionally specify a default, lighter, and darker
+// hue. Available color palettes: https://material.io/design/color/
+$ims-ui-primary-light: mat.define-palette($custom-light-primary);
+$ims-ui-accent-light: mat.define-palette($custom-light-secondary, A200, A100, A400);
+
+$ims-ui-primary-dark: mat.define-palette($custom-dark-primary);
+$ims-ui-accent-dark: mat.define-palette($custom-dark-secondary, A200, A100, A400);
+
+// The warn palette is optional (defaults to red).
+$ims-ui-warn-light: mat.define-palette($custom-red-light);
+$ims-ui-warn-dark: mat.define-palette($custom-red-dark);
+
+// Create the theme object. A theme consists of configurations for individual
+// theming systems such as "color" or "typography".
+$ims-ui-theme-light: mat.define-light-theme((
+  color: (
+    primary: $ims-ui-primary-light,
+    accent: $ims-ui-accent-light,
+    warn: $ims-ui-warn-light,
+  )
+));
+
+
+$ims-ui-theme-dark: mat.define-dark-theme((
+  color: (
+    primary: $ims-ui-primary-dark,
+    accent: $ims-ui-accent-dark,
+    warn: $ims-ui-warn-dark,
+  )
+));
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+.theme-light {
+  @include mat.all-component-themes($ims-ui-theme-light);
+}
+.theme-dark {
+  @include mat.all-component-themes($ims-ui-theme-dark);
+}
+
+/* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body { 
+  margin: 0; 
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  background: mat-color(map_get($mat-theming-theme, lighter));
+}

@@ -1,8 +1,9 @@
 <?php
 
-use App\Http\Controllers\ItemManager;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AngularController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ItemManager;
 use App\Http\Controllers\ScannerController;
 use App\Http\Controllers\NotificationController;
 
@@ -22,6 +23,11 @@ Route::get('/', function () {
     return view('welcome');
 });
 */
+
+/**
+ * All Routes passed to Angular except '/api'
+ */
+Route::any('/{any}', [AngularController::class, 'index'])->where('any', '^(?!api).*$');
 
 /**
  * Routes executed by the scanner. 
