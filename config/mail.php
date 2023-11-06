@@ -132,7 +132,7 @@ return [
     */
     'aliases' => [
         'EMS Supplies' => [
-            'address' => 'SFDSupplies@gmail.com',
+            'address' => 'email@email.com',
             'name' => 'EMS Supply',
         ],
         // Add more aliases as needed
