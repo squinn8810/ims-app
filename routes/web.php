@@ -27,7 +27,7 @@ Route::get('/', function () {
 /**
  * All Routes passed to Angular except '/api'
  */
-Route::any('/{any}', [AngularController::class, 'index'])->where('any', '^(?!api).*$');
+Route::any('/{any}', [AngularController::class, 'index'])->where('any', '^(?!(api)|(sanctum)).*$');
 
 /**
  * Routes executed by the scanner. 

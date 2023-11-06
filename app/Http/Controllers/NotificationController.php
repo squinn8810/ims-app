@@ -44,6 +44,6 @@ class NotificationController extends Controller
         $email = new ReorderMail($list);
 
         // Update the recipient email address
-        Mail::to('squinn8810@gmail.com')->send($email);
+        Mail::to('email@email.com')->send($email);
     }
 }

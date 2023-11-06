@@ -53,8 +53,8 @@
               "outputHashing": "all"
             },
             "development": {
-              "outputPath": "/assets/angular",
-              "baseHref": "/assets/angular/",
+              // "outputPath": "dist/assets/angular",
+              // "baseHref": "/assets/angular/",
               "buildOptimizer": false,
               "optimization": false,
               "vendorChunk": true,
@@ -97,7 +97,8 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.scss",
+              "src/themes/customer-colors.scss"
             ],
             "scripts": []
           }
