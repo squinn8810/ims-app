@@ -1,3 +1,8 @@
-<main title="{{ title }}">
+<main>
+  <div class="row m-3">
+      <h1>Inventory Management System</h1>
+  </div>
+  <hr/>
+  <app-layout *ngIf="showNav"></app-layout>
   <router-outlet></router-outlet>
 </main>

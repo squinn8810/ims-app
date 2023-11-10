@@ -1,0 +1,27 @@
+input.ng-dirty.ng-invalid {
+    border-style: solid;
+    border-color: #f22610;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(255, 0, 0, 0.3);
+}
+
+input.ng-touched.ng-invalid {
+    border-style: solid;
+    border-color:#f22610;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(255, 0, 0, 0.3);
+}
+
+.error {
+    color: #f22610;
+}
+
+input.ng-dirty.ng-valid {
+    border-style: solid;
+    border-color: #00aa33;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(0, 255, 0, 0.3);
+}
+
+input.ng-touched.ng-valid {
+    border-style: solid;
+    border-color: #00aa33;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(0, 255, 0, 0.3);
+}

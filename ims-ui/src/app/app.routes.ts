@@ -5,12 +5,12 @@ import { GuestGuardService } from './services/guest-guard/guest-guard.service';
 
 export const routes: Routes = [
   {
-    path: '',
+    path: 'register-user',
     loadComponent: () =>
-      import('./components/home/home.component').then(
-        (Component) => Component.HomeComponent,
+      import('./components/registration/registration.component').then(
+        (component) => component.RegistrationComponent
       ),
-      canActivate: [AuthGuardService]
+      canActivate: [GuestGuardService]
   },
   {
     path: 'login',
@@ -21,10 +21,34 @@ export const routes: Routes = [
       canActivate: [GuestGuardService]
   },
   {
-    path: 'layout',
+    path: 'home',
     loadComponent: () =>
-      import('./components/layout/layout.component').then(
-        (component) => component.LayoutComponent
+      import('./components/home/home.component').then(
+        (component) => component.HomeComponent
       ),
-  }
+      canActivate: [AuthGuardService]
+  },
+  {
+    path: 'scanner',
+    loadComponent: () =>
+      import('./components/scanner/scanner.component').then(
+        (component) => component.ScannerComponent
+      ),
+      canActivate: [AuthGuardService]
+  },
+  {
+    path: 'profile',
+    loadComponent: () =>
+      import('./components/profile/profile.component').then(
+        (component) => component.ProfileComponent
+      ),
+      canActivate: [AuthGuardService]
+  },
+  {
+    path: '**',
+    loadComponent: () =>
+      import('./components/error/error.component').then(
+        (component) => component.ErrorComponent
+      )
+  },
 ];
