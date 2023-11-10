@@ -10,60 +10,87 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\UserCollection;
 
 /**
- * 
+ * Controller for managing user resources.
  */
 class UserController extends Controller
 {
-
     /**
-     * Display the specified resource.
+     * Display a listing of the user resources.
      *
+     * @param  Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        if (Auth::user()->isAdmin()) {
-            return new UserCollection(User::all());;
+        // Check if the authenticated user is an admin
+        if ($request->user()->isAdmin()) {
+            // Return a collection of all users as a JSON resource
+            return new UserCollection(User::all());
         }
-        return  response()->json(["message" => "Forbidden"], 403);
+        
+        // If not an admin, return a 403 Forbidden response
+        return response()->json(["message" => "Forbidden"], 403);
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified user resource.
      *
-     * @param  int  $id
+     * @param  Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request)
     {
-        if (Auth::user()->isAdmin()) {
-            return new UserResource(User::findOrFail($id));
+        // Check if the authenticated user is an admin
+        if ($request->user()->isAdmin()) {
+            // Return a specific user as a JSON resource
+            return new UserResource(User::findOrFail($request->id));
         }
-        return  response()->json(["message" => "Forbidden"], 403);
+
+        // If not an admin, return a 403 Forbidden response
+        return response()->json(["message" => "Forbidden"], 403);
     }
 
     /**
-     * 
+     * Store a newly created user resource in storage.
+     *
+     * @param  Request  $request
+     * @return \Illuminate\Http\Response
      */
-    public function store()
+    public function store(Request $request)
     {
+        // Store logic goes here
     }
 
     /**
-     * 
+     * Update the specified user resource in storage.
+     *
+     * @param  Request  $request
+     * @return \Illuminate\Http\Response
      */
-    public function update()
+    public function update(Request $request)
     {
+        // Update logic goes here
     }
 
-    public function delete($id)
+    /**
+     * Remove the specified user resource from storage.
+     *
+     * @param  Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function delete(Request $request)
     {
-        if (Auth::user()->isAdmin()) {
-            $user = User::findOrFail($id);
+        // Check if the authenticated user is a superuser
+        if ($request->user()->isSuperuser()) {
+            // Find and delete the specified user
+            $user = User::findOrFail($request->id);
             $user->delete();
+            
+            // Return a 204 No Content response
             return response()->json(null, 204);
         }
 
-        return  response()->json(["message" => "Forbidden"], 403);
+        // If not a superuser, return a 403 Forbidden response
+        return response()->json(["message" => "Forbidden"], 403);
     }
 }

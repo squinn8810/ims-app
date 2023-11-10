@@ -9,27 +9,34 @@ class Item extends Model
 {
     use HasFactory;
 
+    // Disable timestamps for this model
     public $timestamps = false;
 
     /**
-     * 
+     * The table associated with the model.
+     *
+     * @var string
      */
     protected $table = 'item';
 
     /**
-     * 
+     * The primary key associated with the table.
+     *
+     * @var string
      */
     protected $primaryKey = 'itemNum';
 
     /**
-     * 
+     * The attributes that are mass assignable.
+     *
+     * @var array
      */
     protected $fillable = [
-        'itemNum', 'itemName', 'itemURL', 'vendorName', 'vendorID',
+        'itemName', 'itemURL', 'vendorName', 'vendorID',
     ];
 
     /**
-     * 
+     * Get the vendor that owns the item.
      */
     public function vendor()
     {
@@ -37,7 +44,7 @@ class Item extends Model
     }
 
     /**
-     * 
+     * Get the locations associated with the item.
      */
     public function locations()
     {

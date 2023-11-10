@@ -9,31 +9,37 @@ class Location extends Model
 {
     use HasFactory;
 
+    // Disable timestamps for this model
     public $timestamps = false;
 
     /**
-     * 
+     * The table associated with the model.
+     *
+     * @var string
      */
     protected $table = 'location';
 
     /**
-     * 
+     * The primary key associated with the table.
+     *
+     * @var string
      */
     protected $primaryKey = 'locID';
 
     /**
-     * 
+     * The attributes that are mass assignable.
+     *
+     * @var array
      */
     protected $fillable = [
         'locName', 'locAddress', 'locCity', 'locState', 'locZip',
     ];
 
     /**
-     * 
+     * Get the items associated with the location.
      */
     public function items()
     {
         return $this->hasMany(ItemLocation::class, 'locID');
     }
-
 }

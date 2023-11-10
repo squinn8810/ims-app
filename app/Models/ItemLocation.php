@@ -9,21 +9,34 @@ class ItemLocation extends Model
 {
     use HasFactory;
 
+    // Disable timestamps for this model
     public $timestamps = false;
 
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
     protected $table = 'item_location';
 
+    /**
+     * The primary key associated with the table.
+     *
+     * @var string
+     */
     protected $primaryKey = 'itemLocID';
 
     /**
-     * 
+     * The attributes that are mass assignable.
+     *
+     * @var array
      */
     protected $fillable = [
         'itemNum', 'itemReorderQty', 'locID',
     ];
 
     /**
-     * 
+     * Get the item that owns the item location.
      */
     public function item()
     {
@@ -31,13 +44,16 @@ class ItemLocation extends Model
     }
 
     /**
-     * 
+     * Get the location associated with the item location.
      */
     public function location()
     {
         return $this->belongsTo(Location::class, 'locID');
     }
 
+    /**
+     * Get the transaction associated with the item location.
+     */
     public function transaction()
     {
         return $this->hasOne(Transaction::class, 'itemLocID');

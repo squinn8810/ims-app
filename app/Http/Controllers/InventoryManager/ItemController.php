@@ -5,83 +5,92 @@ namespace App\Http\Controllers\InventoryManager;
 use App\Models\Item;
 use App\Models\Vendor;
 use App\Models\Location;
-use Illuminate\View\View;
 use App\Models\ItemLocation;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ItemCollection;
-use App\Providers\RouteServiceProvider;
+use App\Http\Requests\InventoryManager\ItemRequest;
 
 class ItemController extends Controller
 {
     /**
-     * Display the form view.
+     * Display the form view for adding a new item.
+     *
+     * @param  \Illuminate\Http\Request  $request
      */
-    public function createForm(): View
+    public function createForm(Request $request)
     {
+        // Retrieve vendors and locations for the form dropdowns
         $vendors = Vendor::pluck('vendorName', 'vendorID');
         $locations = Location::pluck('locName', 'locID');
 
-        return view('inventory.add_item', compact('locations', 'vendors'));
+        $data = [
+            'vendors' => $vendors,
+            'locations' => $locations,
+        ];
 
+        // Using the json method on the response
+        return response()->json($data);
     }
 
     /**
-     * 
+     * Display a listing of the items.
+     *
+     * @return \App\Http\Resources\ItemCollection
      */
-    public function index() {
+    public function index()
+    {
+        // Return a collection of all items as a JSON resource
         return new ItemCollection(Item::all());
     }
 
-
-    /**
-     * Validate input and create/insert item
+ 
+    /** Validate input and create/insert a new item.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Request $request) {
-
-        $request->validate([
-            'itemName' => ['required', 'string', 'max:32'],
-            'itemURL' => ['required', 'string', 'max:128'],
-            'vendor' => ['required'],
-            'location' => ['required'],
-            'reorderQty' => ['required', 'string', 'max:32'],
-        ]);
-
-        $highestId = Item::max('itemNum');
-        $itemNum = $highestId + 1;
-
-        $vendorName = DB::table('vendor')->where('vendorID', $request->vendor)->value('vendorName');
-
+    public function store(ItemRequest $request)
+    {
+        // Create a new item
         $item = Item::create([
-            'itemNum' => $itemNum,
             'itemName' => $request->itemName,
             'itemURL' => $request->itemURL,
-            'vendorName' => $vendorName,
-            'vendorID' => $request->vendor,
+            'vendorName' => $request->vendorName,
+            'vendorID' => $request->vendorID,
         ]);
-
+    
+        // Create a corresponding item location entry
         $item_location = ItemLocation::create([
-            'itemNum' => $itemNum, 
-            'itemReorderQty' => $request->reorderQty, 
+            'itemNum' => $item->itemNum,
+            'itemReorderQty' => (int)$request->reorderQty,
             'locID' => $request->location,
         ]);
-        return redirect()->route('inventory.add');
+    
+        // Return a JSON response indicating success
+        return response()->json(['message' => 'Item created successfully'], 201);
     }
     
-    /**
-     * 
-     */
-    public function update(Request $request) {
 
+    /**
+     * Update the specified item in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return void
+     */
+    public function update(Request $request)
+    {
+        // Update logic goes here
     }
 
     /**
-     * 
+     * Remove the specified item from storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return void
      */
-    public function delete(Request $request) {
-
+    public function destroy(Request $request)
+    {
+        // Deletion logic goes here
     }
-
-
 }
