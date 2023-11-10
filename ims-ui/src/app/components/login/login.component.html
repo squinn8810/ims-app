@@ -1,37 +1,50 @@
-<div class="mdc-layout-grid">
-    <div class="mdc-layout-grid__inner mdc-layout-grid">
-        <mat-card class="mdc-layout-grid__cell--span-6">
-            <mat-card-header>
-                <mat-card-title>Login</mat-card-title>
-            </mat-card-header>
-            <form>
-                <div class=" mdc-layout-grid__inner">
-                    <div class="mdc-layout-spacer"></div>
-                    <mat-form-field class="mdc-layout-grid__cell--span-6">
-                        <mat-label>Email</mat-label>
-                        <input matInput [formControl]="email">
-                        <mat-error *ngIf="!email.hasError('required')">Email is required</mat-error>
-                    </mat-form-field>
+<div class="container">
+    <div class="row d-flex justify-content-center">
+        <div *ngIf="error" class="col-8 mt-3 alert alert-danger" role="alert">
+            {{error.error.message}}
+        </div>
+        <div class="col-8 mt-3 card">
+            <div class="card-body">
+                <div class="card-title">
+                    <h5>Login</h5>
                 </div>
-                <div class="mdc-layout-grid__inner">
-                    <div class="mdc-layout-spacer"></div>
-                    <mat-form-field class="mdc-layout-grid__cell--span-6">
-                        <mat-label>Password</mat-label>
-                        <input matInput [formControl]="password">
-                        <mat-error *ngIf="!password.hasError('required')">Password is required</mat-error>
-                    </mat-form-field>
+                <div class="card-text">
+                    <form nonvalidate (ngSubmit)="onSubmit(loginForm)" [formGroup]="loginForm">
+                        <div class="row mb-3">
+                            <label for="email" class="form-label" required>Email address</label>
+                            <input type="email" formControlName="email" class="form-control">
+                            <div *ngIf="loginForm.get('email')?.hasError('required') && 
+                                    loginForm.get('email')?.touched" class="error">
+                                Email is required
+                            </div>
+                            <div *ngIf="loginForm.get('email')?.hasError('email') && 
+                                    loginForm.get('email')?.touched" class="error">
+                                Email should be in the form of 'xx@xx.xx'
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label for="password" class="form-label" required>Password</label>
+                            <input type="password" formControlName="password" class="form-control">
+                            <div *ngIf="loginForm.get('password')?.hasError('required') && 
+                                    loginForm.get('password')?.touched" class="error">
+                                Password is required
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-6 form-check">
+                                <input type="checkbox" class="form-check-input" formControlName="remember">
+                                <label class="form-check-label" for="remember">Remember</label>
+                            </div>
+                            <div class="col-3 d-flex align-items-center justify-content-right px-0">
+                                <a href="/register-user">Register</a>
+                            </div>
+                            <div class="col-3 d-flex justify-content-end px-0">
+                                <button type="submit" class="btn btn-primary" [disabled]="loginForm.invalid">Login</button>      
+                            </div>
+                        </div>
+                    </form>
                 </div>
-                <div class="mdc-layout-grid__inner">
-                    <div class="mdc-layout-grid__cell--span-4">
-                        <mat-label>Remember</mat-label>
-                        <mat-checkbox [formControl]="remember"></mat-checkbox>
-                    </div>
-                    <div class="mdc-layout-grid__cell--span-4">
-                        <button mat-button (click)="login()">Login</button>
-                    </div>
-                </div>
-
-            </form>
-        </mat-card>
+            </div>
+        </div>
     </div>
 </div>

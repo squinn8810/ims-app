@@ -1,82 +1,56 @@
-import { Component } from '@angular/core';
-import { NgIf } from '@angular/common';
-import { LoginRequest } from 'src/app/models/login-request';
-import { LoginService } from 'src/app/services/login/login.service';
-import { FormsModule, ReactiveFormsModule, FormControl, Validators } from '@angular/forms';
-import { MatInputModule } from '@angular/material/input';
-import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCheckboxModule } from '@angular/material/checkbox';
+import { Component, OnInit } from '@angular/core';
+import { LoginRequest } from 'src/app/models/login-request/login-request';
+import { FormControl, Validators, FormGroup, ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpClient, HttpClientXsrfModule, HttpHeaders } from '@angular/common/http';
-import { Observable, switchMap } from 'rxjs';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgIf } from '@angular/common';
+import { LoginResponse } from 'src/app/responses/login-response';
+import { LoginService } from 'src/app/services/login/login.service';
+import { GeneralError } from 'src/app/models/errors/general-error/general-error';
 
 
 @Component({
   standalone: true,
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss'],
-  imports: [FormsModule, HttpClientXsrfModule, MatCardModule, MatSidenavModule, MatFormFieldModule, 
-    MatCheckboxModule, MatInputModule, MatButtonModule, ReactiveFormsModule, NgIf]
+  styleUrls: ['./login.component.scss', '../../../main.scss'],
+  imports: [ReactiveFormsModule, HttpClientXsrfModule, NgbModule, NgIf]
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   public accessToken: any;
   public accessTokenDetails: any;
-  private baseUrl = '';
-  private options: any;
+  public loginForm: FormGroup;
+  public loginResponse: LoginResponse;
+  public error: GeneralError;
 
   constructor(
-    private loginService: LoginService,
     private router: Router,
-    private http: HttpClient,
+    private formBuilder: FormBuilder,
+    private loginService: LoginService
   ) {
-    this.accessToken = localStorage.getItem('access_token');
-    this.accessTokenDetails = {
-      id: '?',
-      name: 'Test',
-      email: 'test@email.com',
-    };
-    this.options = {
-      headers: new HttpHeaders({
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      })
-    };
   }
 
-  private loginRequest: LoginRequest = new LoginRequest('','', false);
-  
-  public email = new FormControl('', [Validators.required, Validators.email]);
-  public password = new FormControl('', [Validators.required]);
-  public remember = new FormControl(false);
+  ngOnInit(): void {
+    this.loginForm = this.formBuilder.group({
+      email: new FormControl('', [Validators.email, Validators.required]),
+      password: new FormControl('', [Validators.required]),
+      remember: new FormControl(false)
+    });
+  }
 
-  public login(): void{
-    this.loginRequest.email = this.email.value ? this.email.value : ''; 
-    this.loginRequest.password = this.password.value ? this.password.value : '';
-    this.loginRequest.remember = this.remember.value ? this.remember.value : false;
-    console.log(this.loginRequest);
-    
-    this.http
-        .get(this.baseUrl + '/sanctum/csrf-cookie', this.options)
-        .pipe(
-          switchMap(() =>
-            this.http.post(
-              this.baseUrl + '/api/login',
-              this.loginRequest,
-              this.options
-            )
-          )
-        ).subscribe();
-    
-    // this.loginService.login(this.loginRequest)
-    //   .subscribe((response: any) => {
-    //     localStorage.setItem('access_token', response.access_token);
-    //     this.router.navigate(['/']);
-    //   }, (err: any) => {
-    //     // this.errors = true;
-    //   });
+  public onSubmit({value, valid}: {value: LoginRequest, valid: boolean}): void{
+    if (valid) {
+      this.loginService.login(value)
+        .subscribe(
+          (loginResponse: LoginResponse) => {
+            localStorage.setItem('auth-token', btoa(loginResponse.authentication));
+            this.router.navigate(['home']);
+          },
+          (errorResponse: GeneralError) => {
+            this.error = errorResponse;
+          }
+        );
+    }
   }
 }

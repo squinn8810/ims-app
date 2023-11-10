@@ -1,10 +1,23 @@
-<nav mat-tab-nav-bar [backgroundColor]="'primary'">
-  <a mat-tab-link *ngFor="let link of links"
-     (click)="activeLink = link"
-     [active]="activeLink == link"> {{link}} </a>
-  <a mat-tab-link disabled>Disabled Link</a>
-  <div>
-    <button mat-button class="btn btn-danger" (click)="logout()">Logout</button>
+<nav class="navbar navbar-expand navbar-light bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Navbar</a>
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link active" aria-current="page" href="/home">Home</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/scanner">Scanner</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/profile">Profile</a>
+      </li>
+
+    </ul>
+    <div class="d-flex align-items-center">
+      <button type="button" class="btn btn-danger me-3" (click)="logout()">
+        Logout
+      </button>
+    </div>
   </div>
 </nav>
 <router-outlet></router-outlet>

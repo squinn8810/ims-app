@@ -1,20 +1,19 @@
 import { Component } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
-import { MatTabsModule } from '@angular/material/tabs';
-import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import { LoginService } from 'src/app/services/login/login.service';
+import { NgbModule, NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
+import { GeneralError } from 'src/app/models/errors/general-error/general-error';
 
 @Component({
   standalone: true,
   selector: 'app-layout',
   templateUrl: './layout.component.html',
   styleUrls: ['./layout.component.scss'],
-  imports: [RouterOutlet, CommonModule, MatTabsModule, MatButtonModule]
+  imports: [RouterOutlet, CommonModule, NgbModule, NgbNavModule]
 })
 export class LayoutComponent {
-  public links = ['First', 'Second', 'Third'];
-  public activeLink = this.links[0];
+  public error: GeneralError;
 
   public accessToken: any;
   public accessTokenDetails: any;
@@ -23,19 +22,18 @@ export class LayoutComponent {
     private loginService: LoginService,
     private router: Router
   ) {
-    this.accessToken = localStorage.getItem('access_token');
-    this.accessTokenDetails = {
-      id: '?',
-      name: 'Test',
-      email: 'test@email.com',
-    };
   }
 
   public logout(): void {
     this.loginService.logout()
-      .subscribe(() => {
-        localStorage.removeItem('access_token');
-        this.router.navigate(['/login']);
-      });
+      .subscribe(
+        (data: any) => {
+          localStorage.removeItem('auth-token');
+          this.router.navigate(['/login']);
+        },
+        (errorResponse: GeneralError) => {
+          this.error = errorResponse;
+        }
+      );
   }
 }

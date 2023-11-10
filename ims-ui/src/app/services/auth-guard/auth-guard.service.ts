@@ -15,9 +15,9 @@ export class AuthGuardService {
     state: RouterStateSnapshot
   ) {
     if (
-      localStorage.getItem('access_token')
+      localStorage.getItem('auth-token')
     ) { return true; }
-    localStorage.removeItem('access_token');
+    localStorage.removeItem('auth-token');
     this.router.navigateByUrl('/login');
     return false;
   }
