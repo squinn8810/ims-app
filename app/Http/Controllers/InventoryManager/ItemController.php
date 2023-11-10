@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\InventoryManager;
 
 use App\Models\Item;
 use App\Models\Vendor;
@@ -9,14 +9,16 @@ use Illuminate\View\View;
 use App\Models\ItemLocation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\ItemCollection;
 use App\Providers\RouteServiceProvider;
 
-class InventoryManagerController extends Controller
+class ItemController extends Controller
 {
     /**
      * Display the form view.
      */
-    public function createItem(): View
+    public function createForm(): View
     {
         $vendors = Vendor::pluck('vendorName', 'vendorID');
         $locations = Location::pluck('locName', 'locID');
@@ -26,9 +28,17 @@ class InventoryManagerController extends Controller
     }
 
     /**
+     * 
+     */
+    public function index() {
+        return new ItemCollection(Item::all());
+    }
+
+
+    /**
      * Validate input and create/insert item
      */
-    public function storeItem(Request $request) {
+    public function store(Request $request) {
 
         $request->validate([
             'itemName' => ['required', 'string', 'max:32'],
@@ -56,14 +66,22 @@ class InventoryManagerController extends Controller
             'itemReorderQty' => $request->reorderQty, 
             'locID' => $request->location,
         ]);
-
-
         return redirect()->route('inventory.add');
-
-
-
     }
     
+    /**
+     * 
+     */
+    public function update(Request $request) {
+
+    }
+
+    /**
+     * 
+     */
+    public function delete(Request $request) {
+
+    }
 
 
 }

@@ -18,3 +18,7 @@ yarn-error.log
 /.idea
 /.vscode
 .DS_Store
+/ims-ui
+ims-app.code-workspace
+package-lock.json 
+package.json

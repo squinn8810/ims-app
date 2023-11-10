@@ -33,14 +33,14 @@ class ScannerController extends Controller
             //Generate transaction
             $easternTimeZone = new DateTimeZone('America/New_York');
             $transaction = Transaction::create([
-                'transDate' => new DateTime('now', $easternTimeZone), 
-                'itemLocID' => $itemLocID, 
+                'transDate' => new DateTime('now', $easternTimeZone),
+                'itemLocID' => $itemLocID,
                 'employeeID' => auth()->user()->id
             ]);
-            
+
             //create the shopping list in the session as an array, update the array for multiple items
-            if(Session::has('scannedList')) {
-                $list = session('scannedList'); 
+            if (Session::has('scannedList')) {
+                $list = session('scannedList');
                 $list[] = $transaction;
                 Session(['scannedList' => $list]);
             } else {
@@ -48,9 +48,8 @@ class ScannerController extends Controller
             }
             Session::put('scanSuccess', true);
             Session::put('scanActive', false);
-            
-            return redirect()->route('scan');
 
+            return redirect()->route('scan');
         } catch (\Exception $e) {
 
             // Handle any exceptions that may occur

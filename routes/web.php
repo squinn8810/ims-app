@@ -1,10 +1,10 @@
 <?php
 
-use App\Http\Controllers\ItemManager;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ScannerController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\InventoryManager\ItemManager;
 
 /*
 |--------------------------------------------------------------------------

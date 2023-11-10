@@ -22,8 +22,16 @@ class Transaction extends Model
      * 
      */
     protected $fillable = [
-        'transDate', 'itemLocID', 'employeeID', 'is_pending', 'is_acknowledged', 'is_ordered'
+        'transDate', 'itemLocID', 'employeeID', 'status'
     ];
+
+    /***
+     * 
+     */
+    protected $enumCasts = [
+        'status' => 'array'
+    ];
+
 
     /**
      * 
