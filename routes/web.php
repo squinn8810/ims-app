@@ -6,7 +6,6 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ItemManager;
 use App\Http\Controllers\ScannerController;
 use App\Http\Controllers\NotificationController;
-use App\Http\Controllers\InventoryManager\ItemManager;
 
 /*
 |--------------------------------------------------------------------------
