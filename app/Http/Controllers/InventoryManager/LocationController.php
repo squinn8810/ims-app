@@ -5,6 +5,7 @@ namespace App\Http\Controllers\InventoryManager;
 use App\Models\Location;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\InventoryManager\LocationRequest;
 use App\Http\Resources\LocationResource;
 use App\Http\Resources\LocationCollection;
 
@@ -27,10 +28,10 @@ class LocationController extends Controller
     /**
      * Show the form for creating a new location.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request\InventoryManager\LocationRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request)
+    public function create(LocationRequest $request)
     {
         // Form creation logic goes here
     }
@@ -38,34 +39,47 @@ class LocationController extends Controller
     /**
      * Display the specified location resource.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $locID
      * @return \App\Http\Resources\LocationResource
      */
-    public function show(Request $request)
+    public function show($locID)
     {
         // Return a specific location as a JSON resource
-        return new LocationResource(Location::findOrFail($request->locID));
+        return new LocationResource(Location::findOrFail($locID));
     }
 
     /**
      * Update the specified location resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request\InventoryManager\LocationRequest  $request
+     * @param  int  $locID
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function update(LocationRequest $request, $locID)
     {
-        // Update logic goes here
+        // Find the location by its ID
+        $location = Location::findOrFail($locID);
+
+        // Update the location attributes
+        $location->update($request->only(['locName', 'locAddress', 'locCity', 'locState', 'locZip']));
+
+        // Return a JSON response indicating success
+        return response()->json(['message' => 'Location updated successfully'], 200);
     }
 
     /**
      * Remove the specified location resource from storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $locID
      * @return \Illuminate\Http\Response
      */
-    public function delete(Request $request)
+    public function delete($locID)
     {
-        // Deletion logic goes here
+        // Find and delete the specified location
+        $location = Location::findOrFail($locID);
+        $location->delete();
+
+        // Return a JSON response indicating success
+        return response()->json(['message' => 'Location deleted successfully'], 200);
     }
 }

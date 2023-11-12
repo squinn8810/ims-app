@@ -29,7 +29,6 @@ class ItemController extends Controller
             'locations' => $locations,
         ];
 
-        // Using the json method on the response
         return response()->json($data);
     }
 
@@ -44,10 +43,10 @@ class ItemController extends Controller
         return new ItemCollection(Item::all());
     }
 
- 
+
     /** Validate input and create/insert a new item.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request\InventoryManager\ItemRequest  $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function store(ItemRequest $request)
@@ -59,38 +58,67 @@ class ItemController extends Controller
             'vendorName' => $request->vendorName,
             'vendorID' => $request->vendorID,
         ]);
-    
+
         // Create a corresponding item location entry
         $item_location = ItemLocation::create([
             'itemNum' => $item->itemNum,
             'itemReorderQty' => (int)$request->reorderQty,
             'locID' => $request->location,
         ]);
-    
+
         // Return a JSON response indicating success
         return response()->json(['message' => 'Item created successfully'], 201);
     }
-    
+
 
     /**
      * Update the specified item in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return void
+     * @param  \Illuminate\Http\Request\InventoryManager\ItemRequest  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request)
+    public function update(ItemRequest $request, $id)
     {
-        // Update logic goes here
+        // Find the item by its ID
+        $item = Item::findOrFail($id);
+
+        // Update the item attributes
+        $item->update([
+            'itemName' => $request->itemName,
+            'itemURL' => $request->itemURL,
+            'vendorName' => $request->vendorName,
+            'vendorID' => $request->vendorID,
+        ]);
+
+        // Update the corresponding item location entry
+        $item->location()->update([
+            'itemReorderQty' => (int)$request->reorderQty,
+        ]);
+
+        // Return a JSON response indicating success
+        return response()->json(['message' => 'Item updated successfully'], 200);
     }
+
 
     /**
      * Remove the specified item from storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return void
+     * @param  int  $id
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy(Request $request)
+    public function destroy($id)
     {
-        // Deletion logic goes here
+        // Find the item by its ID
+        $item = Item::findOrFail($id);
+
+        // Delete the corresponding item location entry
+        $item->location()->delete();
+
+        // Delete the item
+        $item->delete();
+
+        // Return a JSON response indicating success
+        return response()->json(['message' => 'Item deleted successfully'], 200);
     }
 }

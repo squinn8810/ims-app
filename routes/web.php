@@ -38,11 +38,9 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
 /**
  * Routes executed by the inventory manager.
  */
-Route::group(['middleware' => ['auth', 'verified']], function () {
+Route::middleware(['auth', 'checkIsAdmin'])->group(function () {
     Route::get('/inventory', [ItemManager::class, 'createItem'])->name('inventory.add');
     Route::post('/inventory', [ItemManager::class, 'storeItem']);
-
-
 });
 
 

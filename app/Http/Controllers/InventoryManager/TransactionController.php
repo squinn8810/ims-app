@@ -27,13 +27,12 @@ class TransactionController extends Controller
     /**
      * Display the specified transaction resource.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \App\Http\Resources\TransactionResource
+     * @return \App\Http\Resources\InventoryManager\TransactionResource
      */
-    public function show(Request $request)
+    public function show($transNum)
     {
         // Return a specific transaction as a JSON resource
-        return new TransactionResource(Transaction::findOrFail($request->transNum));
+        return new TransactionResource(Transaction::findOrFail($transNum));
     }
 
     /**
