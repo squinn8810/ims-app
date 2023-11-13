@@ -15,12 +15,13 @@ use Illuminate\View\View;
 class NewPasswordController extends Controller
 {
     /**
-     * Display the password reset view.
+     * Redirect to the password reset page in Angular.
      */
-    public function create(Request $request): View
-    {
-        return view('auth.reset-password', ['request' => $request]);
-    }
+    // public function create(Request $request): View
+    // {
+    //     return view('angular');
+    //     // return view('auth.reset-password', ['request' => $request]);
+    // }
 
     /**
      * Handle an incoming new password request.

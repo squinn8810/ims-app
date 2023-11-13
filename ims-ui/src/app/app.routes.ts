@@ -21,6 +21,22 @@ export const routes: Routes = [
       canActivate: [GuestGuardService]
   },
   {
+    path: 'forgot-password',
+    loadComponent: () =>
+      import('./components/reset-request/reset-request.component').then(
+        (component) => component.ResetRequestComponent
+      ),
+      canActivate: [GuestGuardService]
+  },
+  {
+    path: 'reset-password/:token',
+    loadComponent: () =>
+      import('./components/password-reset/password-reset.component').then(
+        (component) => component.PasswordResetComponent
+      ),
+      canActivate: [GuestGuardService]
+  },
+  {
     path: 'home',
     loadComponent: () =>
       import('./components/home/home.component').then(

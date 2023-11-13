@@ -1,5 +1,5 @@
 export class LoginResponse {
-  authentication: string;
+  public authentication: string;
 
   constructor(
     authentication: string,

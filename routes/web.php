@@ -18,14 +18,8 @@ use App\Http\Controllers\NotificationController;
 |
 */
 
-/*
-Route::get('/', function () {
-    return view('welcome');
-});
-*/
-
 /**
- * All Routes passed to Angular except '/api'
+ * All PUT Routes passed to Angular except '/api', '/sanctum'
  */
 Route::any('/{any}', [AngularController::class, 'index'])->where('any', '^(?!(api)|(sanctum)).*$');
 

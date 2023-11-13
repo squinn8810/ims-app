@@ -1,8 +1,9 @@
 import { CommonModule, NgIf, Location } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { Component, OnInit, SimpleChanges } from '@angular/core';
-import { Router, RouterOutlet } from '@angular/router';
+import { ActivatedRoute, Router, RouterOutlet, UrlSegment } from '@angular/router';
 import { LayoutComponent } from './components/layout/layout.component';
+import { map } from 'rxjs';
 
 @Component({
   standalone: true,
@@ -14,12 +15,12 @@ import { LayoutComponent } from './components/layout/layout.component';
 export class AppComponent implements OnInit {
   public title = 'Inventory Management System';
   public showNav: boolean;
-  public noNavUrls: string[] = ['/login', '/register-user'];
+  public noNavUrls: string[] = ['/login', '/register-user', '/forgot-password', '/reset-password'];
   public currentRoute: string;
 
 
   constructor(
-    private location: Location
+    private location: Location,
   ) {}
 
   public ngOnInit(): void {
@@ -27,14 +28,19 @@ export class AppComponent implements OnInit {
   }
 
   private checkRoute(): void {
-    console.log('Location Path: ', this.location.path());
-    if (false === this.noNavUrls.includes(this.location.path())) {
-      this.showNav = true;
-    }
-    else {
+    let urlMatches = false;
+
+    this.noNavUrls.forEach(url => {
+      if (this.location.path().includes(url)) {
+        urlMatches = true;
+      }
+    });
+    if (urlMatches) {
       this.showNav = false;
     }
-    console.log('Show Nav: ', this.showNav);
+    else {
+      this.showNav = true;
+    }
   }
 
 }

@@ -31,12 +31,15 @@
                             </div>
                         </div>
                         <div class="row mb-3">
-                            <div class="col-6 form-check">
+                            <div class="col-3 form-check">
                                 <input type="checkbox" class="form-check-input" formControlName="remember">
                                 <label class="form-check-label" for="remember">Remember</label>
                             </div>
-                            <div class="col-3 d-flex align-items-center justify-content-right px-0">
+                            <div class="col-3 d-flex align-items-center justify-content-end">
                                 <a href="/register-user">Register</a>
+                            </div>
+                            <div class="col-3 d-flex align-items-center justify-content-end">
+                                <a href="/forgot-password">Forgot Password?</a>
                             </div>
                             <div class="col-3 d-flex justify-content-end px-0">
                                 <button type="submit" class="btn btn-primary" [disabled]="loginForm.invalid">Login</button>      

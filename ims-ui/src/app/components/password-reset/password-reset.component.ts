@@ -1,35 +1,35 @@
 import { NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { GeneralError } from 'src/app/models/errors/general-error/general-error';
-import { RegistrationRequest } from 'src/app/models/registration-request/registration-request';
-import { LoginResponse } from 'src/app/responses/login-response';
-import { LoginService } from 'src/app/services/login/login.service';
+import { PasswordReset } from 'src/app/models/password-reset/password-reset';
+import { PasswordResetResponse } from 'src/app/responses/password-reset-response/password-reset-response';
+import { PasswordResetService } from 'src/app/services/password-reset/password-reset.service';
 
 @Component({
   standalone: true,
-  selector: 'app-registration',
-  templateUrl: './registration.component.html',
-  styleUrls: ['./registration.component.scss', '../../../main.scss'],
+  selector: 'app-password-reset',
+  templateUrl: './password-reset.component.html',
+  styleUrls: ['./password-reset.component.scss'],
   imports: [ReactiveFormsModule, NgbModule, NgIf]
 })
-export class RegistrationComponent implements OnInit {
-  public registrationForm: FormGroup;
+export class PasswordResetComponent implements OnInit {
   public error: GeneralError;
+  public resetForm: FormGroup;
 
   constructor(
+    private route: ActivatedRoute,
     private router: Router,
-    private loginService: LoginService,
+    private resetService: PasswordResetService,
     private formBuilder: FormBuilder
   ) {}
 
   public ngOnInit(): void {
-    this.registrationForm = this.formBuilder.group({
-      firstName: new FormControl('', [Validators.required, Validators.maxLength(32)]),
-      lastName: new FormControl('', [Validators.required, Validators.maxLength(32)]),
-      id: new FormControl('', [Validators.required, Validators.maxLength(32)]),
+    console.log('token: ' + this.route.snapshot.paramMap.get('token'));
+    this.resetForm = this.formBuilder.group({
+      token: new FormControl(this.route.snapshot.paramMap.get('token'), [Validators.required]),
       email: new FormControl('', [Validators.email, Validators.required, Validators.maxLength(255)]),
       password: new FormControl('', [Validators.required]),
       password_confirmation: new FormControl('', [])
@@ -39,21 +39,22 @@ export class RegistrationComponent implements OnInit {
     });
   }
 
-  public onSubmit({value, valid}: {value: RegistrationRequest, valid: boolean}): void {
+  public onSubmit({value, valid}: {value: PasswordReset, valid: boolean}): void{
     if (valid) {
-      this.loginService.register(value)
+      this.resetService.resetPassword(value)
         .subscribe(
-          (loginResponse: LoginResponse) => {
-            localStorage.setItem('auth-token', btoa(loginResponse.authentication));
-            this.router.navigate(['home']);
+          (resetResponse: PasswordResetResponse) => {
+            this.router.navigate(['login']);
           },
           (errorResponse: GeneralError) => {
-            console.log(errorResponse);
             this.error = errorResponse;
-            console.log(this.error);
           }
         );
     }
+  }
+
+  public cancel() {
+    this.router.navigate(['login']);
   }
 
   confirmPasswordValidator(controlName: string, confirmControlName: string) {
@@ -73,9 +74,4 @@ export class RegistrationComponent implements OnInit {
       }
     };
   }
-
-  public cancel(): void {
-    this.router.navigate(['login']);
-  }
-
 }
