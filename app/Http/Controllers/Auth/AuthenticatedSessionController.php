@@ -13,17 +13,20 @@ use Illuminate\View\View;
 class AuthenticatedSessionController extends Controller
 {
 
-    /**
+   /**
      * Handle an incoming authentication request.
      */
-    public function store(LoginRequest $request): Response
+    public function store(LoginRequest $request)
     {
         $request->authenticate();
 
         $request->session()->regenerate();
 
-        return response(['authentication' => 'success'],
-                        Response::HTTP_OK);
+        // Get the authenticated user
+        $user = $request->user();
+
+        // Return the user as a JSON response
+        return response()->json($user, Response::HTTP_OK);
     }
 
     /**
