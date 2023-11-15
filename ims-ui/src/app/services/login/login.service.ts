@@ -8,7 +8,7 @@ import { RegistrationRequest } from 'src/app/models/registration-request/registr
   providedIn: 'root'
 })
 export class LoginService {
-  private baseUrl = '//localhost:89';
+  private baseUrl = '';
   private options: any;
 
   constructor(

@@ -8,7 +8,7 @@ import { ResetRequest } from 'src/app/models/reset-request/reset-request';
   providedIn: 'root'
 })
 export class PasswordResetService {
-  private baseUrl = '//localhost:89';
+  private baseUrl = '';
   private options: any;
 
   constructor(

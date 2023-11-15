@@ -16,15 +16,7 @@ export class HomeComponent implements OnInit {
   constructor(
     private loginService: LoginService,
     private router: Router,
-    private activatedRoute: ActivatedRoute,
-  ) {
-    this.accessToken = localStorage.getItem('access_token');
-    this.accessTokenDetails = {
-      id: '?',
-      name: 'Test',
-      email: 'test@email.com',
-    };
-  }
+  ) {}
 
   public ngOnInit(): void {
     // Call getUserInfo

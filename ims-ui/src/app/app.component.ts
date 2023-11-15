@@ -1,14 +1,13 @@
 import { CommonModule, NgIf, Location } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { Component, OnInit, SimpleChanges } from '@angular/core';
-import { ActivatedRoute, Router, RouterOutlet, UrlSegment } from '@angular/router';
-import { LayoutComponent } from './components/layout/layout.component';
+import { RouterOutlet } from '@angular/router';
 import { map } from 'rxjs';
 
 @Component({
   standalone: true,
   selector: 'app-root',
-  imports: [CommonModule, RouterOutlet, HttpClientModule, LayoutComponent, NgIf],
+  imports: [CommonModule, RouterOutlet, HttpClientModule, NgIf],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
@@ -28,19 +27,19 @@ export class AppComponent implements OnInit {
   }
 
   private checkRoute(): void {
-    let urlMatches = false;
+    // let urlMatches = false;
 
-    this.noNavUrls.forEach(url => {
-      if (this.location.path().includes(url)) {
-        urlMatches = true;
-      }
-    });
-    if (urlMatches) {
-      this.showNav = false;
-    }
-    else {
-      this.showNav = true;
-    }
+    // this.noNavUrls.forEach(url => {
+    //   if (this.location.path().includes(url)) {
+    //     urlMatches = true;
+    //   }
+    // });
+    // if (urlMatches) {
+    //   this.showNav = false;
+    // }
+    // else {
+    //   this.showNav = true;
+    // }
   }
 
 }

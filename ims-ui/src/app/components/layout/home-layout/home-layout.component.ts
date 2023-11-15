@@ -8,11 +8,11 @@ import { GeneralError } from 'src/app/models/errors/general-error/general-error'
 @Component({
   standalone: true,
   selector: 'app-layout',
-  templateUrl: './layout.component.html',
-  styleUrls: ['./layout.component.scss'],
+  templateUrl: './home-layout.component.html',
+  styleUrls: ['./home-layout.component.scss'],
   imports: [RouterOutlet, CommonModule, NgbModule, NgbNavModule]
 })
-export class LayoutComponent {
+export class HomeLayoutComponent {
   public error: GeneralError;
 
   public accessToken: any;
