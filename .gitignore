@@ -18,5 +18,7 @@ yarn-error.log
 /.idea
 /.vscode
 .DS_Store
+docker-compose.yml
 package-lock.json 
 package.json
+/ims-ui

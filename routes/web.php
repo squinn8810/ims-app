@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AnalyticalController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ScannerController;
@@ -32,6 +33,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::get('/scan/{scanActive?}', function ($scanActive = true) {
         return view('scan');
     })->name('scan');
+    Route::get('/reports', [AnalyticalController::class, 'index']);
     Route::post('/scan', [ScannerController::class, 'analyze']);    
 });
 
