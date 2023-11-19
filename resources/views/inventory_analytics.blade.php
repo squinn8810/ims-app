@@ -1,7 +1,8 @@
 <html>
-<h1>
+<h1>Descriptive Analytics for Reordering</h1>
+<h2>
     Recent Transactions
-</h1>
+</h2>
 
 <head>
     <!--Load the AJAX API-->
@@ -64,9 +65,9 @@
 </html>
 
 <html>
-<h1>
+<h2>
     Transaction Trends
-</h1>
+</h2>
 
 <head>
     <!--Load the AJAX API-->
@@ -121,6 +122,53 @@
 <body>
     <!--Div that will hold the  chart-->
     <div id="trend_div"></div>
+</body>
+
+</html>
+
+<html>
+<h2>
+    Distribution of Transactions
+</h2>
+
+<head>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        google.charts.load('current', {
+            'packages': ['corechart']
+        });
+        google.charts.setOnLoadCallback(drawChart);
+        var jsonData3 = @json($transactionDistribution);
+
+
+        function drawChart() {
+
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'Item');
+            data.addColumn('number', 'Reorders');
+
+            var keys = Object.keys(jsonData3);
+
+            keys.forEach(function(key) {
+                var value = jsonData3[key];
+                data.addRow([key, value]);
+            });
+
+            var options = {
+                title: 'Transaction Distributions',
+                sliceVisibilityThreshold: .05
+            };
+
+            var chart = new google.visualization.PieChart(document.getElementById('pie_div'));
+            chart.draw(data, options);
+        }
+    </script>
+</head>
+
+<body>
+    <!--Div that will hold the pie chart-->
+    <div id="pie_div" style="width: 900px; height: 500px;"></div>
+    </div>
 </body>
 
 </html>

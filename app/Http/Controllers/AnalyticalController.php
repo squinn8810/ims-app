@@ -3,10 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Transaction;
-use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
-use App\Http\Resources\TransactionResource;
-use App\Http\Resources\TransactionCollection;
+use Illuminate\Support\Facades\DB;
 
 class AnalyticalController extends Controller
 {
@@ -15,13 +13,14 @@ class AnalyticalController extends Controller
     {
         $recentTransactions = $this->getRecentTransactions();
         $transactionTrends = $this->getTransactionTrends();
+        $distributionData = $this->getTransactionDistribution();
 
-        return view('data_dashboard')->with([
+        return view('inventory_analytics')->with([
             'recentTransactions' => $recentTransactions,
             'transactionTrends' => $transactionTrends,
+            'transactionDistribution' => $distributionData,
         ]);
     }
-
 
 
     private function getRecentTransactions()
@@ -35,6 +34,43 @@ class AnalyticalController extends Controller
         return $recentData;
     }
 
+    private function getTransactionDistribution()
+    {
+
+        $filters = request()->all();
+        $currentDate = Carbon::now();
+
+        $timePeriods = [
+            '12 months' => $currentDate->copy()->subYear(),
+            '6 months' => $currentDate->copy()->subMonths(6),
+            '3 months' => $currentDate->copy()->subMonths(3),
+            '1 month' => $currentDate->copy()->subMonth(),
+        ];
+
+        $filteredTransactions = [];
+        $query = Transaction::query();
+        // Apply filters 
+        $filteredTransactions = Transaction::where(function ($query) use ($filters, $timePeriods) {
+            foreach ($filters as $field => $value) {
+                if ($field === 'time_period' && $timePeriods[$value]) {
+                    $query->where('transDate', '<=', $timePeriods[$value]);
+                }
+            }
+        })
+            ->groupBy('itemLocID')
+            ->select('itemLocID', DB::raw('count(*) as count'))
+            ->get();
+
+
+        $distributionData = [];
+        foreach ($filteredTransactions as $transaction) {
+            $item = $transaction->getItemName();
+            $count = $transaction['count'];
+            $distributionData[$item] = $count;
+        }
+
+        return $distributionData;
+    }
 
 
 
@@ -44,17 +80,24 @@ class AnalyticalController extends Controller
         // Retrieve filter parameters from the request
         $filters = request()->all();
 
-        // Start with a base query for the Transaction model
         $query = Transaction::query();
 
-        // Apply filters dynamically
+        // Apply filters 
         foreach ($filters as $field => $value) {
+            if ($field === 'itemLocID') {
+                // Validate 'itemLocID' against existing values in the 'item_locations' table
+                $existsInTable = DB::table('item_location')->where('itemLocID', $value)->exists();
+
+                if (!$existsInTable) {
+                    abort(404);
+                }
+            }
             if (in_array($field, ['itemLocID', 'employeeID'])) {
                 $query->where($field, $value);
             }
         }
 
-        // Continue with the rest of your query logic (e.g., ordering)
+
         $filteredTransactions = $query->get();
 
         $currentDate = Carbon::now();
@@ -70,14 +113,12 @@ class AnalyticalController extends Controller
 
         // Count transactions for each time period
         foreach ($timePeriods as $period => $startDate) {
-            // Calculate the end date for the current time period (next start date)
             $endDate = next($timePeriods) ?: $currentDate; // If there is no next period, use $currentDate
 
             $transactionsCount = $filteredTransactions->where('transDate', '>=', $startDate)
-                ->where('transDate', '<', $endDate) // Adjusted to use '<' to include transactions up to, but not including, the end date
+                ->where('transDate', '<', $endDate)
                 ->count();
 
-            // Store the count in the trend array
             $trend[$period] = $transactionsCount;
         }
 

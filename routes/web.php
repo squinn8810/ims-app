@@ -1,9 +1,11 @@
 <?php
 
-use App\Http\Controllers\AnalyticalController;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ScannerController;
+use App\Http\Controllers\AnalyticalController;
+use App\Http\Controllers\InsightsController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\InventoryManager\ItemManager;
 
@@ -33,7 +35,10 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::get('/scan/{scanActive?}', function ($scanActive = true) {
         return view('scan');
     })->name('scan');
+
     Route::get('/reports', [AnalyticalController::class, 'index']);
+    Route::get('/reports/insights', [InsightsController::class, 'index']);
+    
     Route::post('/scan', [ScannerController::class, 'analyze']);    
 });
 

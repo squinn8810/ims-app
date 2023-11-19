@@ -69,13 +69,13 @@ class Transaction extends Model
         return Carbon::parse($value)->format('F d, Y');
     }
     
-    public function getItem() {
+    public function getItemName() {
         $itemLoc = ItemLocation::find($this->itemLocID);
         $item = Item::find($itemLoc->itemNum);
         return $item->itemName;
     }
 
-    public function getLocation(){
+    public function getLocationName(){
         $itemLoc = ItemLocation::find($this->itemLocID);
         $location = Location::find($itemLoc->locID);
         return $location->locName;
@@ -86,7 +86,7 @@ class Transaction extends Model
         return $itemLoc->itemReorderQty;
     }
 
-    public function getUser() {
+    public function getUserName() {
         $user = User::find($this->employeeID);
         return "$user->firstName $user->lastName";
     }
@@ -99,12 +99,15 @@ class Transaction extends Model
      */
     public function getMessage()
     {
-        $reorderQty = $this->getReorderQty();
-        $locName = $this->getLocation();
-        $itemName = $this->getItem();
-        $user = $this->getUser();
+        $data = $this->getDataAsJson(); 
 
-        $message = "$itemName from $locName by $user. Suggested reorder quantity: $reorderQty";
+        $item = $data['Item']; 
+        $location = $data['Location'];
+        $user = $data['Employee'];
+        $reorderQty = $data['Reorder Qty'];
+
+
+        $message = "$item from $location by $user. Suggested reorder quantity: $reorderQty";
 
         return $message;
     }
@@ -112,13 +115,22 @@ class Transaction extends Model
 
     public function getDataAsJson()
     {
+        //Item
+        $itemLoc = ItemLocation::find($this->itemLocID);
+        $item = Item::find($itemLoc->itemNum);
+        //Location & Reorder Qty
+        $location = Location::find($itemLoc->locID);
+        //User
+        $user = User::find($this->employeeID);
+        $user = "$user->firstName $user->lastName";
+
         return [
             'Date' => $this->getDateAttribute($this->transDate),
-            'Item' => $this->getItem(),
-            'Reorder Qty' => $this->getReorderQty(),
-            'Location' => $this->getLocation(),
+            'Item' => $item->itemName,
+            'Reorder Qty' => $itemLoc->itemReorderQty,
+            'Location' => $location->locName,
             'Status' => $this->status,
-            'Employee' => $this->getUser(),
+            'Employee' => $user,
         ];
     }
 }
