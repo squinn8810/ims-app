@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Resources\UserResource;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -26,7 +27,7 @@ class AuthenticatedSessionController extends Controller
         $user = $request->user();
 
         // Return the user as a JSON response
-        return response()->json($user, Response::HTTP_OK);
+        return response()->json(new UserResource($user), Response::HTTP_OK);
     }
 
     /**
