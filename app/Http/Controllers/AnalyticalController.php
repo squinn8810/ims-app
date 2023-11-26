@@ -4,11 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Models\Transaction;
 use Illuminate\Support\Carbon;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 
 class AnalyticalController extends Controller
 {
 
+    /**
+     * 
+     */
     public function index()
     {
         $recentTransactions = $this->getRecentTransactions();
@@ -22,7 +26,9 @@ class AnalyticalController extends Controller
         ]);
     }
 
-
+    /**
+     * 
+     */
     private function getRecentTransactions()
     {
         $recentTransactions = Transaction::orderBy('transNum', 'desc')->take(10)->get();
@@ -34,27 +40,30 @@ class AnalyticalController extends Controller
         return $recentData;
     }
 
+    /**
+     * 
+     */
     private function getTransactionDistribution()
     {
-
-        $filters = request()->all();
         $currentDate = Carbon::now();
 
         $timePeriods = [
-            '12 months' => $currentDate->copy()->subYear(),
-            '6 months' => $currentDate->copy()->subMonths(6),
-            '3 months' => $currentDate->copy()->subMonths(3),
-            '1 month' => $currentDate->copy()->subMonth(),
+            '12_months' => $currentDate->copy()->subYear(),
+            '6_months' => $currentDate->copy()->subMonths(6),
+            '3_months' => $currentDate->copy()->subMonths(3),
+            '1_month' => $currentDate->copy()->subMonth(),
         ];
 
+        $filter = request()->input('time_period');
+    
         $filteredTransactions = [];
-        $query = Transaction::query();
+
+        //$query = Transaction::query();
+
         // Apply filters 
-        $filteredTransactions = Transaction::where(function ($query) use ($filters, $timePeriods) {
-            foreach ($filters as $field => $value) {
-                if ($field === 'time_period' && $timePeriods[$value]) {
-                    $query->where('transDate', '<=', $timePeriods[$value]);
-                }
+        $filteredTransactions = Transaction::where(function ($query) use ($filter, $timePeriods) {
+            if (array_key_exists($filter, $timePeriods)) {
+                $query->where('transDate', '<=', $timePeriods[$filter]);
             }
         })
             ->groupBy('itemLocID')
@@ -74,54 +83,54 @@ class AnalyticalController extends Controller
 
 
 
-    private function getTransactionTrends()
+    /**
+     * 
+     */
+    public function getTransactionTrends()
     {
 
         // Retrieve filter parameters from the request
-        $filters = request()->all();
+        $timePeriods = [
+            '12_months' => 12,
+            '6_months' => 6,
+            '3_months' => 3,
+            '1_month' => 1,
+        ];
+        
+        $currentDate = Carbon::now();
+        $filter = '12_months';
 
-        $query = Transaction::query();
+        // If 'time_period' is present in the request and is a valid key in $timePeriods
+        if (request()->has('time_period')) {
+            $requestedFilter = request()->input('time_period');
 
-        // Apply filters 
-        foreach ($filters as $field => $value) {
-            if ($field === 'itemLocID') {
-                // Validate 'itemLocID' against existing values in the 'item_locations' table
-                $existsInTable = DB::table('item_location')->where('itemLocID', $value)->exists();
-
-                if (!$existsInTable) {
-                    abort(404);
-                }
-            }
-            if (in_array($field, ['itemLocID', 'employeeID'])) {
-                $query->where($field, $value);
+            // Check if the requested filter is a valid key
+            if (array_key_exists($requestedFilter, $timePeriods)) {
+                $filter = $requestedFilter;
             }
         }
 
+        $validatedData = request()->validate([
+            'itemLocID' => 'exists:item_location,itemLocID',
+        ]);
 
-        $filteredTransactions = $query->get();
-
-        $currentDate = Carbon::now();
-
-        $timePeriods = [
-            '12 months' => $currentDate->copy()->subYear(),
-            '6 months' => $currentDate->copy()->subMonths(6),
-            '3 months' => $currentDate->copy()->subMonths(3),
-            '1 month' => $currentDate->copy()->subMonth(),
-        ];
 
         $trend = [];
+        $transactions = Transaction::get();
 
-        // Count transactions for each time period
-        foreach ($timePeriods as $period => $startDate) {
-            $endDate = next($timePeriods) ?: $currentDate; // If there is no next period, use $currentDate
-
-            $transactionsCount = $filteredTransactions->where('transDate', '>=', $startDate)
-                ->where('transDate', '<', $endDate)
-                ->count();
-
-            $trend[$period] = $transactionsCount;
+        for ($i = $timePeriods[$filter];$i > 0; $i--) {
+            $startDate = $currentDate->copy()->subMonths($i)->startOfMonth();
+            $endDate = $currentDate->copy()->subMonths($i-1)->startOfMonth();
+        
+            // Build and execute the query with conditions
+            $transactionsCount = $transactions->when($validatedData, function ($query) use ($validatedData) {
+                return $query->where('itemLocID', $validatedData['itemLocID']);
+            })
+            ->whereBetween('transDate', [$startDate, $endDate->copy()->subSecond()])
+            ->count();
+        
+            $trend[$startDate->format('M y')] = $transactionsCount;
         }
-
 
         return $trend;
     }

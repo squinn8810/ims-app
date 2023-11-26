@@ -34,6 +34,14 @@ class ScannerController extends Controller
             // Extract the item location ID from the scanned data
             $itemLocID = $results[1];
 
+            //TO DO FOR SCANNER 
+            //reconcile item_location quantity 
+            //  capture current inventory quantity 
+            //  capture change in inventory since last reconcile 
+            //pass both to transaction record
+            //pass current inventory quantity to item_location
+            
+            
             // Generate a new transaction with the scanned data
             $easternTimeZone = new DateTimeZone('America/New_York');
             $transaction = Transaction::create([

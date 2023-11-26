@@ -95,16 +95,15 @@
 
             var options = {
                 title: 'Usage Trends',
-                width: 900,
-                height: 500,
+                width: '100%',
+                height: '100%',
                 hAxis: {
                     gridlines: {
-                        count: 12
                     }
                 },
                 vAxis: {
                     gridlines: {
-                        color: 'none'
+                        count: 10
                     },
                     minValue: 0
                 }

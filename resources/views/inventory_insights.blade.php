@@ -29,10 +29,11 @@
             data.addColumn('string', 'Item');
             data.addColumn('number', 'Transactions');
             // Add rows
-            jsonData.forEach(function (itemData) {
+            jsonData.forEach(function(itemData) {
                 // Create a link for each item
-                var link = '<a href="http://localhost/reports/insights?itemLocID=' + itemData.itemLocID + '">' + itemData.Item + '</a>';
-                
+                var link = '<a href="http://localhost/reports/insights?itemLocID=' + itemData.itemLocID + '">' +
+                    itemData.Item + '</a>';
+
                 // Add data to the row
                 data.addRow([link, itemData.Transactions]);
             });
@@ -67,31 +68,40 @@
             'packages': ['corechart']
         });
         google.charts.setOnLoadCallback(drawVisualization);
-        var jsonData2 = @json($reorderQtyData);
+        var jsonData2 = @json($itemData);
+        var evalData = @json($evalData);
 
         function drawVisualization() {
 
 
             var data = new google.visualization.DataTable();
-            data.addColumn('string', 'Date Range');
-            data.addColumn('number', 'Reorder Counts');
-            data.addColumn('number', 'Recommended Reorder Qty');
+            data.addColumn('string', 'Date');
+            data.addColumn('number', 'Transactions');
+            data.addColumn('number', 'Suggested Reorder Qty');
+            data.addColumn('number', 'Item Reorder Qty');
 
 
-            Object.entries(jsonData2).forEach(function([key, array]) {
-                data.addRow([key, array[0], array[1]]);
+            var keys = Object.keys(jsonData2);
+
+            keys.forEach(function(key) {
+                var value = jsonData2[key];
+                data.addRow([key, value, evalData[1], evalData[0]]);
+            
             });
 
             var options = {
                 title: 'Cumulative Reorder Counts',
                 vAxis: {
-                    title: 'Reorder Counts'
+                    title: 'Transactions'
                 },
                 hAxis: {
-                    title: 'Date Range'
+                    title: 'Month'
                 },
                 series: {
                     1: {
+                        type: 'line'
+                    }, 
+                    2: {
                         type: 'line'
                     }
                 },
@@ -123,7 +133,7 @@
         background-color: #f2f2f2;
         padding: 20px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        overflow: auto; 
+        overflow: auto;
         max-height: 600px;
     }
 </style>

@@ -7,6 +7,8 @@ use App\Models\Transaction;
 use App\Models\ItemLocation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\AnalyticalController;
+use Exception;
 
 class InsightsController extends Controller
 {
@@ -16,12 +18,17 @@ class InsightsController extends Controller
     public function index()
     {
 
-        $reorderQtyData = $this->getCumulativeReorderCounts();
+        $transactionData = new AnalyticalController();
+        $transactionData = $transactionData->getTransactionTrends();
+
+        $evalData = $this->evaluateReorderQty($transactionData);
         $frequentItems = $this->getFrequentlyOrderedItems();
 
         return view('inventory_insights')->with([
-            "reorderQtyData" => $reorderQtyData,
+
             "frequentItems" => $frequentItems,
+            "itemData" => $transactionData,
+            'evalData' => $evalData,
         ]);
     }
 
@@ -44,12 +51,12 @@ class InsightsController extends Controller
             $item = Item::find($itemLoc->itemNum);
             $itemName = $item->itemName;
 
-            $frequentItemData[] = 
-            [
-                'Item' => $itemName,
-                'Transactions' => $count,
-                'itemLocID' => $itemLocID,
-            ];
+            $frequentItemData[] =
+                [
+                    'Item' => $itemName,
+                    'Transactions' => $count,
+                    'itemLocID' => $itemLocID,
+                ];
         }
 
         return $frequentItemData;
@@ -71,9 +78,47 @@ class InsightsController extends Controller
     /**
      * Endpoint to provide reorder counts
      */
-    private function getCumulativeReorderCounts()
+    private function evaluateReorderQty(array $transactionData)
     {
-        if (Request()->input('itemLocID')) {
+
+        if (Request()->has('itemLocID')) {
+
+            $numMonths = 0;
+            $sumCounts = 0;
+
+            foreach ($transactionData as $count) {
+                $numMonths++;
+                $sumCounts += $count;
+            }
+
+            $factor = 1;
+
+            if ($sumCounts > $numMonths) {
+                $factor = ($sumCounts / $numMonths);
+            }
+
+            $itemLocRecord = ItemLocation::find(Request('itemLocID'));
+
+            $reorderQty = $itemLocRecord->itemReorderQty;
+
+            $suggestedQty = $reorderQty * $factor;
+
+            return $evalData = [
+                $reorderQty,
+                $suggestedQty,
+            ];
+        }
+        return $evalData = [
+            0,
+            0,
+        ];
+    }
+}
+
+
+
+
+/**if (Request()->input('itemLocID')) {
             $itemLocID = Request()->input('itemLocID');
 
             // Calculate the date ranges for 1 month, 3 months, 6 months, and 12 months
@@ -94,23 +139,23 @@ class InsightsController extends Controller
                 $reorderQty = (int)ItemLocation::where('itemLocID', $itemLocID)
                 ->value('itemReorderQty');
 
-                if ($range == '1 month' && $count > 0) {
+                if ($range == '1 month' && $count > 1) {
                     $percent = 1 / $count;
                     $reorderQty = $reorderQty * $percent;
                 }
-                if ($range == '3 months' && $count > 0) {
+                if ($range == '3 months' && $count > 3) {
                     $percent = 3 / $count;
                     $reorderQty = $reorderQty * $percent;
                 }
-                if ($range == '6 months' && $count > 0) {
+                if ($range == '6 months' && $count > 6) {
                     $percent = 6 / $count;
                     $reorderQty = $reorderQty * $percent;
                 }
-                if ($range == '1 year' && $count > 0) {
+                if ($range == '1 year' && $count > 12) {
                     $percent = 12 / $count;
                     $reorderQty = $reorderQty * $percent;
                 }
-                if ($range == '2 year' && $count > 0) {
+                if ($range == '2 year' && $count > 24) {
                     $percent = 24 / $count;
                     $reorderQty = $reorderQty * $percent;
                 }
@@ -118,7 +163,4 @@ class InsightsController extends Controller
                 $reorderQtyData[$range] = [$count, $reorderQty];
             }
 
-            return $reorderQtyData;
-        }
-    }
-}
+            return $reorderQtyData;**/
