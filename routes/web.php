@@ -20,16 +20,18 @@ use App\Http\Controllers\InventoryManager\ItemManager;
 |
 */
 
-/*
-Route::get('/', function () {
-    return view('welcome');
-});
-*/
+/**
+ * Public routes to static webpages.
+ */
+Route::get('/about', function() {
+        return view('about');
+    });
 
 /**
- * Routes executed by the scanner. 
+ * Routes executed by the inventory application. 
  */
 Route::group(['middleware' => ['auth', 'verified']], function () {
+
     Route::get('/notify', [NotificationController::class, 'restockNotification'])
     ->name('restock-notification');
     Route::get('/scan/{scanActive?}', function ($scanActive = true) {
