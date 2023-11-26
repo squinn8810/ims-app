@@ -24,6 +24,7 @@ class User extends Authenticatable
         'email',
         'password',
         'is_admin',
+        'organization_id',
     ];
 
     /**
@@ -45,6 +46,15 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    /**
+     * Get the orgniazation associated with the user.
+     */
+    public function organization()
+    {
+        return $this->belongsTo(Organization::class, 'organization_id');
+    }
+
 
     /**
      * Check if the user is an admin.

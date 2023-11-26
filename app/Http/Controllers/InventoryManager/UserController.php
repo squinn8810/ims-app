@@ -44,7 +44,7 @@ class UserController extends Controller
      * @param  UserRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(UserRequest $request)
+    public function store(Request $request)
     {
         // Create a new user
         $user = User::create([
@@ -61,11 +61,11 @@ class UserController extends Controller
     /**
      * Update the specified user resource in storage.
      *
-     * @param  UserRequest  $request
+     * @param  Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UserRequest $request, $id)
+    public function update(Request $request, $id)
     {
         // Find the user by its ID
         $user = User::findOrFail($id);

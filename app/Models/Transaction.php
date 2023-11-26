@@ -64,6 +64,7 @@ class Transaction extends Model
         return $this->belongsTo(Account::class, 'employeeID');
     }
 
+    
     public function getDateAttribute($value)
     {
         return Carbon::parse($value)->format('F d, Y');
