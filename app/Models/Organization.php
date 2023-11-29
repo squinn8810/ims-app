@@ -53,7 +53,11 @@ class Organization extends Model
     }
 
     public function users() {
-        return $this->hasMany(User::class, 'organization_id');
+        return $this->hasMany(User::class, 'orgID');
+    }
+
+    public function locations() {
+        return $this->hasMany(Location::class, 'orgID');
     }
 
 }

@@ -2,28 +2,38 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Item;
 use App\Models\Transaction;
+use App\Models\ItemLocation;
+use Illuminate\Http\Response;
 use Illuminate\Support\Carbon;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 
-class AnalyticalController extends Controller
+class AnalyticsController extends Controller
 {
 
     /**
-     * 
+     * Returns a descriptive data view
      */
-    public function index()
+    public function dataView1()
     {
         $recentTransactions = $this->getRecentTransactions();
         $transactionTrends = $this->getTransactionTrends();
         $distributionData = $this->getTransactionDistribution();
 
-        return view('inventory_analytics')->with([
+        $data = [
             'recentTransactions' => $recentTransactions,
             'transactionTrends' => $transactionTrends,
             'transactionDistribution' => $distributionData,
-        ]);
+        ];
+
+        /*return view('inventory_descriptive')->with([
+            'recentTransactions' => $recentTransactions,
+            'transactionTrends' => $transactionTrends,
+            'transactionDistribution' => $distributionData,
+        ]);*/
+        
+        return response()->json($data, Response::HTTP_OK);
     }
 
     /**
@@ -55,7 +65,7 @@ class AnalyticalController extends Controller
         ];
 
         $filter = request()->input('time_period');
-    
+
         $filteredTransactions = [];
 
         //$query = Transaction::query();
@@ -96,7 +106,7 @@ class AnalyticalController extends Controller
             '3_months' => 3,
             '1_month' => 1,
         ];
-        
+
         $currentDate = Carbon::now();
         $filter = '12_months';
 
@@ -118,20 +128,122 @@ class AnalyticalController extends Controller
         $trend = [];
         $transactions = Transaction::get();
 
-        for ($i = $timePeriods[$filter];$i > 0; $i--) {
+        for ($i = $timePeriods[$filter]; $i > 0; $i--) {
             $startDate = $currentDate->copy()->subMonths($i)->startOfMonth();
-            $endDate = $currentDate->copy()->subMonths($i-1)->startOfMonth();
-        
+            $endDate = $currentDate->copy()->subMonths($i - 1)->startOfMonth();
+
             // Build and execute the query with conditions
             $transactionsCount = $transactions->when($validatedData, function ($query) use ($validatedData) {
                 return $query->where('itemLocID', $validatedData['itemLocID']);
             })
-            ->whereBetween('transDate', [$startDate, $endDate->copy()->subSecond()])
-            ->count();
-        
+                ->whereBetween('transDate', [$startDate, $endDate->copy()->subSecond()])
+                ->count();
+
             $trend[$startDate->format('M y')] = $transactionsCount;
         }
 
         return $trend;
+    }
+
+
+    /**
+     * Returns a prescriptive/predictive data view
+     */
+    public function dataView2()
+    {
+
+        $transactionData = $this->getTransactionTrends();
+
+        $evalData = $this->evaluateReorderQty($transactionData);
+        $frequentItems = $this->getFrequentlyOrderedItems();
+
+        return view('inventory_predictive')->with([
+
+            "frequentItems" => $frequentItems,
+            "itemData" => $transactionData,
+            'evalData' => $evalData,
+        ]);
+    }
+
+
+    private function getFrequentlyOrderedItems()
+    {
+        //returns an array of arrays with key value pairs
+        $groupTransactions = DB::table('transaction')
+            ->select('itemLocID', DB::raw('COUNT(*) as count'))
+            ->groupBy('itemLocID')
+            ->orderByDesc('count')
+            ->get();
+
+        $frequentItemData = [];
+
+        foreach ($groupTransactions as $group) {
+            $itemLocID = $group->itemLocID;
+            $count = $group->count;
+            $itemLoc = ItemLocation::find($itemLocID);
+            $item = Item::find($itemLoc->itemNum);
+            $itemName = $item->itemName;
+
+            $frequentItemData[] =
+                [
+                    'Item' => $itemName,
+                    'Transactions' => $count,
+                    'itemLocID' => $itemLocID,
+                ];
+        }
+
+        return $frequentItemData;
+    }
+
+
+    /**
+     * Calculate the reorder count for a specific date range
+     */
+    private function calculateReorderCount($itemLocID, $startDate)
+    {
+        $reorderCount = Transaction::where('itemLocID', $itemLocID)
+            ->where('transDate', '>=', $startDate)
+            ->count();
+
+        return $reorderCount;
+    }
+
+    /**
+     * Endpoint to provide reorder counts
+     */
+    private function evaluateReorderQty(array $transactionData)
+    {
+
+        if (Request()->has('itemLocID')) {
+
+            $numMonths = 0;
+            $sumCounts = 0;
+
+            foreach ($transactionData as $count) {
+                $numMonths++;
+                $sumCounts += $count;
+            }
+
+            $factor = 1;
+
+            if ($sumCounts > $numMonths) {
+                $factor = ($sumCounts / $numMonths);
+            }
+
+            $itemLocRecord = ItemLocation::find(Request('itemLocID'));
+
+            $reorderQty = $itemLocRecord->itemReorderQty;
+
+            $suggestedQty = $reorderQty * $factor;
+
+            return $evalData = [
+                $reorderQty,
+                $suggestedQty,
+            ];
+        }
+        return $evalData = [
+            0,
+            0,
+        ];
     }
 }

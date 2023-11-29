@@ -32,7 +32,7 @@ class Location extends Model
      * @var array
      */
     protected $fillable = [
-        'locName', 'locAddress', 'locCity', 'locState', 'locZip', 'organization_id'
+        'locName', 'locAddress', 'locCity', 'locState', 'locZip', 'orgID'
     ];
 
     /**
@@ -48,7 +48,7 @@ class Location extends Model
      */
     public function organization()
     {
-        return $this->belongsTo(Organization::class, 'organization_id');
+        return $this->belongsTo(Organization::class, 'orgID');
     }
 
 }

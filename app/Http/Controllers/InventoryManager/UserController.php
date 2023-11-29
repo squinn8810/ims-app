@@ -4,11 +4,10 @@ namespace App\Http\Controllers\InventoryManager;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\InventoryManager\UserRequest;
 use App\Http\Resources\UserResource;
-use App\Http\Resources\UserCollection;
-use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\InventoryManager\UserRequest;
 
 /**
  * Controller for managing user resources.
@@ -23,7 +22,11 @@ class UserController extends Controller
     public function index()
     {
         // Return a collection of all users as a JSON resource
-        return new UserCollection(User::all());
+        $data = UserResource::collection(User::paginate(10));
+
+        return response()->json($data, Response::HTTP_OK);
+
+
     }
 
     /**
@@ -35,7 +38,10 @@ class UserController extends Controller
     public function show($id)
     {
         // Find and return a specific user as a JSON resource
-        return new UserResource(User::findOrFail($id));
+        $data = new UserResource(User::findOrFail($id));
+
+        return response()->json($data, Response::HTTP_OK);
+
     }
 
     /**

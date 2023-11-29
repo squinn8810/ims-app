@@ -28,6 +28,7 @@ class NotificationController extends Controller
 
             // Call the makeNotification method with the list of transactions
             $this->makeNotification($list);
+            
 
             // Flash a success message and redirect to the scan route
             session()->flash('success', 'Notification Sent!');

@@ -58,4 +58,28 @@ class ItemLocation extends Model
     {
         return $this->hasMany(Transaction::class, 'itemLocID');
     }
+
+    public function getItemName() {
+        $item = Item::find($this->itemNum);
+        return $item->itemName;
+    }
+
+    public function getVendorName() {
+        $item = Item::find($this->itemNum);
+        return $item->vendorName;
+    }
+
+    public function getLocationName(){
+        $location = Location::find($this->locID);
+        return $location->locName;
+    }
+
+    public function getCurrentQty(){
+        return $this->itemQty;
+    }
+
+    public function getReorderQty(){
+        return $this->itemReorderQty;
+    }
+
 }

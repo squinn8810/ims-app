@@ -4,6 +4,7 @@ namespace App\Http\Controllers\InventoryManager;
 
 use App\Models\Transaction;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\TransactionResource;
 use App\Http\Resources\TransactionCollection;
@@ -21,7 +22,9 @@ class TransactionController extends Controller
     public function index()
     {
         // Return a collection of all transactions as a JSON resource
-        return new TransactionCollection(Transaction::all());
+        $data = TransactionResource::collection(Transaction::paginate(10));
+
+        return response()->json($data, Response::HTTP_OK);
     }
 
     /**
@@ -32,7 +35,9 @@ class TransactionController extends Controller
     public function show($transNum)
     {
         // Return a specific transaction as a JSON resource
-        return new TransactionResource(Transaction::findOrFail($transNum));
+        $data = new TransactionResource(Transaction::findOrFail($transNum));
+        
+        return response()->json($data, Response::HTTP_OK);
     }
 
     /**

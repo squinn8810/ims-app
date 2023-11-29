@@ -19,6 +19,6 @@ class CheckIsAdmin
             return $next($request);
         }
 
-        abort(403, 'Unauthorized.'); // Or redirect to a different route
+        return redirect()->back(); // Or redirect to a different route
     }
 }

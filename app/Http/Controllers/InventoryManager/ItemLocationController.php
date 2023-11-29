@@ -4,6 +4,7 @@ namespace App\Http\Controllers\InventoryManager;
 
 use App\Models\ItemLocation;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ItemLocationResource;
 use App\Http\Resources\ItemLocationCollection;
@@ -18,10 +19,14 @@ class ItemLocationController extends Controller
      *
      * @return \App\Http\Resources\ItemLocationCollection
      */
-    public function index()
+    public function index($locID)
     {
         // Return a collection of all item locations as a JSON resource
-        return new ItemLocationCollection(ItemLocation::all());
+        $items = ItemLocation::where('locID', $locID)->get();
+
+        $data = ItemLocationResource::collection($items);
+
+        return response()->json($data, Response::HTTP_OK);
     }
 
     /**
@@ -43,7 +48,9 @@ class ItemLocationController extends Controller
     public function show(Request $request)
     {
         // Return a specific item location as a JSON resource
-        return new ItemLocationResource(ItemLocation::findOrFail($request->itemLocID));
+        $data = new ItemLocationResource(ItemLocation::findOrFail($request->itemLocID));
+
+        return response()->json($data, Response::HTTP_OK);
     }
 
     /**

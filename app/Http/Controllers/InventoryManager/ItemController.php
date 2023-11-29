@@ -8,11 +8,22 @@ use App\Models\Location;
 use App\Models\ItemLocation;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\ItemCollection;
 use App\Http\Requests\InventoryManager\ItemRequest;
+use App\Http\Resources\ItemResource;
 
 class ItemController extends Controller
 {
+
+    /**
+     * Display a listing of the items.
+     *
+     * @return \App\Http\Resources\ItemCollection
+     */
+    public function index()
+    {
+        return ItemResource::collection(Item::paginate(10));
+    }
+
     /**
      * Display the form view for adding a new item.
      *
@@ -32,16 +43,7 @@ class ItemController extends Controller
         return response()->json($data);
     }
 
-    /**
-     * Display a listing of the items.
-     *
-     * @return \App\Http\Resources\ItemCollection
-     */
-    public function index()
-    {
-        // Return a collection of all items as a JSON resource
-        return new ItemCollection(Item::all());
-    }
+
 
 
     /** Validate input and create/insert a new item.

@@ -4,10 +4,10 @@ namespace App\Http\Controllers\InventoryManager;
 
 use App\Models\Location;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\InventoryManager\LocationRequest;
 use App\Http\Resources\LocationResource;
-use App\Http\Resources\LocationCollection;
+use App\Http\Requests\InventoryManager\LocationRequest;
 
 /**
  * Controller for managing location resources.
@@ -17,12 +17,14 @@ class LocationController extends Controller
     /**
      * Display a listing of the location resources.
      *
-     * @return \App\Http\Resources\LocationCollection
+     * @return \App\Http\Resources\
      */
     public function index()
     {
         // Return a collection of all locations as a JSON resource
-        return new LocationCollection(Location::all());
+        $data = LocationResource::collection(Location::paginate(10));
+
+        return response()->json($data, Response::HTTP_OK);
     }
 
     /**
@@ -45,7 +47,10 @@ class LocationController extends Controller
     public function show($locID)
     {
         // Return a specific location as a JSON resource
-        return new LocationResource(Location::findOrFail($locID));
+        $data = new LocationResource(Location::findOrFail($locID));
+        
+        return response()->json($data, Response::HTTP_OK);
+
     }
 
     /**
