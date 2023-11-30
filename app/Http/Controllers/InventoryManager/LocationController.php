@@ -22,7 +22,7 @@ class LocationController extends Controller
     public function index()
     {
         // Return a collection of all locations as a JSON resource
-        $data = LocationResource::collection(Location::paginate(10));
+        $data = LocationResource::collection(Location::all());
 
         return response()->json($data, Response::HTTP_OK);
     }

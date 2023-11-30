@@ -15,11 +15,10 @@ class TransactionResource extends JsonResource
     public function toArray($request): array
     {
         return [
-            'transNum' => $this->id,
             'name' => $this->getUserName(),
             'item' => $this->getItemName(),
             'location' => $this->getLocationName(),
-            'message' =>$this->getMessage(),
+            //'message' =>$this->getMessage(),
         ];
     }
 }

@@ -22,7 +22,7 @@ class UserController extends Controller
     public function index()
     {
         // Return a collection of all users as a JSON resource
-        $data = UserResource::collection(User::paginate(10));
+        $data = UserResource::collection(User::all());
 
         return response()->json($data, Response::HTTP_OK);
 

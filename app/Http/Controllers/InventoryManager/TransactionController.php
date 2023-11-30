@@ -22,7 +22,7 @@ class TransactionController extends Controller
     public function index()
     {
         // Return a collection of all transactions as a JSON resource
-        $data = TransactionResource::collection(Transaction::paginate(10));
+        $data = TransactionResource::collection(Transaction::all());
 
         return response()->json($data, Response::HTTP_OK);
     }
