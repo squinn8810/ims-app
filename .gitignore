@@ -18,9 +18,11 @@ yarn-error.log
 /.idea
 /.vscode
 .DS_Store
+docker-compose.yml
 ims-app.code-workspace
 package-lock.json 
 package.json
+/ims-ui
 GitHubDesktop*
 ims-ui/src/app/services/csrf/csrf.service.ts
 ims-ui/src/app/services/login/login.service.ts

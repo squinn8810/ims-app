@@ -32,7 +32,7 @@ class ItemLocation extends Model
      * @var array
      */
     protected $fillable = [
-        'itemNum', 'itemReorderQty', 'locID',
+        'itemNum', 'itemQty', 'itemReorderQty', 'locID',
     ];
 
     /**
@@ -52,10 +52,34 @@ class ItemLocation extends Model
     }
 
     /**
-     * Get the transaction associated with the item location.
+     * Get the transactions associated with the item location.
      */
-    public function transaction()
+    public function transactions()
     {
-        return $this->hasOne(Transaction::class, 'itemLocID');
+        return $this->hasMany(Transaction::class, 'itemLocID');
     }
+
+    public function getItemName() {
+        $item = Item::find($this->itemNum);
+        return $item->itemName;
+    }
+
+    public function getVendorName() {
+        $item = Item::find($this->itemNum);
+        return $item->vendorName;
+    }
+
+    public function getLocationName(){
+        $location = Location::find($this->locID);
+        return $location->locName;
+    }
+
+    public function getCurrentQty(){
+        return $this->itemQty;
+    }
+
+    public function getReorderQty(){
+        return $this->itemReorderQty;
+    }
+
 }

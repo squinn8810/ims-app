@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\TransactionResource;
 use DateTime;
 use DateTimeZone;
 use Illuminate\Http\Response;
@@ -19,50 +20,46 @@ class ScannerController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function analyze(Request $request)
+    public function decode(Request $request)
     {
-        // try {
-            // Get the JSON data from the request body
-            $requestData = json_decode($request->getContent(), true);
+        // Get the JSON data from the request body
+        $requestData = json_decode($request->getContent(), true);
 
-            // Extract the scan data from the JSON request
-            $results = $requestData['scanData'];
+        // Extract the scan data from the JSON request
+        $results = $requestData['scanData'];
 
-            // Extract the item location ID from the scanned data
-            $itemLocID = $results;
+        // Extract the item location ID from the scanned data
+        $itemLocID = $results;
 
-            // Generate a new transaction with the scanned data
-            $easternTimeZone = new DateTimeZone('America/New_York');
-            $transaction = Transaction::create([
-                'transDate' => new DateTime('now', $easternTimeZone),
-                'itemLocID' => $itemLocID,
-                'employeeID' => auth()->user()->id
-            ]);
+        $transaction = $this->store($itemLocID);
 
-            
-            // Create or update the shopping list in the session
-            if (Session::has('scannedList')) {
-                $list = session('scannedList');
-                $list[] = $transaction;
-                Session(['scannedList' => $list]);
-            } else {
-                Session::put('scannedList', [$transaction]);
-            }
+        // Create or update the shopping list in the session
+        if (Session::has('scannedList')) {
+            $list = session('scannedList');
+            $list[] = $transaction;
+            Session(['scannedList' => $list]);
+        } else {
+            Session::put('scannedList', [$transaction]);
+        }
 
-            // Set session flags to indicate successful scan and deactivate scanning
-            Session::put('scanSuccess', true);
-            Session::put('scanActive', false);
+        // Set session flags to indicate successful scan and deactivate scanning
+        Session::put('scanSuccess', true);
+        Session::put('scanActive', false);
 
-            // Return the scan result from session
-            return response()->json([
-                'scannedList' => session('scannedList')
-            ],
-            Response::HTTP_OK);
-        // } catch (\Exception $e) {
-        //     // Handle any exceptions that may occur and return an error response
-        //     error_log($e->getMessage());
-        //     return response()->json(['error' => 'An error occurred'], 500);
-        // }
+
+        //TO DO FOR SCANNER 
+        //reconcile item_location quantity 
+        //  capture current inventory quantity 
+        //  capture change in inventory since last reconcile 
+        //pass both to transaction record
+        //pass current inventory quantity to item_location
+
+
+        // Return the scan result from session
+        return response()->json([
+            'scannedList' => session('scannedList')
+        ],
+        Response::HTTP_OK);
     }
 
     /**
@@ -82,5 +79,43 @@ class ScannerController extends Controller
             'error' => 'Scanned List Not Found'
         ],
         Response::HTTP_NOT_FOUND);
+    }
+
+
+    /**
+     * 
+     */
+    private function store($itemLocID)
+    {
+
+        $easternTimeZone = new DateTimeZone('America/New_York');
+        $transaction = Transaction::create([
+            'transDate' => new DateTime('now', $easternTimeZone),
+            'itemLocID' => $itemLocID,
+            'employeeID' => auth()->user()->id
+        ]);
+
+        $resource = new TransactionResource($transaction);
+
+        return $resource;
+    }
+
+
+    /**
+     * 
+     */
+    private function store($itemLocID)
+    {
+
+        $easternTimeZone = new DateTimeZone('America/New_York');
+        $transaction = Transaction::create([
+            'transDate' => new DateTime('now', $easternTimeZone),
+            'itemLocID' => $itemLocID,
+            'employeeID' => auth()->user()->id
+        ]);
+
+        $resource = new TransactionResource($transaction);
+
+        return $resource;
     }
 }

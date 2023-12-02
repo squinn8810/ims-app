@@ -42,7 +42,6 @@ class Organization extends Model
         'zip',
         'phone',
         'superuser',
-        'locID',
     ];
 
     /**
@@ -50,14 +49,15 @@ class Organization extends Model
      */
     public function superuser()
     {
-        return $this->belongsTo(User::class, 'id');
+        return $this->hasOne(User::class, 'superuser');
     }
 
-    /**
-     * Get the location associated with the organization.
-     */
-    public function locID()
-    {
-        return $this->belongsTo(Location::class, 'locID');
+    public function users() {
+        return $this->hasMany(User::class, 'orgID');
     }
+
+    public function locations() {
+        return $this->hasMany(Location::class, 'orgID');
+    }
+
 }

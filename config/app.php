@@ -16,7 +16,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'SFD Supply Management'),
+    'name' => env('APP_NAME', 'EMS Supply Management'),
 
     /*
     |--------------------------------------------------------------------------

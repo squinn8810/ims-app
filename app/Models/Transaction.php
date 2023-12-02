@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Model for the "transaction" table.
@@ -63,6 +64,35 @@ class Transaction extends Model
         return $this->belongsTo(Account::class, 'employeeID');
     }
 
+    
+    public function getDateAttribute($value)
+    {
+        return Carbon::parse($value)->format('F d, Y');
+    }
+    
+    public function getItemName() {
+        $itemLoc = ItemLocation::find($this->itemLocID);
+        $item = Item::find($itemLoc->itemNum);
+        return $item->itemName;
+    }
+
+    public function getLocationName(){
+        $itemLoc = ItemLocation::find($this->itemLocID);
+        $location = Location::find($itemLoc->locID);
+        return $location->locName;
+    }
+
+    public function getReorderQty(){
+        $itemLoc = ItemLocation::find($this->itemLocID);
+        return $itemLoc->itemReorderQty;
+    }
+
+    public function getUserName() {
+        $user = User::find($this->employeeID);
+        return "$user->firstName $user->lastName";
+    }
+
+
     /**
      * Get a custom message for the transaction.
      *
@@ -70,18 +100,38 @@ class Transaction extends Model
      */
     public function getMessage()
     {
-        $itemLoc = ItemLocation::find($this->itemLocID);
-        $locId = $itemLoc->locID;
-        $reorderQty = $itemLoc->itemReorderQty;
-        $location = Location::find($locId);
-        $locName = $location->locName;
-        $itemNum = $itemLoc->itemNum;
-        $item = Item::find($itemNum);
-        $itemName = $item->itemName;
-        $name = auth()->user()->lastName;
+        $data = $this->getDataAsJson(); 
 
-        $message = "$itemName from $locName by $name. Suggested reorder quantity: $reorderQty";
+        $item = $data['Item']; 
+        $location = $data['Location'];
+        $user = $data['Employee'];
+        $reorderQty = $data['Reorder Qty'];
+
+
+        $message = "$item from $location by $user. Suggested reorder quantity: $reorderQty";
 
         return $message;
+    }
+
+
+    public function getDataAsJson()
+    {
+        //Item
+        $itemLoc = ItemLocation::find($this->itemLocID);
+        $item = Item::find($itemLoc->itemNum);
+        //Location & Reorder Qty
+        $location = Location::find($itemLoc->locID);
+        //User
+        $user = User::find($this->employeeID);
+        $user = "$user->firstName $user->lastName";
+
+        return [
+            'Date' => $this->getDateAttribute($this->transDate),
+            'Item' => $item->itemName,
+            'Reorder Qty' => $itemLoc->itemReorderQty,
+            'Location' => $location->locName,
+            'Status' => $this->status,
+            'Employee' => $user,
+        ];
     }
 }

@@ -32,7 +32,7 @@ class Location extends Model
      * @var array
      */
     protected $fillable = [
-        'locName', 'locAddress', 'locCity', 'locState', 'locZip',
+        'locName', 'locAddress', 'locCity', 'locState', 'locZip', 'orgID'
     ];
 
     /**
@@ -42,4 +42,13 @@ class Location extends Model
     {
         return $this->hasMany(ItemLocation::class, 'locID');
     }
+
+      /**
+     * Get the employee associated with the transaction.
+     */
+    public function organization()
+    {
+        return $this->belongsTo(Organization::class, 'orgID');
+    }
+
 }

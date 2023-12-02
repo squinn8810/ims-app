@@ -5,6 +5,7 @@ namespace App\Http\Controllers\InventoryManager;
 use App\Models\Vendor;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\InventoryManager\VendorRequest;
 use App\Http\Resources\VendorResource;
 use App\Http\Resources\VendorCollection;
 
@@ -27,13 +28,13 @@ class VendorController extends Controller
     /**
      * Display the specified vendor resource.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $vendorID
      * @return \App\Http\Resources\VendorResource
      */
-    public function show(Request $request)
+    public function show($vendorID)
     {
         // Return a specific vendor as a JSON resource
-        return new VendorResource(Vendor::findOrFail($request->vendorID));
+        return new VendorResource(Vendor::findOrFail($vendorID));
     }
 
     /**
@@ -49,22 +50,35 @@ class VendorController extends Controller
     /**
      * Update the specified vendor resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request\InventoryManager\VendorRequest  $request
+     * @param  int  $vendorID
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function update(VendorRequest $request, $vendorID)
     {
-        // Update logic goes here
+        // Find the vendor by its ID
+        $vendor = Vendor::findOrFail($vendorID);
+
+        // Update the vendor attributes
+        $vendor->update($request->only(['name', 'other_attributes'])); // Adjust attributes accordingly
+
+        // Return a JSON response indicating success
+        return response()->json(['message' => 'Vendor updated successfully'], 200);
     }
 
     /**
      * Remove the specified vendor resource from storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $vendorID
      * @return \Illuminate\Http\Response
      */
-    public function delete(Request $request)
+    public function delete($vendorID)
     {
-        // Deletion logic goes here
+        // Find and delete the specified vendor
+        $vendor = Vendor::findOrFail($vendorID);
+        $vendor->delete();
+
+        // Return a 204 No Content response
+        return response()->json(null, 204);
     }
 }

@@ -1,5 +1,5 @@
 import { CommonModule, NgIf, Location } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
 @Component({
@@ -9,34 +9,10 @@ import { RouterOutlet } from '@angular/router';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
   public title = 'Inventory Management System';
-  public showNav: boolean;
-  public noNavUrls: string[] = ['/login', '/register-user', '/forgot-password', '/reset-password'];
-  public currentRoute: string;
-
 
   constructor(
   ) {}
-
-  public ngOnInit(): void {
-    this.checkRoute();
-  }
-
-  private checkRoute(): void {
-    // let urlMatches = false;
-
-    // this.noNavUrls.forEach(url => {
-    //   if (this.location.path().includes(url)) {
-    //     urlMatches = true;
-    //   }
-    // });
-    // if (urlMatches) {
-    //   this.showNav = false;
-    // }
-    // else {
-    //   this.showNav = true;
-    // }
-  }
 
 }

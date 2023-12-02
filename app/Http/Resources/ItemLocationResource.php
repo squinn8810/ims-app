@@ -14,6 +14,12 @@ class ItemLocationResource extends JsonResource
      */
     public function toArray($request): array
     {
-        return parent::toArray($request);
+          return [
+            'item' => $this->getItemName(),
+            'quantity' => $this->getCurrentQty(),
+            'reorder_quantity' => $this->getReorderQty(),
+            'location' => $this->getLocationName(),
+            'vendor' => $this->getVendorName(),
+        ];;
     }
 }
