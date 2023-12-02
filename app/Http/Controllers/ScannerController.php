@@ -81,26 +81,6 @@ class ScannerController extends Controller
         Response::HTTP_NOT_FOUND);
     }
 
-
-    /**
-     * 
-     */
-    private function store($itemLocID)
-    {
-
-        $easternTimeZone = new DateTimeZone('America/New_York');
-        $transaction = Transaction::create([
-            'transDate' => new DateTime('now', $easternTimeZone),
-            'itemLocID' => $itemLocID,
-            'employeeID' => auth()->user()->id
-        ]);
-
-        $resource = new TransactionResource($transaction);
-
-        return $resource;
-    }
-
-
     /**
      * 
      */
