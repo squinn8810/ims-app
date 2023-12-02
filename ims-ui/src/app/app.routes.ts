@@ -26,6 +26,20 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'restock',
+        loadComponent: () =>
+          import('./components/notification/notification.component').then(
+            (component) => component.NotificationComponent
+          ),
+      },
+      {
+        path: 'inventory',
+        loadComponent: () =>
+          import('./components/inventory/inventory.component').then(
+            (component) => component.InventoryComponent
+          ),
+      },
+      {
         path: 'profile',
         loadComponent: () =>
           import('./components/profile/profile.component').then(

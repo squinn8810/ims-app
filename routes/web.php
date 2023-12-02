@@ -27,12 +27,12 @@ Route::any('/{any}', [AngularController::class, 'index'])->where('any', '^(?!(ap
  * Routes executed by the scanner. 
  */
 Route::group(['middleware' => ['auth', 'verified']], function () {
-    Route::get('/notify', [NotificationController::class, 'restockNotification'])
-    ->name('restock-notification');
-    Route::get('/scan/{scanActive?}', function ($scanActive = true) {
-        return view('scan');
-    })->name('scan');
-    Route::post('/scan', [ScannerController::class, 'analyze']);    
+    Route::post('/api/send-restock-notification', [NotificationController::class, 'restockNotification']);
+    // Route::get('/scan/{scanActive?}', function ($scanActive = true) {
+    //     return view('scan');
+    // })->name('scan');
+    Route::post('/api/scan', [ScannerController::class, 'analyze']);    
+    Route::get('/api/scanned-list', [ScannerController::class, 'getScannedList']);    
 });
 
 /**

@@ -8,7 +8,6 @@ import { RegistrationRequest } from 'src/app/models/registration-request/registr
   providedIn: 'root'
 })
 export class LoginService {
-  private baseUrl = '';
   private options: any;
 
   constructor(
@@ -23,11 +22,11 @@ export class LoginService {
   }
 
   public login(loginRequest: LoginRequest): Observable<any> {
-    return this.http.get(this.baseUrl + '/sanctum/csrf-cookie', this.options)
+    return this.http.get('/sanctum/csrf-cookie', this.options)
       .pipe(
         switchMap(() =>
           this.http.post(
-            this.baseUrl + '/api/login',
+            '/api/login',
             loginRequest,
             this.options
           )
@@ -35,12 +34,12 @@ export class LoginService {
       );
   }
 
-  public logout() {
-    return this.http.get(this.baseUrl + '/sanctum/csrf-cookie', this.options)
+  public logout(): Observable<any> {
+    return this.http.get('/sanctum/csrf-cookie', this.options)
     .pipe(
       switchMap(() =>
         this.http.post(
-          this.baseUrl + '/api/logout',
+          '/api/logout',
           this.options
         )
       )
@@ -48,11 +47,11 @@ export class LoginService {
   }
 
   public register(registrationRequest: RegistrationRequest): Observable<any> {
-    return this.http.get(this.baseUrl + '/sanctum/csrf-cookie', this.options)
+    return this.http.get('/sanctum/csrf-cookie', this.options)
       .pipe(
         switchMap(() =>
           this.http.post(
-            this.baseUrl + '/api/register',
+            '/api/register',
             registrationRequest,
             this.options
           )

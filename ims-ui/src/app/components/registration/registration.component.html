@@ -12,7 +12,7 @@
                     <form novalidate (ngSubmit)="onSubmit(registrationForm)" [formGroup]="registrationForm">
                         <div class="row mb-3">
                             <label for="firstName" class="form-label" required>First Name</label>
-                            <input type="firstName" class="form-control" formControlName="firstName">
+                            <input type="text" class="form-control" formControlName="firstName">
                             <div *ngIf="registrationForm.get('firstName')?.hasError('required') &&
                                     registrationForm.get('firstName')?.touched" class="invalid-feedback">
                                 First Name is required
@@ -24,7 +24,7 @@
                         </div>
                         <div class="row mb-3">
                             <label for="lastName" class="form-label" required>Last Name</label>
-                            <input type="lastName" class="form-control" formControlName="lastName">
+                            <input type="text" class="form-control" formControlName="lastName">
                             <div *ngIf="registrationForm.get('lastName')?.hasError('required') &&
                                     registrationForm.get('lastName')?.touched" class="invalid-feedback">
                                 Last Name is required
@@ -36,7 +36,7 @@
                         </div>
                         <div class="row mb-3">
                             <label for="id" class="form-label" required>Employee ID</label>
-                            <input type="id" class="form-control" formControlName="id">
+                            <input type="text" class="form-control" formControlName="id">
                             <div *ngIf="registrationForm.get('id')?.hasError('required') &&
                                     registrationForm.get('id')?.touched" class="invalid-feedback">
                                 Employee ID is required

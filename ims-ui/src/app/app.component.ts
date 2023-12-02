@@ -1,13 +1,11 @@
 import { CommonModule, NgIf, Location } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
-import { Component, OnInit, SimpleChanges } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { map } from 'rxjs';
 
 @Component({
   standalone: true,
   selector: 'app-root',
-  imports: [CommonModule, RouterOutlet, HttpClientModule, NgIf],
+  imports: [CommonModule, RouterOutlet, NgIf],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
@@ -19,7 +17,6 @@ export class AppComponent implements OnInit {
 
 
   constructor(
-    private location: Location,
   ) {}
 
   public ngOnInit(): void {

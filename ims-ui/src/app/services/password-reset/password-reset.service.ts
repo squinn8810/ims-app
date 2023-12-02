@@ -8,7 +8,6 @@ import { ResetRequest } from 'src/app/models/reset-request/reset-request';
   providedIn: 'root'
 })
 export class PasswordResetService {
-  private baseUrl = '';
   private options: any;
 
   constructor(
@@ -23,11 +22,11 @@ export class PasswordResetService {
   }
 
   public sendResetRequest(forgotRequest: ResetRequest): Observable<any> {
-    return this.http.get(this.baseUrl + '/sanctum/csrf-cookie', this.options)
+    return this.http.get('/sanctum/csrf-cookie', this.options)
       .pipe(
         switchMap(() =>
           this.http.post(
-            this.baseUrl + '/api/forgot-password',
+            '/api/forgot-password',
             forgotRequest,
             this.options
           )
@@ -36,11 +35,11 @@ export class PasswordResetService {
   }
 
   public resetPassword(passwordReset: PasswordReset): Observable<any> {
-    return this.http.get(this.baseUrl + '/sanctum/csrf-cookie', this.options)
+    return this.http.get('/sanctum/csrf-cookie', this.options)
       .pipe(
         switchMap(() =>
           this.http.post(
-            this.baseUrl + '/api/reset-password',
+            '/api/reset-password',
             passwordReset,
             this.options
           )
