@@ -1,0 +1,20 @@
+<div class="container">
+    <div>
+        <p *ngIf="!transactions">
+            No Scans To Show.
+        </p>
+    </div>
+
+    <div *ngIf="transactions">
+        <div class="row">
+            <h5 class="col-12">Scanned Items</h5>
+        </div>
+        <div class="row">
+            <ul *ngFor="let transaction of transactions" class="col-12">
+                <li>Location ID [{{transaction.itemLocID}}], EID [{{transaction.employeeID}}]</li>
+            </ul>
+            <button class="btn btn-primary col-4" (click)="sendNotification()">Send Notification</button>    
+        </div>
+    </div>
+</div>
+

@@ -2,7 +2,9 @@
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AngularController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ItemManager;
 use App\Http\Controllers\ScannerController;
 use App\Http\Controllers\AnalyticsController;
 use App\Http\Controllers\InventoryManager\DashboardController;
@@ -32,14 +34,26 @@ Route::get('/about', function () {
 });
 
 /**
+ * All PUT Routes passed to Angular except '/api', '/sanctum'
+ */
+Route::any('/{any}', [AngularController::class, 'index'])->where('any', '^(?!(api)|(sanctum)).*$');
+
+/**
  * Routes executed by the inventory application. 
  */
 Route::group(['middleware' => ['auth', 'verified']], function () {
+    Route::post('/api/send-restock-notification', [NotificationController::class, 'restockNotification']);
+    // Route::get('/scan/{scanActive?}', function ($scanActive = true) {
+    //     return view('scan');
+    // })->name('scan');
+    Route::post('/api/scan', [ScannerController::class, 'analyze']);    
+    Route::get('/api/scanned-list', [ScannerController::class, 'getScannedList']);    
+});
 
-    Route::get('/scan/{scanActive?}', function ($scanActive = true) {
-        return view('scan');
-    })->name('scan');
-    Route::get('/notify', [NotificationController::class, 'restockNotification'])->name('restock-notification');
+/**
+ * Routes executed by the inventory manager.
+ */
+Route::group(['middleware' => ['auth', 'verified']], function () {
 
     Route::get('/reports', [AnalyticsController::class, 'dataView1']);
     Route::get('/reports/insights', [AnalyticsController::class, 'dataView2']);

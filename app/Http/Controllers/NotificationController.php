@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Mail\ReorderMail;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 
@@ -14,7 +15,7 @@ class NotificationController extends Controller
      * Send restock notification.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\Response
      */
     public function restockNotification(Request $request)
     {
@@ -27,32 +28,39 @@ class NotificationController extends Controller
             }
 
             // Call the makeNotification method with the list of transactions
-            $this->makeNotification($list);
-            
+            $this->makeNotification($request, $list);
 
-            // Flash a success message and redirect to the scan route
-            session()->flash('success', 'Notification Sent!');
-            session()->forget('scanSuccess');
-            return redirect()->route('scan');
+            // Return Success
+            return response(Response::HTTP_OK);
         }
 
-        // Flash a fail message if 'scannedList' session is empty and redirect to the scan route
-        session()->flash('fail', 'Scan an item first...');
-        return redirect()->route('scan');
+        // Return Failure to send
+        return response()->json([
+            'error' => [
+                'errors' => Response::HTTP_NOT_FOUND,
+                'message' => 'No scanned list found in session.'
+            ],
+            'status' => Response::HTTP_NOT_FOUND,
+            'statusText' => 'No scanned list found in session.',
+            'name' => '404 Not Found',
+            'ok' => false,
+            'url' => request()->url(),
+        ]);
     }
 
     /**
      * Make and send the restock notification.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @param  array  $list
      * @return void
      */
-    public function makeNotification(array $list)
+    public function makeNotification(Request $request, array $list)
     {
         // Create a new ReorderMail instance with the list of transactions
         $email = new ReorderMail($list);
 
         // Update the recipient email address if needed
-        Mail::to('squinn8810@gmail.com')->send($email);
+        Mail::to($request->user()->email)->send(new ReorderMail($email));
     }
 }

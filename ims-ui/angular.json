@@ -30,12 +30,18 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.scss"
+              "node_modules/bootstrap/scss/bootstrap.scss",
+              "node_modules/bootstrap-icons/font/bootstrap-icons.css",
+              "src/main.scss"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+            ]
           },
           "configurations": {
             "production": {
+              "outputPath": "../public/assets/angular",
+              "baseHref": "/assets/angular/",
               "budgets": [
                 {
                   "type": "initial",
@@ -51,6 +57,8 @@
               "outputHashing": "all"
             },
             "development": {
+              // "outputPath": "dist/assets/angular",
+              // "baseHref": "/assets/angular/",
               "buildOptimizer": false,
               "optimization": false,
               "vendorChunk": true,
@@ -93,15 +101,16 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.scss"
+              "node_modules/bootstrap/scss/bootstrap.scss",
+              "node_modules/bootstrap-icons/font/bootstrap-icons.css",
+              "src/main.scss"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+            ]
           }
         }
       }
     }
-  },
-  "cli": {
-    "analytics": false
   }
 }

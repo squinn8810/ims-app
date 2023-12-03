@@ -19,6 +19,7 @@ yarn-error.log
 /.vscode
 .DS_Store
 docker-compose.yml
+ims-app.code-workspace
 package-lock.json 
 package.json
-/ims-ui
+GitHubDesktop*

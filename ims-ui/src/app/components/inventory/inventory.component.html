@@ -1,0 +1,21 @@
+<h5>Inventory</h5>
+<table class="table table-striped table-bordered">
+    <thead>
+        <tr>
+          <th scope="col">Item</th>
+          <th scope="col">URL</th>
+          <th scope="col">Vendor</th>
+          <th scope="col">Reorder Quantity</th>
+        </tr>
+    </thead>
+    <tbody *ngFor="let org of organizations">
+        <div *ngFor="let item of org.location.itemLocations">
+            <tr>
+                <th scope="row">{{item.item.itemName}}</th>
+                <td>{{item.item.itemURL}}</td>
+                <td>{{item.item.vendor}}</td>
+                <td>{{item.itemReorderQty}}</td>
+            </tr>
+        </div>
+    </tbody>
+</table>
