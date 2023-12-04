@@ -33,6 +33,13 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'reports',
+        loadComponent: () =>
+          import('./components/charts/charts.component').then(
+            (component) => component.ChartComponent
+          ),
+      },
+      {
         path: 'inventory',
         loadComponent: () =>
           import('./components/inventory/inventory.component').then(

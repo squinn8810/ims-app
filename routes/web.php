@@ -39,31 +39,26 @@ Route::get('/about', function () {
 Route::any('/{any}', [AngularController::class, 'index'])->where('any', '^(?!(api)|(sanctum)).*$');
 
 /**
- * Routes executed by the inventory application. 
+ * Routes executed by the scanner application. 
  */
 Route::group(['middleware' => ['auth', 'verified']], function () {
-    Route::post('/api/send-restock-notification', [NotificationController::class, 'restockNotification']);
-    // Route::get('/scan/{scanActive?}', function ($scanActive = true) {
-    //     return view('scan');
-    // })->name('scan');
-    Route::post('/api/scan', [ScannerController::class, 'analyze']);    
-    Route::get('/api/scanned-list', [ScannerController::class, 'getScannedList']);    
+    Route::get('/api/scanned-list', [ScannerController::class, 'getScannedList']);
+    Route::post('/api/send-restock-notification', [NotificationController::class, 'restockNotification']);    
+    Route::post('/api/scan', [ScannerController::class, 'decode']);
 });
 
 /**
  * Routes executed by the inventory manager.
  */
 Route::group(['middleware' => ['auth', 'verified']], function () {
-
-    Route::get('/reports', [AnalyticsController::class, 'dataView1']);
-    Route::get('/reports/insights', [AnalyticsController::class, 'dataView2']);
-
-    Route::get('/users', [UserController::class, 'index']);
-    Route::get('/inventory', [DashboardController::class, 'index']);
-    Route::get('/inventory/items', [ItemController::class, 'index']);
-    Route::get('/inventory/locations', [LocationController::class, 'index']);
-    Route::get('/inventory/locations/{locID}/items', [ItemLocationController::class, 'index']);
-    Route::get('inventory/transactions', [TransactionController::class, 'index']);
+    Route::get('/api/reports', [AnalyticsController::class, 'dataView1']);
+    Route::get('/api/reports/insights', [AnalyticsController::class, 'dataView2']);
+    Route::get('/api/users', [UserController::class, 'index']);
+    Route::get('/api/inventory', [DashboardController::class, 'index']);
+    Route::get('/api/inventory/items', [ItemController::class, 'index']);
+    Route::get('/api/inventory/locations', [LocationController::class, 'index']);
+    Route::get('/api/inventory/locations/{locID}/items', [ItemLocationController::class, 'index']);
+    Route::get('/api/inventory/transactions', [TransactionController::class, 'index']);
 
     Route::middleware('admin')->group(function () {
         //admin only routes create, update, delete

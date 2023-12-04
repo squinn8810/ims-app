@@ -41,7 +41,7 @@ class AnalyticsController extends Controller
      */
     private function getRecentTransactions()
     {
-        $recentTransactions = Transaction::orderBy('transNum', 'desc')->take(10)->get();
+        $recentTransactions = Transaction::orderBy('transDate', 'desc')->take(10)->get();
         $recentData = [];
         foreach ($recentTransactions as $transaction) {
             $recentData[] = $transaction->getDataAsJson();
@@ -153,7 +153,6 @@ class AnalyticsController extends Controller
     {
 
         $transactionData = $this->getTransactionTrends();
-
         $evalData = $this->evaluateReorderQty($transactionData);
         $frequentItems = $this->getFrequentlyOrderedItems();
 

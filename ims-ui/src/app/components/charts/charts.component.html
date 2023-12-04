@@ -1,0 +1,14 @@
+<div>
+  <app-table [data]="data?.recentTransactions" *ngIf="chartsReady('table')"></app-table>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6">
+        <app-line-chart [data]="data?.transactionTrends" *ngIf="chartsReady('line')"></app-line-chart>
+      </div>
+      <div class="col-md-6">
+        <app-pie-chart [data]="data?.transactionDistribution" *ngIf="chartsReady('pie')"></app-pie-chart>
+      </div>
+    </div>
+  </div>
+</div>

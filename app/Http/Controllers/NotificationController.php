@@ -61,6 +61,6 @@ class NotificationController extends Controller
         $email = new ReorderMail($list);
 
         // Update the recipient email address if needed
-        Mail::to($request->user()->email)->send(new ReorderMail($email));
+        Mail::to($request->user()->email)->send($email);
     }
 }

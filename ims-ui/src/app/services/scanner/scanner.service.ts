@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, switchMap } from 'rxjs';
 import { ScanResult } from 'src/app/models/scan-result/scan-result';
@@ -32,7 +32,23 @@ export class ScannerService {
         )
       );
   }
+  //this should be moved to it's own service
+  public getDataView(): Observable<any>{
+    return this.http.get('api/reports', this.options);
+  }
 
+  getReportView(param1: string, param2: string): Observable<any> {
+    // Construct the query parameters
+    const params = new HttpParams()
+      .set('itemLocID', param1)
+      .set('time_period', param2);
+
+    // Add the params to the request
+    const options = { params };
+
+    return this.http.get('api/reports', options);
+  }
+  
   public getScannedList(): Observable<any> {
     return this.http.get('/api/scanned-list', this.options);
   }
@@ -40,4 +56,7 @@ export class ScannerService {
   public sendNotification(): Observable<any> {
     return this.http.post('/api/send-restock-notification', this.options);
   }
+
+
+
 }
