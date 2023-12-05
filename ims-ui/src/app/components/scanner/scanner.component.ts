@@ -5,12 +5,11 @@ import { Html5QrcodeError } from 'html5-qrcode/esm/core';
 import { GeneralError } from 'src/app/models/errors/general-error/general-error';
 import { ScanResult } from 'src/app/models/scan-result/scan-result';
 import { Transaction } from 'src/app/models/transaction/transaction';
+import { ItemLocation } from 'src/app/models/items/item-location/item-location';
 import { ScannerService } from 'src/app/services/scanner/scanner.service';
 import { Router } from '@angular/router';
 import { FormControl, Validators, FormGroup, ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { ScanForm } from 'src/app/models/scan-form/scan-form';
-
-
 
 @Component({
   standalone: true,
@@ -19,6 +18,7 @@ import { ScanForm } from 'src/app/models/scan-form/scan-form';
   styleUrls: ['./scanner.component.scss'],
   imports: [ReactiveFormsModule, NgIf, NgFor],
 })
+
 export class ScannerComponent implements OnInit {
   public codeScanner: Html5QrcodeScanner;
   private qrBoxSize: number;
@@ -27,7 +27,7 @@ export class ScannerComponent implements OnInit {
 
   public notification: boolean;
   public scannerOpen: boolean;
-  public transactions: { scannedList: Transaction[] } = { scannedList: [] };
+  public itemLocation: { scannedList: ItemLocation[] } = { scannedList: [] };
   public scanForm: FormGroup;
 
   constructor(
@@ -53,8 +53,8 @@ export class ScannerComponent implements OnInit {
 
     this.scannerService.postScan(scanResult)
       .subscribe(
-        (data: { scannedList: Transaction[] }) => {
-          this.transactions = data;
+        (data: { scannedList: ItemLocation[] }) => {
+          this.itemLocation = data;
           this.scanSuccess = true;
         },
         (errorResponse: GeneralError) => {
@@ -71,8 +71,8 @@ export class ScannerComponent implements OnInit {
 
   public getScannedList(): void {
     this.scannerService.getScannedList()
-      .subscribe((data: { scannedList: Transaction[] }) => {
-        this.transactions = data;
+      .subscribe((data: { scannedList: ItemLocation[] }) => {
+        this.itemLocation = data;
       });
   }
 

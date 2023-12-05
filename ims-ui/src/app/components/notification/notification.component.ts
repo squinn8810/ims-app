@@ -4,30 +4,35 @@ import { Html5QrcodeResult, Html5QrcodeScanner } from 'html5-qrcode';
 import { Html5QrcodeError } from 'html5-qrcode/esm/core';
 import { GeneralError } from 'src/app/models/errors/general-error/general-error';
 import { ScanResult } from 'src/app/models/scan-result/scan-result';
-import { Transaction } from 'src/app/models/transaction/transaction';
+import { ItemLocation } from 'src/app/models/items/item-location/item-location';
 import { ScannerService } from 'src/app/services/scanner/scanner.service';
 import { Router } from '@angular/router';
-
+import { FormControl, Validators, FormGroup, ReactiveFormsModule, FormBuilder } from '@angular/forms';
+import { ScanForm } from 'src/app/models/scan-form/scan-form';
 
 @Component({
   standalone: true,
   selector: 'app-notification',
   templateUrl: './notification.component.html',
   styleUrls: ['./notification.component.scss'],
-  imports: [NgIf, NgFor],
+  imports: [ReactiveFormsModule, NgIf, NgFor],
 })
+
 export class NotificationComponent implements OnInit {
   public codeScanner: Html5QrcodeScanner;
   private qrBoxSize: number;
   public error: GeneralError;
   public scanSuccess: boolean;
+
   public notification: boolean;
   public scannerOpen: boolean;
-  public transactions: { scannedList: Transaction[] } = { scannedList: [] };
+  public itemLocation: { scannedList: ItemLocation[] } = { scannedList: [] };
+  public scanForm: FormGroup;
 
   constructor(
     private scannerService: ScannerService,
-    private router: Router
+    private router: Router,
+    private formBuilder: FormBuilder,
   ) { }
 
   public ngOnInit(): void {
@@ -35,6 +40,9 @@ export class NotificationComponent implements OnInit {
     this.scannerOpen = false;
     this.getScannedList();
     this.openNewScanner();
+    this.scanForm = this.formBuilder.group({
+      itemQty: new FormControl('', [Validators.required, Validators.pattern('^[0-9]*$'),]),
+    });
   }
 
   public onScanSuccess(decodedText: string, decodedResult: Html5QrcodeResult): void {
@@ -44,8 +52,8 @@ export class NotificationComponent implements OnInit {
 
     this.scannerService.postScan(scanResult)
       .subscribe(
-        (data: { scannedList: Transaction[] }) => {
-          this.transactions = data;
+        (data: { scannedList: ItemLocation[] }) => {
+          this.itemLocation = data;
           this.scanSuccess = true;
         },
         (errorResponse: GeneralError) => {
@@ -62,8 +70,8 @@ export class NotificationComponent implements OnInit {
 
   public getScannedList(): void {
     this.scannerService.getScannedList()
-      .subscribe((data: { scannedList: Transaction[] }) => {
-        this.transactions = data;
+      .subscribe((data: { scannedList: ItemLocation[] }) => {
+        this.itemLocation = data;
       });
   }
 
@@ -90,7 +98,6 @@ export class NotificationComponent implements OnInit {
     }
   }
 
-  /*
   public sendNotification(form: FormGroup): void {
 
     let scanForm: ScanForm = new ScanForm(form.get('itemQty')?.value);
@@ -111,6 +118,9 @@ export class NotificationComponent implements OnInit {
           console.error('Error sending notification:', error);
         }
       );
-  }*/
+  }
+
+
 
 }
+

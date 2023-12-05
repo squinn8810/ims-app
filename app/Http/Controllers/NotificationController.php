@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use DateTime;
 use Exception;
+use DateTimeZone;
 use App\Mail\ReorderMail;
 use App\Models\Transaction;
 use App\Models\ItemLocation;
@@ -10,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
+use App\Http\Resources\TransactionResource;
 
 class NotificationController extends Controller
 {
@@ -22,6 +25,7 @@ class NotificationController extends Controller
     public function restockNotification(Request $request)
     {
         $list = [];
+
         try {
             // Check if the scannedList exists in the session
             if (session()->has('scannedList')) {
@@ -31,10 +35,10 @@ class NotificationController extends Controller
                 }
 
                 // Reconcile inventory based on scanned list and request data
-                $this->reconcileInventory($list, $request);
+                $transactions = $this->reconcileInventory($list, $request);
 
                 // Send restock notification email
-                $this->makeNotification($request, $list);
+                $this->makeNotification($transactions);
 
                 // Return success response
                 return response()->json(['message' => 'Restock notification sent successfully'], Response::HTTP_OK);
@@ -62,51 +66,63 @@ class NotificationController extends Controller
      */
     private function reconcileInventory(array $list, Request $request)
     {
+        $transactions = [];
+
         foreach ($list as $scan) {
             $itemLocID = $scan->itemLocID;
 
             // Retrieve the last transaction for the item location
             $lastTransaction = Transaction::where('itemLocID', $itemLocID)
                 ->latest('transDate')
-                ->skip(1) 
-                ->take(1)
                 ->first();
 
             // Retrieve the item location
-            $item = ItemLocation::find($itemLocID);
+            //$item = ItemLocation::find($itemLocID);
 
             if ($lastTransaction) {
-                if ($item) {
-                    // Update the item quantity in the ItemLocation
-                    $item->update(['itemQty' => $request->itemQty]);
-                } else {
-                    // Return an error response if the item is not found at the location
-                    return response()->json(
-                        [
-                            'error' => 'Item not found at location.'
-                        ],
-                        Response::HTTP_NOT_FOUND
-                    );
-                }
-                $lastQty = $lastTransaction->itemQty;
-                $changeQty = (int)$request->itemQty - $lastQty;
-                // Update the transaction with the new item quantity
-                $transaction = Transaction::findOrFail($scan->transNum);
-                $transaction->update([
-                    "itemQty" => $changeQty
-                ]);
-            } else {
-                // First transaction case or no others found
-                $lastQty = $item->itemQty;
+
+                $lastQty = $scan->itemQty;
                 $changeQty = (int)$request->itemQty - $lastQty;
 
-                // Update the transaction with the new item quantity
+                $scan->update(['itemQty' => $request->itemQty]);
+                $transactions[] = $this->store($scan->itemLocID, $changeQty);
+
+                /*$transaction = Transaction::findOrFail($scan->transNum);
+                $transaction->update([
+                    "itemQty" => $changeQty
+                ]);*/
+            } else {
+                // First transaction case or no others found
+                $lastQty = $scan->itemQty;
+                $changeQty = (int)$request->itemQty - $lastQty;
+
+                $scan->update(['itemQty' => $request->itemQty]);
+                $transactions[] = $this->store($scan->itemLocID, $changeQty);
+                /*
                 $transaction = Transaction::findOrFail($scan->transNum);
                 $transaction->update([
                     "itemQty" => $changeQty
                 ]);
+                */
             }
         }
+
+        return $transactions;
+    }
+
+    private function store($itemLocID, $changeQty)
+    {
+
+        $easternTimeZone = new DateTimeZone('America/New_York');
+        $transaction = Transaction::create([
+            'transDate' => new DateTime('now', $easternTimeZone),
+            'itemLocID' => $itemLocID,
+            'employeeID' => auth()->user()->id,
+            'itemQty' => $changeQty,
+        ]);
+        $resource = new TransactionResource($transaction);
+
+        return $resource;
     }
 
     /**
@@ -116,7 +132,7 @@ class NotificationController extends Controller
      * @param  array  $list
      * @return void
      */
-    private function makeNotification(Request $request, array $list)
+    private function makeNotification($list)
     {
         // Create a new ReorderMail instance with the list of transactions
         $email = new ReorderMail($list);

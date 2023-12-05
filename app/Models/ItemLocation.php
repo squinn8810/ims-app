@@ -63,24 +63,29 @@ class ItemLocation extends Model
         $item = Item::find($this->itemNum);
         return $item->itemName;
     }
+    
+    public function getItem() {
+        $item = Item::find($this->itemNum);
+        return $item;
+    }
 
     public function getVendorName() {
         $item = Item::find($this->itemNum);
         return $item->vendorName;
     }
 
-    public function getItem() {
-        $item = Item::find($this->itemNum);
-        return $item;
-    }
-
+    
     public function getLocationName(){
         $location = Location::find($this->locID);
         return $location->locName;
     }
 
     public function getMessage(){
-        $message = "$this->getItemName from $this->getLocationName. Suggested reorder quantity $this->reorderQty.";
+        
+        $item = $this->getItemName();
+        $location = $this->getLocationName();
+        $message = "$item from $location. Suggested reorder quantity $this->itemReorderQty.";
+        
         return $message;
     }
 

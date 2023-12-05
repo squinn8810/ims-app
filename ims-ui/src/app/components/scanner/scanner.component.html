@@ -8,21 +8,21 @@
     </div>
 
     <div class="row">
-        <p *ngIf="!transactions?.scannedList" class="col-9">
+        <p *ngIf="!itemLocation?.scannedList" class="col-9">
             No Scans To Show.
         </p>
     </div>
 
-    <div *ngIf="transactions?.scannedList">
+    <div *ngIf="itemLocation?.scannedList && !notification">
         <h5 class="col-12">Scanned Items</h5>
     </div>
     <div *ngIf="notification" class="row">
         <h5>Notification Sent!</h5>
     </div>
     <div class="row">
-        <div *ngFor="let transaction of transactions?.scannedList" class="col-9">
+        <div *ngFor="let transaction of itemLocation?.scannedList" class="col-9">
             <div *ngIf="!notification">
-                {{ transaction?.Message }}
+                {{ transaction?.message }}
             </div>
         </div>
     </div>
