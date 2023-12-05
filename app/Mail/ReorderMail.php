@@ -33,7 +33,7 @@ class ReorderMail extends Mailable
     public function build()
     {
         return $this
-            ->from('SFDSupplies@gmail.com', 'SFD EMS Supplies')
+            ->from('powersupply@gmail.com', 'PowerSupply Inventory')
             ->subject('Low Supply Notification')
             ->markdown('mail.restock-notification')
             ->with([

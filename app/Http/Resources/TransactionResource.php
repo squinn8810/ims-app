@@ -15,21 +15,13 @@ class TransactionResource extends JsonResource
     public function toArray($request): array
     {
         return [
-            /*
-            'transDate' => $this->transDate,
-            'itemLocID' => $this->itemLocID,
-            'employeeID' => $this->employeeID,
-            'transNum' => $this->transNum,
-            'status' => $this->status,
-            'message' => $this->getMessage(),
-*/
-
-
-
-            'name' => $this->getUserName(),
-            'item' => $this->getItemName(),
-            'location' => $this->getLocationName(),
-            'message' => $this->getMessage(),
+            'Id' => $this->transNum,
+            'Date' => $this->getDateAttribute($this->transDate),
+            'Item' => $this->getItemName(),
+            'Location' => $this->getLocationName(),
+            'Status' => $this->status,
+            'Employee' => $this->getUserName(),
+            'Message' => $this->getMessage(),
         ];
     }
 }

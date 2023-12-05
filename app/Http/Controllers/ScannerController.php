@@ -3,13 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\TransactionResource;
+use App\Models\ItemLocation;
 use DateTime;
 use DateTimeZone;
 use Illuminate\Http\Response;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
-use Log;
 
 class ScannerController extends Controller
 {
@@ -31,15 +31,24 @@ class ScannerController extends Controller
         // Extract the item location ID from the scanned data
         $itemLocID = $results;
 
-        $transaction = $this->store($itemLocID);
+        //update item at location qty
+        /*if ($requestData['itemQty'] != null) {
+            $itemQty = $requestData['itemQty'];
+            $difference = $this->reconcileInventory($itemQty, $itemLocID);
+        }*/
 
+        //create transaction with difference item qty at location
+        /*$transaction = $this->store($itemLocID, $difference);
+        */ 
+        
+        $transactionResource = $this->store($itemLocID);
         // Create or update the shopping list in the session
         if (Session::has('scannedList')) {
             $list = session('scannedList');
-            $list[] = $transaction;
+            $list[] = $transactionResource;
             Session(['scannedList' => $list]);
         } else {
-            Session::put('scannedList', [$transaction]);
+            Session::put('scannedList', [$transactionResource]);
         }
 
         // Set session flags to indicate successful scan and deactivate scanning
@@ -47,19 +56,13 @@ class ScannerController extends Controller
         Session::put('scanActive', false);
 
 
-        //TO DO FOR SCANNER 
-        //reconcile item_location quantity 
-        //  capture current inventory quantity 
-        //  capture change in inventory since last reconcile 
-        //pass both to transaction record
-        //pass current inventory quantity to item_location
-
-
         // Return the scan result from session
-        return response()->json([
-            'scannedList' => session('scannedList')
-        ],
-        Response::HTTP_OK);
+        return response()->json(
+            [
+                'scannedList' => session('scannedList')
+            ],
+            Response::HTTP_OK
+        );
     }
 
     /**
@@ -67,33 +70,65 @@ class ScannerController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\JsonResponse
-     */    
-    public function getScannedList(Request $request) {
+     */
+    public function getScannedList(Request $request)
+    {
         if (Session::has('scannedList')) {
-            return response()->json([
-                'scannedList' => session('scannedList')
-            ],
-            Response::HTTP_OK);
+            return response()->json(
+                [
+                    'scannedList' => session('scannedList')
+                ],
+                Response::HTTP_OK
+            );
         }
-        return response()->json([
-            'error' => 'Scanned List Not Found'
-        ],
-        Response::HTTP_NOT_FOUND);
+        return response()->json(Response::HTTP_NOT_FOUND);
     }
 
     /**
      * 
      */
-    private function store($itemLocID)
+    private function reconcileInventory($itemQty, $itemLocID)
+    {
+        $lastTransaction = Transaction::where('itemLocID', $itemLocID)
+            ->latest('transDate')
+            ->first();
+        
+        $item = ItemLocation::find($itemLocID);
+
+        if ($lastTransaction) {
+            $lastQty = $lastTransaction->itemQty; 
+    
+            if ($item) {
+                $item->update(['itemQty' => $itemQty]);
+            } else {
+                return response()->json(
+                    [
+                        'error' => 'Item not found at location.'
+                    ],
+                    Response::HTTP_NOT_FOUND);
+            }
+            return $itemQty - $lastQty;
+        } else {
+            //first transaction case or no others found
+            $lastQty = $item->itemQty;
+            return $itemQty - $lastQty;
+        }
+    }
+
+
+    /**
+     * 
+     */
+    private function store($itemLocID /* , $difference*/)
     {
 
         $easternTimeZone = new DateTimeZone('America/New_York');
         $transaction = Transaction::create([
             'transDate' => new DateTime('now', $easternTimeZone),
             'itemLocID' => $itemLocID,
-            'employeeID' => auth()->user()->id
+            'employeeID' => auth()->user()->id,
+            //'itemQty' => $difference,
         ]);
-
         $resource = new TransactionResource($transaction);
 
         return $resource;

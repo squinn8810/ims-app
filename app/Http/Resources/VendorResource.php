@@ -14,6 +14,11 @@ class VendorResource extends JsonResource
      */
     public function toArray($request): array
     {
-        return parent::toArray($request);
+        return [
+            "vendorName" => $this->vendorName,
+            "vendorEmail" => $this->vendorEmail,
+            "vendorPhone" => $this->vendorPhone,
+            "vendorURL" => $this->vendorURL,
+        ];
     }
 }

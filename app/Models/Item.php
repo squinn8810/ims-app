@@ -50,4 +50,9 @@ class Item extends Model
     {
         return $this->hasMany(ItemLocation::class, 'itemLocID');
     }
+
+    public function getVendor(){
+        $vendor = Vendor::find($this->vendorID);
+        return $vendor;
+    }
 }

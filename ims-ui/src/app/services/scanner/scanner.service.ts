@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, switchMap } from 'rxjs';
+import { ScanForm } from 'src/app/models/scan-form/scan-form';
 import { ScanResult } from 'src/app/models/scan-result/scan-result';
 
 @Injectable({
@@ -37,6 +38,7 @@ export class ScannerService {
     return this.http.get('api/reports', this.options);
   }
 
+  //not complete
   getReportView(param1: string, param2: string): Observable<any> {
     // Construct the query parameters
     const params = new HttpParams()
@@ -53,10 +55,17 @@ export class ScannerService {
     return this.http.get('/api/scanned-list', this.options);
   }
 
-  public sendNotification(): Observable<any> {
-    return this.http.post('/api/send-restock-notification', this.options);
+  public sendNotification(scanForm: ScanForm): Observable<any> {
+    return this.http.get('/sanctum/csrf-cookie', this.options)
+      .pipe(
+        switchMap(() =>
+          this.http.post(
+            '/api/send-restock-notification',
+            scanForm, // Assuming itemQty is a string; modify as needed
+            this.options
+          )
+        )
+      );
   }
-
-
-
+  
 }
