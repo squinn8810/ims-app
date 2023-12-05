@@ -76,8 +76,6 @@ class NotificationController extends Controller
                 ->latest('transDate')
                 ->first();
 
-            // Retrieve the item location
-            //$item = ItemLocation::find($itemLocID);
 
             if ($lastTransaction) {
 
@@ -86,11 +84,6 @@ class NotificationController extends Controller
 
                 $scan->update(['itemQty' => $request->itemQty]);
                 $transactions[] = $this->store($scan->itemLocID, $changeQty);
-
-                /*$transaction = Transaction::findOrFail($scan->transNum);
-                $transaction->update([
-                    "itemQty" => $changeQty
-                ]);*/
             } else {
                 // First transaction case or no others found
                 $lastQty = $scan->itemQty;
@@ -98,12 +91,6 @@ class NotificationController extends Controller
 
                 $scan->update(['itemQty' => $request->itemQty]);
                 $transactions[] = $this->store($scan->itemLocID, $changeQty);
-                /*
-                $transaction = Transaction::findOrFail($scan->transNum);
-                $transaction->update([
-                    "itemQty" => $changeQty
-                ]);
-                */
             }
         }
 
