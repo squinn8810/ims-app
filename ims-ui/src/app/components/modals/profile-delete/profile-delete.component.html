@@ -1,0 +1,44 @@
+<div class="modal-content">
+    <div class="container">
+        <div class="row modal-header">
+            <h5>Delete Account</h5>
+        </div>
+        <div class="row d-flex justify-content-center">
+            <form nonvalidate (ngSubmit)="onSubmit(deleteAccountForm)" [formGroup]="deleteAccountForm">
+                <div class="modal-body">
+                    <div class="row mb-3">
+                        <label for="affirmationText" class="form-label" required>Enter <strong>{{affirmationText}}</strong> to affirm</label>
+                        <input type="text" formControlName="affirmationText" class="form-control">
+                        <div *ngIf="deleteAccountForm.get('affirmationText')?.hasError('required') && 
+                                deleteAccountForm.get('affirmationText')?.touched" class="error">
+                            Affirmation Required
+                        </div>
+                        <div *ngIf="deleteAccountForm.get('affirmationText')?.hasError('affirmationText') && 
+                                deleteAccountForm.get('affirmationText')?.touched" class="error">
+                            Affirmation should match {{affirmationText}}
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label for="password" class="form-label" required>Password</label>
+                        <input type="password" formControlName="password" class="form-control">
+                        <div *ngIf="deleteAccountForm.get('password')?.hasError('required') && 
+                                deleteAccountForm.get('password')?.touched" class="error">
+                            Password is required
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer px-0">
+                    <div class="row mb-3">
+                        <div class="col d-flex justify-content-start px-0">
+                            <button type="button" class="btn btn-primary" (click)="closeModal()">Cancel</button>      
+                        </div>
+                        <div class="col d-flex justify-content-end px-0">
+                            <button type="submit" class="btn btn-danger" [disabled]="deleteAccountForm.invalid">Delete Account</button>      
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+  

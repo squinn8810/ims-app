@@ -9,5 +9,10 @@ export class PasswordReset {
         email: string,
         password: string,
         password_confirmation: string,
-    ) {}
+    ) {
+        this.token = token;
+        this.email = email;
+        this.password = password;
+        this.password_confirmation = password_confirmation;
+    }
 }

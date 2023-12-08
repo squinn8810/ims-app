@@ -29,7 +29,7 @@ export class RegistrationComponent implements OnInit {
     this.registrationForm = this.formBuilder.group({
       firstName: new FormControl('', [Validators.required, Validators.maxLength(32)]),
       lastName: new FormControl('', [Validators.required, Validators.maxLength(32)]),
-      id: new FormControl('', [Validators.required, Validators.maxLength(32)]),
+      id: new FormControl('', [Validators.required, Validators.pattern(new RegExp('[0-9]+')), Validators.maxLength(32)]),
       email: new FormControl('', [Validators.email, Validators.required, Validators.maxLength(255)]),
       password: new FormControl('', [Validators.required]),
       password_confirmation: new FormControl('', [])
@@ -48,9 +48,7 @@ export class RegistrationComponent implements OnInit {
             this.router.navigate(['home']);
           },
           (errorResponse: GeneralError) => {
-            console.log(errorResponse);
             this.error = errorResponse;
-            console.log(this.error);
           }
         );
     }

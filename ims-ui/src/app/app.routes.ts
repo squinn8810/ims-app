@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router'
 import { AuthGuardService } from './services/auth-guard/auth-guard.service';
 import { GuestGuardService } from './services/guest-guard/guest-guard.service';
+import { userResolver } from './resolvers/user.resolver';
 
 export const routes: Routes = [
   {
@@ -16,6 +17,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./components/home/home.component').then(
             (component) => component.HomeComponent
+          ),
+      },
+      {
+        path: 'inventory',
+        loadComponent: () =>
+          import('./components/inventory/inventory.component').then(
+            (component) => component.InventoryComponent
           ),
       },
       {
@@ -40,10 +48,24 @@ export const routes: Routes = [
           ),
       },
       {
-        path: 'inventory',
+        path: 'reports',
         loadComponent: () =>
-          import('./components/inventory/inventory.component').then(
-            (component) => component.InventoryComponent
+          import('./components/charts/charts.component').then(
+            (component) => component.ChartComponent
+          ),
+      },
+      {
+        path: 'manage-users',
+        loadComponent: () =>
+          import('./components/manage-users/manage-users.component').then(
+            (component) => component.ManageUsersComponent
+          ),
+      },
+      {
+        path: 'update-user/:userId',
+        loadComponent: () =>
+          import('./components/manage-users/update-user/update-user.component').then(
+            (component) => component.UpdateUserComponent
           ),
       },
       {
@@ -52,7 +74,16 @@ export const routes: Routes = [
           import('./components/profile/profile.component').then(
             (component) => component.ProfileComponent
           ),
-      },    
+          resolve: {currentUser: userResolver},
+      },
+      {
+        path: 'update-profile',
+        loadComponent: () =>
+          import('./components/profile/profile-update/profile-update.component').then(
+            (component) => component.ProfileUpdateComponent
+          ),
+          resolve: {currentUser: userResolver},
+      }   
     ]
   },
   {
