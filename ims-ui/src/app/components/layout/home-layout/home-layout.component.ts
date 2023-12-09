@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Router, RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { LoginService } from 'src/app/services/login/login.service';
 import { NgbModule, NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
@@ -10,7 +10,7 @@ import { GeneralError } from 'src/app/models/errors/general-error/general-error'
   selector: 'app-layout',
   templateUrl: './home-layout.component.html',
   styleUrls: ['./home-layout.component.scss'],
-  imports: [RouterOutlet, CommonModule, NgbModule, NgbNavModule]
+  imports: [RouterOutlet, CommonModule, NgbModule, NgbNavModule, RouterLink, RouterLinkActive]
 })
 export class HomeLayoutComponent {
   public error: GeneralError;

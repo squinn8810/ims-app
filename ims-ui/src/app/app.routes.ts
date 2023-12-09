@@ -41,20 +41,6 @@ export const routes: Routes = [
           ),
       },
       {
-        path: 'reports',
-        loadComponent: () =>
-          import('./components/charts/charts.component').then(
-            (component) => component.ChartComponent
-          ),
-      },
-      {
-        path: 'reports',
-        loadComponent: () =>
-          import('./components/charts/charts.component').then(
-            (component) => component.ChartComponent
-          ),
-      },
-      {
         path: 'manage-users',
         loadComponent: () =>
           import('./components/manage-users/manage-users.component').then(
