@@ -1,13 +1,58 @@
-<div>
-  <app-table [data]="data?.recentTransactions" *ngIf="chartsReady('table')"></app-table>
+<div class="container mt-5">
+  <div class="card text-center">
+    <!-- Card Header -->
+    <div class="card-header">
+      <h5 class="card-title">Recent Transactions</h5>
+    </div>
 
-  <div class="container">
-    <div class="row">
-      <div class="col-md-6">
-        <app-line-chart [data]="data?.transactionTrends" *ngIf="chartsReady('line')"></app-line-chart>
+    <!-- Show loading animation if loading is true -->
+    <div *ngIf="loading" class="card-body loading-animation">
+      <div class="spinner"></div>
+    </div>
+
+    <!-- Show charts if loading is false -->
+    <div *ngIf="!loading" class="card-body">
+      <div id="table_div" class="row my-3">
+        <!-- Table content goes here -->
       </div>
-      <div class="col-md-6">
-        <app-pie-chart [data]="data?.transactionDistribution" *ngIf="chartsReady('pie')"></app-pie-chart>
+    </div>
+  </div>
+</div>
+
+
+<div class="container mt-5">
+  <div class="card text-center">
+    <!-- Card Header -->
+    <div class="card-header">
+      <h5 class="card-title">Inventory Usage Data</h5>
+    </div>
+
+    <!-- Show loading animation if loading is true -->
+    <div *ngIf="loading" class="card-body loading-animation">
+      <div class="spinner"></div>
+    </div>
+
+
+    <!-- Dropdown content -->
+    <div *ngIf="!loading" class="row my-3">
+      <div class="col-12 text-center">
+        <label for="timePeriod">Filter:</label>
+        <select id="timePeriod" [(ngModel)]="selectedTimePeriod" (change)="onDropdownChange()" class="custom-select">
+          <option value="12_months">1 year</option>
+          <option value="6_months">6 months</option>
+          <option value="3_months">3 months</option>
+          <option value="1_month">1 month</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Trend and Pie Charts -->
+    <div class="row justify-content-center">
+      <div id="trend_div" style="width: 90%; height: 400px;">
+      </div>
+    </div>
+    <div class="row justify-content-center my-6">
+      <div id="pie_div" style="width: 90%; height: 400px;">
       </div>
     </div>
   </div>

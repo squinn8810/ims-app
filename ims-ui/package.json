@@ -24,10 +24,16 @@
     "@ng-bootstrap/ng-bootstrap": "^15.1.2",
     "bootstrap": "^5.3.2",
     "bootstrap-icons": "^1.11.1",
+    "html5-qrcode": "^2.3.8",
+    "mdb-angular-ui-kit": "^5.2.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
+<<<<<<< Updated upstream
     "zone.js": "~0.13.0",
     "html5-qrcode": "^2.3.8"
+=======
+    "zone.js": "~0.13.0"
+>>>>>>> Stashed changes
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^16.2.9",
