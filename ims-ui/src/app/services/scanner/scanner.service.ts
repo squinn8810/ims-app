@@ -33,49 +33,29 @@ export class ScannerService {
         )
       );
   }
+  //this should be moved to it's own service
+  public getDataView(): Observable<any>{
+    return this.http.get('api/reports', this.options);
+  }
 
-  public getFilteredDataView1(param1: string): Observable<any> {
-    let params = new HttpParams();
-    if (param1.trim() !== '') {
-      params = params.set('time_period', param1);
-    }
+  //not complete
+  getReportView(param1: string, param2: string): Observable<any> {
+    // Construct the query parameters
+    const params = new HttpParams()
+      .set('itemLocID', param1)
+      .set('time_period', param2);
+
+    // Add the params to the request
     const options = { params };
+
     return this.http.get('api/reports', options);
   }
-
-  public getFilteredDataView2(param1: string, param2: string): Observable<any> {
-    let params = new HttpParams();
-    if (param1.trim() !== '') {
-      params = params.set('time_period', param1);
-    }
-
-    if (param2.trim() !== '') {
-      params = params.set('itemLocID', param2);
-    }
-    const options = { params };
-    return this.http.get('api/reports/insights', options);
-  }
-
   
   public getScannedList(): Observable<any> {
     return this.http.get('/api/scanned-list', this.options);
   }
 
-
-  public sendLowSupplyNotification(scanForm: ScanForm): Observable<any> {
-    return this.http.get('/sanctum/csrf-cookie', this.options)
-      .pipe(
-        switchMap(() =>
-          this.http.post(
-            '/api/send-low-supply-notification',
-            scanForm, // Assuming itemQty is a string; modify as needed
-            this.options
-          )
-        )
-      );
-  }
-
-  public sendRestockNotification(scanForm: ScanForm): Observable<any> {
+  public sendNotification(scanForm: ScanForm): Observable<any> {
     return this.http.get('/sanctum/csrf-cookie', this.options)
       .pipe(
         switchMap(() =>
@@ -87,5 +67,5 @@ export class ScannerService {
         )
       );
   }
-
+  
 }

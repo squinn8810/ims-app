@@ -14,7 +14,6 @@ use App\Http\Controllers\InventoryManager\LocationController;
 use App\Http\Controllers\InventoryManager\TransactionController;
 use App\Http\Controllers\InventoryManager\UserController;
 use App\Http\Controllers\NotificationController;
-use Illuminate\Notifications\Notification;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,16 +42,9 @@ Route::any('/{any}', [AngularController::class, 'index'])->where('any', '^(?!(ap
  * Routes executed by the scanner application. 
  */
 Route::group(['middleware' => ['auth', 'verified']], function () {
-<<<<<<< Updated upstream
     Route::get('/api/scanned-list', [ScannerController::class, 'getScannedList']);
     Route::post('/api/send-restock-notification', [NotificationController::class, 'restockNotification']);    
     Route::post('/api/scan', [ScannerController::class, 'decode']);
-=======
-    Route::post('/api/send-restock-notification', [NotificationController::class, 'restockNotification']);   
-    Route::post('/api/send-low-supply-notification', [NotificationController::class, 'lowSupplyNotification']); 
-    Route::post('/api/scan', [ScannerController::class, 'scanToSession']);    
-    Route::get('/api/scanned-list', [ScannerController::class, 'getScannedList']);    
->>>>>>> Stashed changes
 });
 
 /**
@@ -61,11 +53,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
 Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::get('/api/reports', [AnalyticsController::class, 'dataView1']);
     Route::get('/api/reports/insights', [AnalyticsController::class, 'dataView2']);
-<<<<<<< Updated upstream
     Route::get('/api/users', [UserController::class, 'index']);
-=======
-    
->>>>>>> Stashed changes
     Route::get('/api/inventory', [DashboardController::class, 'index']);
     Route::get('/api/inventory/items', [ItemController::class, 'index']);
     Route::get('/api/inventory/locations', [LocationController::class, 'index']);

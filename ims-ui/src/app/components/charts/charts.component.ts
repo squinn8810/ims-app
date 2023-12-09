@@ -2,28 +2,49 @@ import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { NgIf } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ScannerService } from 'src/app/services/scanner/scanner.service';
-import { FormsModule } from '@angular/forms';
-
 
 declare var google: any;
 
 @Component({
     standalone: true,
     selector: 'app-chart',
-    templateUrl: './charts.component.html',
+    template: `
+    <div>
+    <!-- Show loading animation if loading is true -->
+    <div *ngIf="loading" class="loading-animation">
+    <div class="spinner"></div>
+    </div>
+
+    <!-- Show charts if loading is false -->
+    <div *ngIf="!loading">
+      <div id="table_div">
+      </div>
+
+      <div class="row">
+        <div class="col-md-6">
+          <div id="trend_div">
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div id="pie_div" style="width: 100%; height: 500px;">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  `,
     styleUrls: ['./charts.component.scss'],
-    imports: [NgIf, FormsModule],
+    imports: [NgIf],
 })
 
 export class ChartComponent implements OnInit {
     data: any;
     google: any;
-    //@Input() recentTransactions: any;
-    //@Input() transactionDistribution: any;
-    //@Input() transactionTrends: any;
+    @Input() recentTransactions: any;
+    @Input() transactionDistribution: any;
+    @Input() transactionTrends: any;
     @Output() chartReady = new EventEmitter<any>();
     loading: boolean = true;
-    selectedTimePeriod: string = '';
 
 
     constructor(
@@ -32,7 +53,7 @@ export class ChartComponent implements OnInit {
 
 
     ngOnInit(): void {
-        this.getFilteredDataView(this.selectedTimePeriod);
+        this.getDataView();
 
         setTimeout(() => {
             this.loading = false;
@@ -40,8 +61,8 @@ export class ChartComponent implements OnInit {
 
     }
 
-    getFilteredDataView(timePeriod: string): void {
-        this.scannerService.getFilteredDataView1(timePeriod).subscribe(
+    getDataView(): void {
+        this.scannerService.getDataView().subscribe(
             (response) => {
                 this.data = response;
                 this.loading = false;
@@ -55,12 +76,6 @@ export class ChartComponent implements OnInit {
             }
         );
     }
-
-    onDropdownChange() {
-
-        this.getFilteredDataView(this.selectedTimePeriod);
-    }
-
 
     private drawTableChart(): void {
         const jsonData: any[] = this.data.recentTransactions; // Declare the type explicitly
@@ -106,11 +121,10 @@ export class ChartComponent implements OnInit {
 
             const options = {
                 title: 'Usage Trends',
-                width: '100%',
-                height: '100%',
+                width: 900,
+                height: 600,
                 hAxis: { gridlines: {} },
                 vAxis: { gridlines: { count: 10 }, minValue: 0 },
-                curveType: 'function',
             };
 
             const chart = new google.visualization.LineChart(document.getElementById('trend_div'));
@@ -134,9 +148,7 @@ export class ChartComponent implements OnInit {
             });
 
             const options = {
-                title: 'Usage Distribution',
-                width: '100%',
-                height: '100%',
+                title: 'Transaction Distributions',
                 sliceVisibilityThreshold: 0.05,
             };
 

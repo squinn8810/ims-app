@@ -104,7 +104,7 @@ export class ScannerComponent implements OnInit {
     let scanForm: ScanForm = new ScanForm(form.get('itemQty')?.value);
 
 
-    this.scannerService.sendLowSupplyNotification(scanForm)
+    this.scannerService.sendNotification(scanForm)
       .subscribe(
         (response) => {
           console.log('Notification sent successfully. Response:', response);

@@ -28,14 +28,13 @@ export const routes: Routes = [
       {
         path: 'restock',
         loadComponent: () =>
-          import('./components/restock/restock.component').then(
-            (component) => component.RestockComponent
+          import('./components/notification/notification.component').then(
+            (component) => component.NotificationComponent
           ),
       },
       {
         path: 'reports',
         loadComponent: () =>
-<<<<<<< Updated upstream
           import('./components/charts/charts.component').then(
             (component) => component.ChartComponent
           ),
@@ -45,24 +44,6 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./components/inventory/inventory.component').then(
             (component) => component.InventoryComponent
-=======
-          import('./components/reports/reports.component').then(
-            (component) => component.ReportsComponent
-          ),
-      },
-      {
-        path: 'manage-users',
-        loadComponent: () =>
-          import('./components/manage-users/manage-users.component').then(
-            (component) => component.ManageUsersComponent
-          ),
-      },
-      {
-        path: 'update-user/:userId',
-        loadComponent: () =>
-          import('./components/manage-users/update-user/update-user.component').then(
-            (component) => component.UpdateUserComponent
->>>>>>> Stashed changes
           ),
       },
       {

@@ -1,17 +1,20 @@
 
 <x-mail::message>
 
-Restock Notification: The following items have been scanned...
+Low Supply: the following items have been scanned...
+
 
 <ul>
-    <li>{{ $transaction->getRestockMessage() }}</li>
+    @foreach ($transactions as $transaction)
+        <li>{{ $transaction->getMessage() }}</li>
+    @endforeach
 </ul>
 
 
-Confirm available inventory at {{ $transaction->getLocationName() }} or click below to confirm order with {{ $transaction->getVendor()->vendorName }}. 
+Check available inventory in overflow supply room or click below to place an order with Boundtree. 
 
 <x-mail::button :url="$url">
-Confirm Order
+Place Order
 </x-mail::button>
 
 
