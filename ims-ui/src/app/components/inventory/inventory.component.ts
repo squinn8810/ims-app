@@ -1,16 +1,45 @@
-import { NgFor } from '@angular/common';
-import { Component } from '@angular/core';
-import { Organization } from 'src/app/models/items/organization/organization';
+import { NgFor, NgIf } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { InventoryService } from 'src/app/services/inventory/inventory.service';
+import { GeneralError } from 'src/app/models/errors/general-error/general-error';
+import { InventoryItem } from 'src/app/models/items/inventory-item/inventory-item';
+import { map } from 'rxjs';
 
 @Component({
   standalone: true,
   selector: 'app-inventory',
   templateUrl: './inventory.component.html',
   styleUrls: ['./inventory.component.scss'],
-  imports: [NgFor]
+  imports: [ NgFor, NgIf ]
 })
-export class InventoryComponent {
-  public organizations: Organization[];
+export class InventoryComponent implements OnInit {
+  public inventoryItems: InventoryItem[];
+  public error: GeneralError;
+  public selectedLocation: string;
 
-  constructor() {}
+  constructor(
+    private inventoryService: InventoryService
+  ) {}
+
+  public ngOnInit(): void {
+    this.inventoryService.getInventoryItems()
+    .pipe(map((response: any) => {
+      this.inventoryItems = new Array<InventoryItem>;
+      // Map object keys to location name variable
+      Object.keys(response).forEach((key) => {
+          this.inventoryItems.push(new InventoryItem(key, response[key]));
+          });
+      })
+    )
+    .subscribe();
+  }
+
+  public selectLocation(locationName: string) {
+    if (this.selectedLocation !== locationName) {
+      this.selectedLocation = locationName;
+    } else {
+      this.selectedLocation = '';
+    }
+  }
+
 }

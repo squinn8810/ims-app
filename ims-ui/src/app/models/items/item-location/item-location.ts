@@ -1,23 +1,23 @@
 import { Item } from "../item/item";
 
 export class ItemLocation {
-    public item: Item;
-    public itemReorderQty: number;
-    public itemQty: number;
-    public itemLocation: string;
-    public message: string;
+    public itemName: string;
+    public quantity: number;
+    public reorder_quantity: number;
+    public vendor: string;
+    public message: string
 
     constructor(
-        item: Item,
-        itemQty: number,
-        itemReorderQty: number,
-        itemLocation: string,
+        itemName: string,
+        reorder_quantity: number,
+        quantity: number,
+        vendor: string,
         message: string,
     ) {
-        this.item = item;
-        this.itemQty = itemQty;
-        this.itemReorderQty = itemReorderQty;
-        this.itemLocation = itemLocation;
+        this.itemName = itemName;
+        this.reorder_quantity = reorder_quantity;
+        this.quantity = quantity;
+        this.vendor = vendor;
         this.message = message;
     }
 }

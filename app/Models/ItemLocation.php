@@ -51,6 +51,14 @@ class ItemLocation extends Model
         return $this->belongsTo(Location::class, 'locID');
     }
 
+    public function getCurrentQty() {
+        return $this->itemQty;
+    }
+
+    public function getItemReorderQty() {
+        return $this->itemReorderQty;
+    }
+
     /**
      * Get the transactions associated with the item location.
      */

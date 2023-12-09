@@ -18,7 +18,7 @@ class DashboardController extends Controller
      *
      * @return \App\Http\Resources\ItemCollection
      */
-    public function index()
+    public function getAllItems()
     {
 
         $items = [];
@@ -33,10 +33,10 @@ class DashboardController extends Controller
         foreach ($items as $locName => $itemCollection) {
             foreach ($itemCollection as $index => $item) {
                 $items[$locName][$index] = [
-                    'Item' => $item->getItemName(),
-                    'Available Quantity' => $item->itemQty,
-                    'Reorder Quantity' => $item->itemReorderQty,
-                    'Vendor' => $item->getVendorName(),
+                    'itemName' => $item->getItemName(),
+                    'quantity' => $item->getCurrentQty(),
+                    'reorder_quantity' => $item->getItemReorderQty(),
+                    'vendor' => $item->getVendorName()
                 ];
             }
         }
