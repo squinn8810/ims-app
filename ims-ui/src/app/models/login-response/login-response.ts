@@ -3,5 +3,7 @@ export class LoginResponse {
     
     constructor(
         authentication: string
-    ) {}
+    ) {
+        this.authentication = authentication;
+    }
 }

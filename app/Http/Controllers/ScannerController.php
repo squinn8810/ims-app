@@ -21,7 +21,7 @@ class ScannerController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function decode(Request $request)
+    public function scanToSession(Request $request)
     {
         // Get the JSON data from the request body
         $requestData = json_decode($request->getContent(), true);

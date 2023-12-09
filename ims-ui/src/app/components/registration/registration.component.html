@@ -41,6 +41,10 @@
                                     registrationForm.get('id')?.touched" class="invalid-feedback">
                                 Employee ID is required
                             </div>
+                            <div *ngIf="registrationForm.get('id')?.hasError('pattern') && 
+                                    registrationForm.get('id')?.touched" class="error">
+                                Employee ID must be a number
+                            </div>
                             <div *ngIf="registrationForm.get('id')?.hasError('maxlength') && 
                                     registrationForm.get('id')?.touched" class="error">
                                 Max length of 32 exceeded
@@ -83,7 +87,7 @@
                                 <button class="btn btn-danger" (click)="cancel()">Cancel</button>      
                             </div>
                             <div class="col d-flex justify-content-end px-0">
-                                <button type="submit" class="btn btn-primary" [disabled]="registrationForm.invalid">Login</button>      
+                                <button type="submit" class="btn btn-primary" [disabled]="registrationForm.invalid">Submit</button>      
                             </div>
                         </div>
                     </form>

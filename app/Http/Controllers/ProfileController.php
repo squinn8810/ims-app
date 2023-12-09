@@ -2,22 +2,37 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ProfileUpdateRequest;
-use Illuminate\Http\RedirectResponse;
+use App\Http\Requests\Auth\ProfileUpdateRequest;
+use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\View\View;
 
 class ProfileController extends Controller
 {
+    /**
+     * Retrieve Current User's Profile information
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getCurrentProfile(Request $request)
+    {
+        $currentUser = new UserResource($request->user());
+
+        return response()->json($currentUser,Response::HTTP_OK);
+    }
 
     /**
      * Update the user's profile information.
+     * 
+     * @return \Illuminate\Http\Response
      */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
+    public function update(ProfileUpdateRequest $request)
     {
-        $request->user()->fill($request->validated());
+        // Update the user attributes
+        $request->user->update($request->only(['firstName', 'lastName', 'email', 'id']));
+
+        // $request->user()->fill($request->validated());
 
         if ($request->user()->isDirty('email')) {
             $request->user()->email_verified_at = null;
@@ -25,13 +40,15 @@ class ProfileController extends Controller
 
         $request->user()->save();
 
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+        $currentUser = new UserResource($request->user());
+
+        return response()->json($currentUser, Response::HTTP_OK);
     }
 
     /**
      * Delete the user's account.
      */
-    public function destroy(Request $request): RedirectResponse
+    public function destroy(Request $request): Response
     {
         $request->validateWithBag('userDeletion', [
             'password' => ['required', 'current_password'],
@@ -46,6 +63,6 @@ class ProfileController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return Redirect::to('/');
+        return response(Response::HTTP_OK);
     }
 }

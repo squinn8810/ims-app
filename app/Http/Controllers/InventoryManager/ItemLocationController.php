@@ -16,7 +16,8 @@ class ItemLocationController extends Controller
 {
     /**
      * Display a listing of the item locations.
-     *
+     * 
+     * @param  int  $locID
      * @return \App\Http\Resources\ItemLocationCollection
      */
     public function index($locID)

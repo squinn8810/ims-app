@@ -8,7 +8,8 @@ import { APP_BASE_HREF } from "@angular/common";
 import { ErrorCatchingInterceptor } from "./error-catching-interceptor";
 
 export const appConfig: ApplicationConfig = {
-    providers: [provideRouter(routes), 
+    providers: [
+        provideRouter(routes), 
         importProvidersFrom(BrowserAnimationsModule, BrowserModule, HttpClientModule), 
         {provide: APP_BASE_HREF, useValue: '/'},
         {provide: HTTP_INTERCEPTORS, useClass: ErrorCatchingInterceptor, multi: true},
