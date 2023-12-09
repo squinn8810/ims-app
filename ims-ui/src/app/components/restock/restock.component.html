@@ -33,11 +33,11 @@
     <div *ngIf="!notification && !scannerOpen" class="row col-9">
         <form nonvalidate (ngSubmit)="sendNotification(scanForm)" [formGroup]="scanForm">
             <div class="row">
-                <label for="itemQty" class="form-label" required>How many items are in stock?</label>
+                <label for="itemQty" class="form-label" required>What is the quantity being added to inventory?</label>
                 <input type="itemQty" formControlName="itemQty" class="form-control col-9">
                 <div *ngIf="scanForm.get('itemQty')?.hasError('required') && 
                             scanForm.get('itemQty')?.touched" class="error col-9">
-                    Quantity of item you're restocking is required.
+                    Quantity of item you're adding to inventory is required.
                 </div>
                 <div *ngIf="scanForm.get('itemQty')?.hasError('itemQty') && 
                             scanForm.get('itemQty')?.touched" class="error col-9">

@@ -1,0 +1,38 @@
+<app-chart></app-chart>
+
+
+<div class="container mt-5">
+  <div class="card text-center justify-content-center">
+    <!-- Card Header -->
+    <div class="card-header">
+      <h5 class="card-title">Reordering Effectiveness</h5>
+    </div>
+
+    <!-- Show loading animation if loading is true -->
+    <div *ngIf="loading" class="card-body loading-animation">
+      <div class="spinner"></div>
+    </div>
+
+    <!-- Dropdown content -->
+    <div *ngIf="!loading" class="row my-3">
+      <div class="col-12 text-center">
+        <label for="timePeriod">Filter:</label>
+        <select id="timePeriod" [(ngModel)]="selectedTimePeriod" (change)="onDropdownChange()" class="custom-select">
+          <option value="12_months">1 year</option>
+          <option value="6_months">6 months</option>
+          <option value="3_months">3 months</option>
+          <option value="1_month">1 month</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Show charts if loading is false -->
+    <div *ngIf="!loading" class="card-body">
+      <div id="combo_chart" class="row my-3" style="height: 400px; width: 90%;">
+        <!-- Table content goes here -->
+      </div>
+    </div>
+  </div>
+</div>
+
+

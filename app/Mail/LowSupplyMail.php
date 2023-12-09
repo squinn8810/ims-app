@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\Transaction;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Support\Facades\Mail;
@@ -10,19 +11,19 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Mail\Mailables\Envelope;
 
-class ReorderMail extends Mailable
+class LowSupplyMail extends Mailable
 {
     use Queueable, SerializesModels;
 
 
-    public array $transaction;
+    private Transaction $transaction;
 
     /**
      * Create a new message instance.
      */
     public function __construct(array $transaction)
     {
-        $this->transaction = $transaction;
+        $this->transaction = $transaction[0];
     }
 
       /**
@@ -34,11 +35,11 @@ class ReorderMail extends Mailable
     {
         return $this
             ->from('powersupply@gmail.com', 'PowerSupply Inventory')
-            ->subject('Low Supply Notification')
-            ->markdown('mail.restock-notification')
+            ->subject('Inventory Notification')
+            ->markdown('mail.low-supply-notification')
             ->with([
-                'transactions' => $this->transaction,
-                'url' => 'https://www.boundtree.com',
+                'transaction' => $this->transaction,
+                'url' => $this->transaction->getVendor()->vendorURL,
             ]);
     }
 
