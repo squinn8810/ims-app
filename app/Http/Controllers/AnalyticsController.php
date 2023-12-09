@@ -32,7 +32,7 @@ class AnalyticsController extends Controller
             'transactionTrends' => $transactionTrends,
             'transactionDistribution' => $distributionData,
         ]);*/
-        
+
         return response()->json($data, Response::HTTP_OK);
     }
 
@@ -73,9 +73,10 @@ class AnalyticsController extends Controller
         // Apply filters 
         $filteredTransactions = Transaction::where(function ($query) use ($filter, $timePeriods) {
             if (array_key_exists($filter, $timePeriods)) {
-                $query->where('transDate', '<=', $timePeriods[$filter]);
+                $query->where('transDate', '>=', $timePeriods[$filter]);
             }
         })
+            ->where('itemQty', '<', 0)
             ->groupBy('itemLocID')
             ->select('itemLocID', DB::raw('count(*) as count'))
             ->get();
@@ -126,25 +127,31 @@ class AnalyticsController extends Controller
 
 
         $trend = [];
-        $transactions = Transaction::get();
 
-        for ($i = $timePeriods[$filter]; $i > 0; $i--) {
+        for ($i = $timePeriods[$filter]; $i >= 0; $i--) {
             $startDate = $currentDate->copy()->subMonths($i)->startOfMonth();
-            $endDate = $currentDate->copy()->subMonths($i - 1)->startOfMonth();
 
-            // Build and execute the query with conditions
-            $transactionsCount = $transactions->when($validatedData, function ($query) use ($validatedData) {
+            // Check if it's the current month
+            if ($i === 0) {
+                $endDate = $currentDate->copy()->endOfMonth();
+            } else {
+                $endDate = $currentDate->copy()->subMonths($i - 1)->startOfMonth()->endOfMonth();
+            }
+
+            $transactionsCount = Transaction::when($validatedData, function ($query) use ($validatedData) {
                 return $query->where('itemLocID', $validatedData['itemLocID']);
             })
-                ->whereBetween('transDate', [$startDate, $endDate->copy()->subSecond()])
+                ->whereBetween('transDate', [$startDate, $endDate])
+                ->where('itemQty', '<', 0)
                 ->count();
 
-            $trend[$startDate->format('M y')] = $transactionsCount;
+            $trend[$startDate->format('M Y')] = $transactionsCount;
         }
 
         return $trend;
     }
 
+    /******************************************************************************************************* */
 
     /**
      * Returns a prescriptive/predictive data view
@@ -152,23 +159,100 @@ class AnalyticsController extends Controller
     public function dataView2()
     {
 
-        $transactionData = $this->getTransactionTrends();
-        $evalData = $this->evaluateReorderQty($transactionData);
+        $transactionData = $this->getTransactionData();
+        $lowSupplyTrends = $transactionData["lowSupply"];
+        $restockSupplyTrends = $transactionData["restock"];
+
+
+        $evalData = $this->evaluateReorderQty($lowSupplyTrends);
         $frequentItems = $this->getFrequentlyOrderedItems();
 
-        return view('inventory_predictive')->with([
-
+        $data = [
             "frequentItems" => $frequentItems,
-            "itemData" => $transactionData,
+            "lowSupplyData" => $lowSupplyTrends,
+            "restockData" => $restockSupplyTrends,
             'evalData' => $evalData,
-        ]);
+        ];
+
+        return response()->json($data, Response::HTTP_OK);
+
     }
+
+    /**
+     * 
+     */
+    public function getTransactionData()
+    {
+
+        // Retrieve filter parameters from the request
+        $timePeriods = [
+            '12_months' => 12,
+            '6_months' => 6,
+            '3_months' => 3,
+            '1_month' => 1,
+        ];
+
+        $currentDate = Carbon::now();
+        $filter = '12_months';
+
+        // If 'time_period' is present in the request and is a valid key in $timePeriods
+        if (request()->has('time_period')) {
+            $requestedFilter = request()->input('time_period');
+
+            // Check if the requested filter is a valid key
+            if (array_key_exists($requestedFilter, $timePeriods)) {
+                $filter = $requestedFilter;
+            }
+        }
+
+        $validatedData = request()->validate([
+            'itemLocID' => 'exists:item_location,itemLocID',
+        ]);
+
+
+        $lowSupplyTransactions = [];
+        $restockTransactions = [];
+
+        for ($i = $timePeriods[$filter]; $i >= 0; $i--) {
+            $startDate = $currentDate->copy()->subMonths($i)->startOfMonth();
+
+            // Check if it's the current month
+            if ($i === 0) {
+                $endDate = $currentDate->copy()->endOfMonth();
+            } else {
+                $endDate = $currentDate->copy()->subMonths($i - 1)->startOfMonth()->endOfMonth();
+            }
+
+            $lowSupplyTransactions = Transaction::when($validatedData, function ($query) use ($validatedData) {
+                return $query->where('itemLocID', $validatedData['itemLocID']);
+            })
+                ->whereBetween('transDate', [$startDate, $endDate])
+                ->where('itemQty', '<', 0)
+                ->count();
+
+            $restockTransactions = Transaction::when($validatedData, function ($query) use ($validatedData) {
+                return $query->where('itemLocID', $validatedData['itemLocID']);
+            })
+                ->whereBetween('transDate', [$startDate, $endDate])
+                ->where('itemQty', '>', 0)
+                ->count();
+
+
+            $lowSupplyTrend[$startDate->format('M Y')] = $lowSupplyTransactions;
+            $restockSupplyTrend[$startDate->format('M Y')] = $restockTransactions;
+
+        }
+
+        return ["lowSupply" => $lowSupplyTrend, "restock" => $restockSupplyTrend];
+    }
+
 
 
     private function getFrequentlyOrderedItems()
     {
         //returns an array of arrays with key value pairs
         $groupTransactions = DB::table('transaction')
+            ->where('itemQty', '<', 0)
             ->select('itemLocID', DB::raw('COUNT(*) as count'))
             ->groupBy('itemLocID')
             ->orderByDesc('count')

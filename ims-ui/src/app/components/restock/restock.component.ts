@@ -12,13 +12,13 @@ import { ScanForm } from 'src/app/models/scan-form/scan-form';
 
 @Component({
   standalone: true,
-  selector: 'app-notification',
-  templateUrl: './notification.component.html',
-  styleUrls: ['./notification.component.scss'],
+  selector: 'app-restock',
+  templateUrl: './restock.component.html',
+  styleUrls: ['./restock.component.scss'],
   imports: [ReactiveFormsModule, NgIf, NgFor],
 })
 
-export class NotificationComponent implements OnInit {
+export class RestockComponent implements OnInit {
   public codeScanner: Html5QrcodeScanner;
   private qrBoxSize: number;
   public error: GeneralError;
@@ -103,7 +103,7 @@ export class NotificationComponent implements OnInit {
     let scanForm: ScanForm = new ScanForm(form.get('itemQty')?.value);
 
 
-    this.scannerService.sendNotification(scanForm)
+    this.scannerService.sendRestockNotification(scanForm)
       .subscribe(
         (response) => {
           console.log('Notification sent successfully. Response:', response);
