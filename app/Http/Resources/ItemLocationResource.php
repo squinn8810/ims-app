@@ -15,7 +15,7 @@ class ItemLocationResource extends JsonResource
     public function toArray($request): array
     {
           return [
-            'item' => $this->getItem(),
+            'item' => ItemResource::class($this->getItem()),
             'currentQty' => $this->itemQty,
             'reorderQty' => $this->itemReorderQty,
             'location' => $this->getLocationName(),
