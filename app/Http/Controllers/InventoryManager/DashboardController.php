@@ -33,10 +33,10 @@ class DashboardController extends Controller
         foreach ($items as $locName => $itemCollection) {
             foreach ($itemCollection as $index => $item) {
                 $items[$locName][$index] = [
-                    'Item' => new ItemLocationResource($item),
-                    'Location' => $item->location,
+                    'Item' => $item->getItemName(),
                     'Available Quantity' => $item->itemQty,
                     'Reorder Quantity' => $item->itemReorderQty,
+                    'Vendor' => $item->getVendorName(),
                 ];
             }
         }

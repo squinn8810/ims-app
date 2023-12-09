@@ -2,12 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AngularController;
-use App\Http\Controllers\AnalyticsController;
-use App\Http\Controllers\InventoryManager\ItemController;
-use App\Http\Controllers\InventoryManager\LocationController;
-use App\Http\Controllers\InventoryManager\DashboardController;
-use App\Http\Controllers\InventoryManager\TransactionController;
-use App\Http\Controllers\InventoryManager\ItemLocationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,19 +20,6 @@ use App\Http\Controllers\InventoryManager\ItemLocationController;
 Route::get('/about', function () {
     return view('about');
 });
-
-Route::group(['middleware' => ['auth', 'verified']], function () {
-    Route::get('/reports', [AnalyticsController::class, 'dataView1']);
-    Route::get('/reports/insights', [AnalyticsController::class, 'dataView2']);
-    
-    Route::get('/inventory', [DashboardController::class, 'index']);
-    Route::get('/inventory/items', [ItemController::class, 'index']);
-    Route::get('/inventory/locations', [LocationController::class, 'index']);
-    Route::get('/inventory/locations/{locID}/items', [ItemLocationController::class, 'index']);
-    Route::get('/inventory/transactions', [TransactionController::class, 'index']);
-});
-
-
 
 /**
  * All Routes passed to Angular except '/api', '/sanctum'
