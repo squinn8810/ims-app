@@ -3,28 +3,26 @@ import { NgIf } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ScannerService } from 'src/app/services/scanner/scanner.service';
 import { FormsModule } from '@angular/forms';
+import { ChartComponent } from '../charts/charts.component';
 
 
 declare var google: any;
 
 @Component({
     standalone: true,
-    selector: 'app-chart',
-    templateUrl: './charts.component.html',
-    styleUrls: ['./charts.component.scss'],
-    imports: [NgIf, FormsModule],
+    selector: 'app-reports',
+    templateUrl: './reports.component.html',
+    styleUrls: ['./reports.component.scss'],
+    imports: [NgIf, FormsModule, ChartComponent],
 })
 
-export class ChartComponent implements OnInit {
+export class ReportsComponent implements OnInit {
     data: any;
     google: any;
-    //@Input() recentTransactions: any;
-    //@Input() transactionDistribution: any;
-    //@Input() transactionTrends: any;
     @Output() chartReady = new EventEmitter<any>();
     loading: boolean = true;
     selectedTimePeriod: string = '';
-
+    selectedItem: string = '';
 
     constructor(
         private scannerService: ScannerService,
@@ -32,7 +30,7 @@ export class ChartComponent implements OnInit {
 
 
     ngOnInit(): void {
-        this.getFilteredDataView(this.selectedTimePeriod);
+        this.getFilteredDataView(this.selectedTimePeriod, this.selectedItem);
 
         setTimeout(() => {
             this.loading = false;
@@ -40,15 +38,15 @@ export class ChartComponent implements OnInit {
 
     }
 
-    getFilteredDataView(timePeriod: string): void {
-        this.scannerService.getFilteredDataView1(timePeriod).subscribe(
+    getFilteredDataView(timePeriod: string, itemLocID: string): void {
+        this.scannerService.getFilteredDataView2(timePeriod, itemLocID).subscribe(
             (response) => {
                 this.data = response;
                 this.loading = false;
                 // Draw charts
-                this.drawTableChart();
-                this.drawLineChart();
-                this.drawPieChart();
+                this.drawComboChart();
+                //this.drawLineChart();
+                //this.drawPieChart();
             },
             (error) => {
                 console.error('Error fetching data:', error);
@@ -58,36 +56,63 @@ export class ChartComponent implements OnInit {
 
     onDropdownChange() {
 
-        this.getFilteredDataView(this.selectedTimePeriod);
+        this.getFilteredDataView(this.selectedTimePeriod, this.selectedItem);
     }
 
 
-    private drawTableChart(): void {
-        const jsonData: any[] = this.data.recentTransactions; // Declare the type explicitly
-        google.charts.load('current', { packages: ['table'] });
-        google.charts.setOnLoadCallback(() => {
-            const data = new google.visualization.DataTable();
-            const keys = Object.keys(jsonData[0]);
+    private drawComboChart(): void {
+        const lowSupply: {[index: string]:any} = this.data.lowSupplyData;
+        const restock: {[index: string]:any} = this.data.restockData;
+        const evalData: number[] = this.data.evalData;
+
+        google.charts.load('current', {
+            'packages': ['corechart']
+        });
+        google.charts.setOnLoadCallback(drawVisualization);
+
+
+        function drawVisualization() {
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'Date');
+            data.addColumn('number', 'Low Supply Scans');
+            data.addColumn('number', 'Resupply Scans');
+            data.addColumn('number', 'Suggested Reorder Qty');
+            data.addColumn('number', 'Item Reorder Qty');
+
+
+            const keys = Object.keys(lowSupply);
 
             keys.forEach((key) => {
-                data.addColumn(typeof jsonData[0][key], key);
+                var lowSupplyValue = lowSupply[key];
+                var restockValue = restock[key];
+                data.addRow([key, lowSupplyValue, restockValue, evalData[1], evalData[0]]);
+
             });
 
-            jsonData.forEach((item) => {
-                const row = keys.map((key) => item[key]);
-                data.addRow(row);
-            });
-
-            const options = {
-                title: 'Recent Removals',
-                showRowNumber: true,
-                width: '100%',
-                height: '100%',
+            var options = {
+                title: 'Low Supply vs Resupply',
+                vAxis: {
+                    title: 'Transactions'
+                },
+                series: {
+                    0: {
+                        type: 'bars'
+                    }, // 'Low Supply Alerts' as a bar chart
+                    1: {
+                        type: 'bars'
+                    }, // 'Resupply Alerts' as a bar chart
+                    2: {
+                        type: 'line'
+                    }, // 'Suggested Reorder Qty' as a line chart
+                    3: {
+                        type: 'line'
+                    } // 'Item Reorder Qty' as a line chart
+                }
             };
 
-            const table = new google.visualization.Table(document.getElementById('table_div'));
-            table.draw(data, options);
-        });
+            var chart = new google.visualization.ComboChart(document.getElementById('combo_chart'));
+            chart.draw(data, options);
+        }
     }
 
     private drawLineChart(): void {
@@ -106,8 +131,8 @@ export class ChartComponent implements OnInit {
 
             const options = {
                 title: 'Usage Trends',
-                width: '100%',
-                height: '100%',
+                width: '200%',
+                height: '200%',
                 hAxis: { gridlines: {} },
                 vAxis: { gridlines: { count: 10 }, minValue: 0 },
                 curveType: 'function',
@@ -135,8 +160,8 @@ export class ChartComponent implements OnInit {
 
             const options = {
                 title: 'Usage Distribution',
-                width: '100%',
-                height: '100%',
+                width: '200%',
+                height: '200%',
                 sliceVisibilityThreshold: 0.05,
             };
 

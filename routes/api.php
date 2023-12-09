@@ -36,7 +36,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
  * Routes executed by the scanner application. 
  */
 Route::group(['middleware' => ['auth', 'verified']], function () {
-    Route::post('/send-restock-notification', [NotificationController::class, 'restockNotification']);    
+    Route::post('/send-restock-notification', [NotificationController::class, 'restockNotification']);   
+    Route::post('/send-low-supply-notification', [NotificationController::class, 'lowSupplyNotification']); 
     Route::post('/scan', [ScannerController::class, 'scanToSession']);    
     Route::get('/scanned-list', [ScannerController::class, 'getScannedList']);    
 });
@@ -60,11 +61,13 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
  */
 Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::get('/profile', [ProfileController::class, 'getCurrentProfile']);    
+    Route::get('/users', [UserController::class, 'showAll']);
+    Route::get('/users/user/{userId}', [UserController::class, 'show']);
+    
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::get('/users', [UserController::class, 'showAll']);
-    Route::get('/users/user/{userId}', [UserController::class, 'show']);
+ 
     
     Route::middleware('admin')->group(function () {
         //admin only routes create, update, delete

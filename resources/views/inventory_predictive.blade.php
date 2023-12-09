@@ -27,11 +27,11 @@
 
             // Add columns
             data.addColumn('string', 'Item');
-            data.addColumn('number', 'Transactions');
+            data.addColumn('number', 'Times in Low Supply');
             // Add rows
             jsonData.forEach(function(itemData) {
                 // Create a link for each item
-                var link = '<a href="http://localhost/reports/insights?itemLocID=' + itemData.itemLocID + '">' +
+                var link = '<a href="http://localhost/api/reports/insights?itemLocID=' + itemData.itemLocID + '">' +
                     itemData.Item + '</a>';
 
                 // Add data to the row
@@ -68,7 +68,8 @@
             'packages': ['corechart']
         });
         google.charts.setOnLoadCallback(drawVisualization);
-        var jsonData2 = @json($itemData);
+        var lowSupply = @json($lowSupplyData);
+        var restock = @json($restockData);
         var evalData = @json($evalData);
 
         function drawVisualization() {
@@ -76,17 +77,19 @@
 
             var data = new google.visualization.DataTable();
             data.addColumn('string', 'Date');
-            data.addColumn('number', 'Transactions');
+            data.addColumn('number', 'Low Supply Alerts');
+            data.addColumn('number', 'Restock Alerts');
             data.addColumn('number', 'Suggested Reorder Qty');
             data.addColumn('number', 'Item Reorder Qty');
 
 
-            var keys = Object.keys(jsonData2);
+            var keys = Object.keys(lowSupply);
 
             keys.forEach(function(key) {
-                var value = jsonData2[key];
-                data.addRow([key, value, evalData[1], evalData[0]]);
-            
+                var lowSupplyValue = lowSupply[key];
+                var restockValue = restock[key];
+                data.addRow([key, lowSupplyValue, restockValue, evalData[1], evalData[0]]);
+
             });
 
             var options = {
@@ -98,15 +101,19 @@
                     title: 'Month'
                 },
                 series: {
+                    0: {
+                        type: 'bars'
+                    }, // 'Low Supply Alerts' as a bar chart
                     1: {
-                        type: 'line'
-                    }, 
+                        type: 'bars'
+                    }, // 'Resupply Alerts' as a bar chart
                     2: {
                         type: 'line'
-                    }
-                },
-                seriesType: 'bars',
-
+                    }, // 'Suggested Reorder Qty' as a line chart
+                    3: {
+                        type: 'line'
+                    } // 'Item Reorder Qty' as a line chart
+                }
             };
 
             var chart = new google.visualization.ComboChart(document.getElementById('reorderCount_div'));

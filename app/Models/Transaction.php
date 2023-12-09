@@ -76,43 +76,33 @@ class Transaction extends Model
         return $item->itemName;
     }
 
+    public function getVendor() {
+        $itemLoc = ItemLocation::find($this->itemLocID);
+        $item = Item::find($itemLoc->itemNum);
+        $vendor = Vendor::find($item->vendorID);
+        return $vendor;
+    }
+
     public function getLocationName(){
         $itemLoc = ItemLocation::find($this->itemLocID);
         $location = Location::find($itemLoc->locID);
         return $location->locName;
     }
 
-    public function getReorderQty(){
+    public function getItemAtLocation(){
+        $item = ItemLocation::find($this->itemLocID);
+        return $item;
+    }
+
+    public function getCurrentQty(){
         $itemLoc = ItemLocation::find($this->itemLocID);
-        return $itemLoc->itemReorderQty;
+        return $itemLoc->itemQty;
     }
 
     public function getUserName() {
         $user = User::find($this->employeeID);
         return "$user->firstName $user->lastName";
     }
-
-
-    /**
-     * Get a custom message for the transaction.
-     *
-     * @return string
-     */
-    public function getMessage()
-    {
-        $data = $this->getDataAsJson(); 
-
-        $item = $data['Item']; 
-        $location = $data['Location'];
-        $user = $data['Employee'];
-        $reorderQty = $data['Reorder Qty'];
-
-
-        $message = "$item from $location by $user. Suggested reorder quantity: $reorderQty";
-
-        return $message;
-    }
-
 
     public function getDataAsJson()
     {
@@ -128,10 +118,51 @@ class Transaction extends Model
         return [
             'Date' => $this->getDateAttribute($this->transDate),
             'Item' => $item->itemName,
-            'Reorder Qty' => $itemLoc->itemReorderQty,
+            'Qty Removed/Restocked' => $this->itemQty,
+            'Suggested Reorder Qty' => $itemLoc->itemReorderQty,
             'Location' => $location->locName,
             'Status' => $this->status,
             'Employee' => $user,
         ];
+    }
+
+    public function getLowSupplyMessage()
+    {
+        $data = $this->getDataAsJson(); 
+        $itemLoc = ItemLocation::find($this->itemLocID);
+
+        $item = $data['Item']; 
+        $location = $data['Location'];
+        $user = $data['Employee'];
+        $reorderQty = $data['Suggested Reorder Qty'];
+        $itemQty = $itemLoc->itemQty;
+
+
+        $message = "$item at $location by $user. Quantity available: $itemQty. Suggested reorder quantity: $reorderQty.";
+
+        return $message;
+    }
+
+
+    /**
+     * Get a custom message for the transaction.
+     *
+     * @return string
+     */
+    public function getRestockMessage()
+    {
+        $data = $this->getDataAsJson(); 
+        $itemLoc = ItemLocation::find($this->itemLocID);
+
+        $item = $data['Item']; 
+        $location = $data['Location'];
+        $user = $data['Employee'];
+        $restockedQty = $data['Qty Removed/Restocked'];
+        $itemQty = $itemLoc->itemQty;
+
+
+        $message = "$item at $location by $user. Quantity available: $itemQty. Quantity added to inventory: $restockedQty.";
+
+        return $message;
     }
 }

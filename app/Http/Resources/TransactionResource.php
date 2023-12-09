@@ -21,7 +21,7 @@ class TransactionResource extends JsonResource
             'Location' => $this->getLocationName(),
             'Status' => $this->status,
             'Employee' => $this->getUserName(),
-            'Message' => $this->getMessage(),
+            'ChangeQty' => $this->itemQty,
         ];
     }
 }
