@@ -7,39 +7,40 @@ use App\Models\ItemLocation;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ItemLocationResource;
+use App\Http\Resources\ItemResource;
 use App\Http\Resources\LocationResource;
 
 class DashboardController extends Controller
 {
-       /**
+    /**
      * Display a listing of inventory items and their locations.
      *
      * @return \App\Http\Resources\ItemCollection
      */
     public function index()
     {
-        
+
         $items = [];
 
         $locations = Location::all();
 
         foreach ($locations as $location) {
-            $resource = new LocationResource($location);
-            $items[$resource->locName] = ItemLocation::where('locID', $location->locID)->get();
+            $itemsFromLocation = ItemLocation::where('locID', $location->locID)->get();
+            $items[$location->locName] = $itemsFromLocation;
         }
 
         foreach ($items as $locName => $itemCollection) {
             foreach ($itemCollection as $index => $item) {
                 $items[$locName][$index] = [
-                    'item' => $item->getItemName(),
-                    'quantity' => $item->getCurrentQty(),
-                    'reorder_quantity' => $item->getReorderQty(),
-                    'vendor' => $item->getVendorName(),
+                    'Item' => new ItemLocationResource($item),
+                    'Location' => $item->location,
+                    'Available Quantity' => $item->itemQty,
+                    'Reorder Quantity' => $item->itemReorderQty,
                 ];
             }
         }
 
-        return response()->json($items, Response::HTTP_OK);
-
+        return response($items, Response::HTTP_OK);
     }
 }

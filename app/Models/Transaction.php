@@ -138,7 +138,7 @@ class Transaction extends Model
         $itemQty = $itemLoc->itemQty;
 
 
-        $message = "$item at $location by $user. <br>Quantity available: $itemQty. Suggested reorder quantity: $reorderQty.";
+        $message = "$item at $location by $user. Quantity available: $itemQty. Suggested reorder quantity: $reorderQty.";
 
         return $message;
     }
@@ -152,42 +152,17 @@ class Transaction extends Model
     public function getRestockMessage()
     {
         $data = $this->getDataAsJson(); 
+        $itemLoc = ItemLocation::find($this->itemLocID);
 
         $item = $data['Item']; 
         $location = $data['Location'];
         $user = $data['Employee'];
         $restockedQty = $data['Qty Removed/Restocked'];
-        $itemQty = $data['Item Qty'];
+        $itemQty = $itemLoc->itemQty;
 
 
-        $message = "$item at $location by $user. <br>Quantity available: $itemQty. Quantity added to inventory: $restockedQty.";
+        $message = "$item at $location by $user. Quantity available: $itemQty. Quantity added to inventory: $restockedQty.";
 
         return $message;
     }
-
-
-    /** 
-    public function getRestockDataAsJson()
-    {
-        //Item
-        $itemLoc = ItemLocation::find($this->itemLocID);
-        $item = Item::find($itemLoc->itemNum);
-        //Location & Reorder Qty
-        $location = Location::find($itemLoc->locID);
-        //User
-        $user = User::find($this->employeeID);
-        $user = "$user->firstName $user->lastName";
-
-        return [
-            'Date' => $this->getDateAttribute($this->transDate),
-            'Item' => $item->itemName,
-            'Current Qty' => $itemLoc->itemQty,
-            'Change in Qty' => $this->itemQty,
-            'Location' => $location->locName,
-            'Status' => $this->status,
-            'Employee' => $user,
-        ];
-    }
-    */
-
 }

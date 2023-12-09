@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ItemResource extends JsonResource
@@ -17,7 +16,7 @@ class ItemResource extends JsonResource
         return [
             'itemName' => $this->itemName,
             'itemUrl' => $this->itemURL,
-            'vendor' => $this->getVendor(),
+            'vendor' => new VendorResource($this->getVendor()),
         ];
     }
 }
