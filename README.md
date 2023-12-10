@@ -2,11 +2,11 @@
 <html lang="en">
 <body>
 
-<h1>Developed by IT482 (Steve Quinn, Chris Hunter, Tim Guerin)</h1>
+<h2>Developed by IT482 (Steve Quinn, Chris Hunter, Tim Guerin)</h2>
 
-<h1>IMS-App Documentation</h1>
+<h2>PowerSupply App Documentation</h2>
 
-<h2>Introduction</h2>
+<h3>Introduction</h3>
 
 <h5>1.1 Purpose</h5>
 
@@ -14,13 +14,13 @@
 
 <h5>1.3 Technology Stack</h5>
 
-<h2>Installation</h2>
+<h3>Installation</h3>
 
 <h5>2.1 Prerequisites</h5>
 
 <h5>2.2 Setup</h5>
 
-<h2>User Guide</h2>
+<h3>User Guide</h3>
 
 <h5>3.1 Account Creation and Login</h5>
 
@@ -34,13 +34,13 @@
 
 <h5>3.6 User Administration</h5>
 
-<h2>AWS Integration</h2>
+<h3>AWS Integration</h3>
 
 <h5>4.1 Database Configuration</h5>
 
 <h5>4.2 Storage and Security</h5>
 
-<h2>Troubleshooting</h2>
+<h3>Troubleshooting</h3>
 
 <h5>5.1 Backend Issues (Laravel)</h5>
 
@@ -48,7 +48,7 @@
 
 <h5>5.3 AWS Services</h5>
 
-<h2>A Message From the Developers</h2>
+<h3>A Message From the Developers</h3>
 
 </p>
 <h2>1. Introduction</h2>
