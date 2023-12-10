@@ -4,30 +4,51 @@
 
 <h1>Developed by IT482 (Steve Quinn, Chris Hunter, Tim Guerin)</h1>
 
-<h2>Table of Contents</h2>
-<p>
-    Introduction
-1.1 Purpose
-1.2 Features
-1.3 Technology Stack
-Installation
-2.1 Prerequisites
-2.2 Setup
-User Guide
-3.1 Account Creation and Login
-3.2 Dashboard
-3.3 Barcode Scanning
-3.4 Reorder Notification
-3.5 Trending Analysis and Forecasting
-3.6 User Administration
-AWS Integration
-4.1 Database Configuration
-4.2 Storage and Security
-Troubleshooting
-	5.1 Backend Issues (Laravel)
-	5.2 Frontend Issues (Angular)
-	5.3 AWS Services
-A Message From the Developers
+<h1>IMS-App Documentation</h1>
+
+<h2>Introduction</h2>
+
+<h5>1.1 Purpose</h5>
+
+<h5>1.2 Features</h5>
+
+<h5>1.3 Technology Stack</h5>
+
+<h2>Installation</h2>
+
+<h5>2.1 Prerequisites</h5>
+
+<h5>2.2 Setup</h5>
+
+<h2>User Guide</h2>
+
+<h5>3.1 Account Creation and Login</h5>
+
+<h5>3.2 Dashboard</h5>
+
+<h5>3.3 Barcode Scanning</h5>
+
+<h5>3.4 Reorder Notification</h5>
+
+<h5>3.5 Trending Analysis and Forecasting</h5>
+
+<h5>3.6 User Administration</h5>
+
+<h2>AWS Integration</h2>
+
+<h5>4.1 Database Configuration</h5>
+
+<h5>4.2 Storage and Security</h5>
+
+<h2>Troubleshooting</h2>
+
+<h5>5.1 Backend Issues (Laravel)</h5>
+
+<h5>5.2 Frontend Issues (Angular)</h5>
+
+<h5>5.3 AWS Services</h5>
+
+<h2>A Message From the Developers</h2>
 
 </p>
 <h2>1. Introduction</h2>
