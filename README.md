@@ -1,8 +1,12 @@
-PowerSupply App
-Developed by IT482 (Steve Quinn, Chris Hunter, Tim Guerin)
+<!DOCTYPE html>
+<html lang="en">
+<body>
 
-Table of Contents
-Introduction
+<h1>Developed by IT482 (Steve Quinn, Chris Hunter, Tim Guerin)</h1>
+
+<h2>Table of Contents</h2>
+<p>
+    Introduction
 1.1 Purpose
 1.2 Features
 1.3 Technology Stack
@@ -25,184 +29,407 @@ Troubleshooting
 	5.3 AWS Services
 A Message From the Developers
 
+</p>
+<h2>1. Introduction</h2>
 
-1. Introduction
+<h3>1.1 Background and Purpose</h3>
+<p>
+    The Laravel-based Angular web application for inventory management is designed to provide first responders with an intuitive and efficient solution to track, analyze, and manage inventory levels. This documentation serves as a comprehensive guide for users, administrators, and developers. The primary objective of the Inventory Management System is to offer first responders a robust platform for overseeing their equipment and supplies. The system aims to streamline the inventory management process, enhance decision-making through data analysis, and ensure the timely replenishment of essential items.
+</p>
 
-1.1 Background and Purpose
-The Laravel-based Angular web application for inventory management is designed to provide first responders with an intuitive and efficient solution to track, analyze, and manage inventory levels. This documentation serves as a comprehensive guide for users, administrators, and developers.
-The primary objective of the Inventory Management System is to offer first responders a robust platform for overseeing their equipment and supplies. The system aims to streamline the inventory management process, enhance decision-making through data analysis, and ensure the timely replenishment of essential items.
+<h3>1.2 Features</h3>
+<p>
+    <strong>User Authentication:</strong>
+    <br>
+    Users can create accounts securely, and the system employs industry-standard authentication practices to protect sensitive information.
+    <br>
+<p>
+    <strong>Dashboard:</strong>
+    <br>
+    The intuitive dashboard provides an overview of current inventory levels through visually appealing graphs and charts. This feature enables users to quickly assess the status of their resources.
+    <br>
+</p>
+<h3>1.3 Technology Stack</h3>
+<p>
+    The technology stack combines the power of Angular for the frontend, Laravel for the backend, and AWS services for database storage and deployment. This robust stack ensures scalability, security, and optimal performance.
+    <br>
+</p>
 
-1.2 Features
-User Authentication:
-Users can create accounts securely, and the system employs industry-standard authentication practices to protect sensitive information.
-Dashboard:
-The intuitive dashboard provides an overview of current inventory levels through visually appealing graphs and charts. This feature enables users to quickly assess the status of their resources.
-Barcode Scanning: 
-The application supports barcode scanning functionality, allowing users to expedite inventory management by triggering reorder notifications with a simple scan. This feature enhances efficiency, reducing the time required to identify and address low-stock situations.
-Trending Analysis: 
-The trending analysis section empowers users to delve into historical data, identifying patterns and trends in inventory usage. Additionally, the system incorporates forecasting algorithms to predict future inventory needs, facilitating proactive decision-making.
-User Administration: 
-Administrators have the authority to manage user roles and permissions. This feature ensures that different team members have appropriate levels of access, maintaining data integrity and security.
+<h2>2. Installation</h2>
+
+<h3>2.1 Prerequisites</h3>
+<p>
+    Before initiating the installation process, ensure that PHP and Composer are installed for Laravel, and Node.js along with npm for Angular. Additionally, set up an AWS account to leverage cloud services for database storage and deployment.
+    <br>
+</p>
 
 
+<h3>2.2 Setup</h3>
+<p>
+    <strong>Clone the Repository:</strong>
+    <br>
+    Execute the following command: gh repo clone squinn8810/ims-app
+    <br>
+    <button onclick="copyCode('cloneRepoCode')">Copy Code</button>
+</p>
+<pre id="cloneRepoCode">
+gh repo clone squinn8810/ims-app</pre>
 
+<p>
+    <strong>Install Laravel Dependencies:</strong>
+    <br>
+    Navigate to the Laravel project directory and run: 
+    <br>
+    <button onclick="copyCode('laravelDepsCode')">Copy Code</button>
+</p>
+<pre id="laravelDepsCode">
+composer install
+</pre>
+<p>
+    <strong>Install Angular Dependencies:</strong>
+    <br>
+    Navigate to the Angular project directory and run: 
+    <br>
+    <button onclick="copyCode('angularDepsCode')">Copy Code</button>
+</p>
+<pre id="angularDepsCode">npm install</pre>
 
-1.3 Technology Stack
-The technology stack combines the power of Angular for the frontend, Laravel for the backend, and AWS services for database storage and deployment. This robust stack ensures scalability, security, and optimal performance.
+<p>
+    <strong>Build Angular Project:</strong>
+    <br>
+    Generate the Angular production build:
+    <br>
+    <button onclick="copyCode('angularBuildCode')">Copy Code</button>
+</p>
+<pre id="angularBuildCode">
+ng build --prod</pre>
 
-2. Installation
+<p>
+    <strong>Configure AWS Services:</strong>
+    <br>
+    Utilize AWS RDS for database configuration, ensuring Laravel is set up to connect to the AWS database.
+    <br>
+    <button onclick="copyCode('awsConfigCode')">Copy Code</button>
+</p>
+<p>
+    <strong>Deploy the application to AWS:</strong>
+    <br>
+    Use appropriate services such as Elastic Beanstalk or EC2.
+    <br>
+    <button onclick="copyCode('awsDeployCode')">Copy Code</button>
+</p>
 
-2.1 Prerequisites
-Before initiating the installation process, ensure that PHP and Composer are installed for Laravel, and Node.js along with npm for Angular. Additionally, set up an AWS account to leverage cloud services for database storage and deployment.
+<h2>3. User Guide</h2>
 
-2.2 Setup
-•	Clone the Repository:
-o	Execute the following command: gh repo clone squinn8810/ims-app
-•	Install Laravel Dependencies:
-o	Navigate to the Laravel project directory and run: composer install
-•	Configure Laravel Environment Variables:
-o	Set up the necessary environment variables, including database connection details.
-•	Install Angular Dependencies:
-o	Navigate to the Angular project directory and run: npm install
-•	Build Angular Project:
-o	Generate the Angular production build: ng build --prod
-•	Configure AWS Services:
-o	Utilize AWS RDS for database configuration, ensuring Laravel is set up to connect to the AWS database.
-o	Deploy the application to AWS using appropriate services such as Elastic Beanstalk or EC2.
+<h3>3.1 Account Creation and Login</h3>
+<p>
+    To get started with the Inventory Management System:
+</p>
+<ul>
+    <li>
+        <strong>Visit the Application URL:</strong>
+        <br>
+        Open your web browser and enter the URL provided.
+    </li>
+    <li>
+        <strong>Register an Account:</strong>
+        <br>
+        Click on the "Register" button.
+        <br>
+        Complete the registration form with the required details.
+    </li>
+    <li>
+        <strong>Login:</strong>
+        <br>
+        Use your registered credentials to log in securely.
+    </li>
+</ul>
 
-3. User Guide
+<h3>3.2 Dashboard</h3>
+<p>
+    Upon successful login, users can navigate to the comprehensive dashboard:
+</p>
+<ul>
+    <li>
+        <strong>Real-Time Inventory Levels:</strong>
+        <br>
+        The dashboard displays real-time inventory levels using intuitive charts and graphs.
+    </li>
+    <li>
+        <strong>Visual Representation:</strong>
+        <br>
+        Graphical elements provide a quick and visually appealing overview of inventory status.
+    </li>
+</ul>
 
-3.1 Account Creation and Login
-To get started with the Inventory Management System:
-•	Visit the Application URL:
-o	Open your web browser and enter the URL provided.
-•	Register an Account:
-o	Click on the "Register" button.
-o	Complete the registration form with the required details.
-•	Login:
-o	Use your registered credentials to log in securely.
+<h3>3.3 Barcode Scanning</h3>
+<p>
+    The Barcode Scanning feature simplifies inventory management:
+</p>
+<ul>
+    <li>
+        <strong>Access from Dashboard:</strong>
+        <br>
+        Navigate to the designated section from the dashboard.
+    </li>
+    <li>
+        <strong>Scan Barcodes:</strong>
+        <br>
+        Utilize a device camera to scan barcodes on items.
+    </li>
+    <li>
+        <strong>Reorder Trigger:</strong>
+        <br>
+        Efficiently trigger reorder notifications based on scanned data.
+    </li>
+</ul>
 
-3.2 Dashboard
-Upon successful login, users can navigate to the comprehensive dashboard:
-•	Real-Time Inventory Levels:
-o	The dashboard displays real-time inventory levels using intuitive charts and graphs.
-•	Visual Representation:
-o	Graphical elements provide a quick and visually appealing overview of inventory status.
+<h3>3.4 Reorder Notification</h3>
+<p>
+    Receive timely notifications for low inventory levels:
+</p>
+<ul>
+    <li>
+        <strong>Notification Prompt:</strong>
+        <br>
+        Instant notifications alert users about low-stock situations.
+        <br>
+        Identifies items that need to be reordered as well as vendor information.
+    </li>
+    <li>
+        <strong>Reorder Confirmation:</strong>
+        <br>
+        Confirm reorders directly from the notification interface.
+    </li>
+</ul>
 
-3.3 Barcode Scanning
-The Barcode Scanning feature simplifies inventory management:
-•	Access from Dashboard:
-o	Navigate to the designated section from the dashboard.
-•	Scan Barcodes:
-o	Utilize a device camera to scan barcodes on items.
-•	Reorder Trigger:
-o	Efficiently trigger reorder notifications based on scanned data.
+<h3>3.5 Trending Analysis and Forecasting</h3>
+<p>
+    Explore historical data and forecast future needs:
+</p>
+<ul>
+    <li>
+        <strong>Analysis Section:</strong>
+        <br>
+        Access the dedicated section for trending analysis.
+    </li>
+    <li>
+        <strong>Historical Trends:</strong>
+        <br>
+        View and analyze historical trends in inventory usage.
+    </li>
+    <li>
+        <strong>Forecasting:</strong>
+        <br>
+        Leverage forecasting algorithms for future inventory needs.
+    </li>
+</ul>
 
-3.4 Reorder Notification
-Receive timely notifications for low inventory levels:
-•	Notification Prompt:
-o	Instant notifications alert users about low-stock situations.
-o	Identifies items that need to be reordered as well as vendor information.
-•	Reorder Confirmation:
-o	Confirm reorders directly from the notification interface.
-
-3.5 Trending Analysis and Forecasting
-Explore historical data and forecast future needs:
-•	Analysis Section:
-o	Access the dedicated section for trending analysis.
-•	Historical Trends:
-o	View and analyze historical trends in inventory usage.
-
-•	Forecasting:
-o	Leverage forecasting algorithms for future inventory needs.
-
-3.6 User Administration
-Efficiently manage user roles and permissions:
-•	Admin Privileges:
-o	Administrators can assign and modify user roles.
-•	Access Levels:
-o	Ensure that different team members have appropriate levels of access for data security.
+<h3>3.6 User Administration</h3>
+<p>
+    Efficiently manage user roles and permissions:
+</p>
+<ul>
+    <li>
+        <strong>Admin Privileges:</strong>
+        <br>
+        Administrators can assign and modify user roles.
+    </li>
+    <li>
+        <strong>Access Levels:</strong>
+        <br>
+        Ensure that different team members have appropriate levels of access for data security.
+    </li>
+</ul>
 
 4. AWS Integration
 
-4.1 Database Configuration
-Setting up RDS for Laravel
-•	Create an RDS Instance:
-o	Log in to the AWS Management Console.
-o	Navigate to Amazon RDS and create a new database instance.
-o	Configure the instance details, including database engine, credentials, and security group settings.
-•	Database Configuration in Laravel:
-o	Update Laravel's database configuration (usually found in the .env file) with RDS connection details.
-o	Specify the RDS endpoint, database name, username, and password.
+<h2>4. AWS Integration</h2>
+
+<h3>4.1 Database Configuration</h3>
+<p>
+    Setting up RDS for Laravel:
+</p>
+<ol>
+    <li>
+        <strong>Create an RDS Instance:</strong>
+        <br>
+        Log in to the AWS Management Console.
+        <br>
+        Navigate to Amazon RDS and create a new database instance.
+        <br>
+        Configure the instance details, including database engine, credentials, and security group settings.
+    </li>
+    <li>
+        <strong>Database Configuration in Laravel:</strong>
+        <br>
+        Update Laravel's database configuration (usually found in the .env file) with RDS connection details.
+    </li>
+</ol>
+<pre>
+<code>
 DB_CONNECTION=aws
 DB_HOST=ims-app.c0oaeoxlqvyj.us-east-2.rds.amazonaws.com
 DB_PORT=3306
 DB_DATABASE=ims-app
 DB_USERNAME=admin
 DB_PASSWORD=it482imsapp
+</code>
+</pre>
 
-
-4.2 Storage and Security
-AWS S3 for Storage
-•	Create an S3 Bucket:
-o	In the AWS Management Console, navigate to Amazon S3 and create a new bucket.
-o	Configure bucket settings, including region and access control.
-•	Laravel Configuration for S3:
-o	Update Laravel's filesystem configuration (config/filesystems.php) to use the S3 driver.
+<h3>4.2 Storage and Security</h3>
+<p>
+    AWS S3 for Storage:
+</p>
+<ol>
+    <li>
+        <strong>Create an S3 Bucket:</strong>
+        <br>
+        In the AWS Management Console, navigate to Amazon S3 and create a new bucket.
+        <br>
+        Configure bucket settings, including region and access control.
+    </li>
+    <li>
+        <strong>Laravel Configuration for S3:</strong>
+        <br>
+        Update Laravel's filesystem configuration (config/filesystems.php) to use the S3 driver.
+    </li>
+</ol>
+<pre>
+<code>
+php
 
 'disks' => [
     's3' => [
-           'driver' => 's3',
-            'key' => env('AWS_ACCESS_KEY_ID'),
-            'secret' => env('AWS_SECRET_ACCESS_KEY'),
-            'region' => env('AWS_DEFAULT_REGION'),
-            'bucket' => env('AWS_BUCKET'),
-            'url' => env('AWS_URL'),
-            'endpoint' => env('AWS_ENDPOINT'),
-            'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
-            'throw' => false,
+        'driver' => 's3',
+        'key' => env('AWS_ACCESS_KEY_ID'),
+        'secret' => env('AWS_SECRET_ACCESS_KEY'),
+        'region' => env('AWS_DEFAULT_REGION'),
+        'bucket' => env('AWS_BUCKET'),
+        'url' => env('AWS_URL'),
+        'endpoint' => env('AWS_ENDPOINT'),
+        'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
+        'throw' => false,
     ],
 ],
+</code>
+</pre>
 
-•	Security with IAM Roles:
-o	Create an IAM role with the necessary permissions for accessing RDS and S3.
-o	Attach the IAM role to the EC2 instance running Laravel for secure access.
+<p>
+    <strong>Security with IAM Roles:</strong>
+</p>
+<ol>
+    <li>
+        Create an IAM role with the necessary permissions for accessing RDS and S3.
+    </li>
+    <li>
+        Attach the IAM role to the EC2 instance running Laravel for secure access.
+    </li>
+</ol>
 
-5. Troubleshooting
+<h2>5. Troubleshooting</h2>
 
-5.1 Backend Issues (Laravel)
-Error Logs
-•	Location:
-o	Laravel logs errors to the storage/logs directory.
-•	Access:
-o	Check for error messages in the laravel.log file.
-o	Tail the logs in real-time: tail -f storage/logs/laravel.log
-•	Common Issues:
-o	Database connection errors: Verify credentials in the .env file.
-o	Incorrect configuration: Double-check environment variables.
+<h3>5.1 Backend Issues (Laravel)</h3>
+<p>
+    Error Logs:
+</p>
+<ul>
+    <li>
+        <strong>Location:</strong>
+        <br>
+        Laravel logs errors to the storage/logs directory.
+    </li>
+    <li>
+        <strong>Access:</strong>
+        <br>
+        Check for error messages in the laravel.log file.
+    </li>
+    <li>
+        <strong>Tail the logs in real-time:</strong>
+        <br>
+        <code>tail -f storage/logs/laravel.log</code>
+    </li>
+</ul>
+<p>
+    Common Issues:
+</p>
+<ul>
+    <li>
+        <strong>Database connection errors:</strong>
+        <br>
+        Verify credentials in the .env file.
+    </li>
+    <li>
+        <strong>Incorrect configuration:</strong>
+        <br>
+        Double-check environment variables.
+    </li>
+</ul>
 
-5.2 Frontend Issues (Angular)
-Browser Console
-•	Access:
-o	Open the browser's developer tools (usually by pressing F12).
-o	Navigate to the "Console" tab.
-•	Common Issues:
-o	Missing assets: Ensure correct paths in Angular configuration.
-o	Network errors: Check API requests for errors.
-o	Syntax errors: Review JavaScript errors in the console.
+<h3>5.2 Frontend Issues (Angular)</h3>
+<p>
+    Browser Console:
+</p>
+<ul>
+    <li>
+        <strong>Access:</strong>
+        <br>
+        Open the browser's developer tools (usually by pressing F12).
+        <br>
+        Navigate to the "Console" tab.
+    </li>
+</ul>
+<p>
+    Common Issues:
+</p>
+<ul>
+    <li>
+        <strong>Missing assets:</strong>
+        <br>
+        Ensure correct paths in Angular configuration.
+    </li>
+    <li>
+        <strong>Network errors:</strong>
+        <br>
+        Check API requests for errors.
+    </li>
+    <li>
+        <strong>Syntax errors:</strong>
+        <br>
+        Review JavaScript errors in the console.
+    </li>
+</ul>
 
-5.3 AWS Services
-CloudWatch
-•	Logs:
-o	Check AWS CloudWatch logs for Lambda functions, if applicable.
-RDS and S3
-•	AWS Console:
-o	Review RDS and S3 dashboards for any reported issues.
-•	Security Groups:
-o	Confirm that security groups allow necessary traffic.
+<h3>5.3 AWS Services</h3>
+<p>
+    CloudWatch:
+</p>
+<ul>
+    <li>
+        <strong>Logs:</strong>
+        <br>
+        Check AWS CloudWatch logs for Lambda functions, if applicable.
+    </li>
+</ul>
+<p>
+    RDS and S3:
+</p>
+<ul>
+    <li>
+        <strong>AWS Console:</strong>
+        <br>
+        Review RDS and S3 dashboards for any reported issues.
+    </li>
+    <li>
+        <strong>Security Groups:</strong>
+        <br>
+        Confirm that security groups allow necessary traffic.
+    </li>
+</ul>
 
-6. A Message from the Developers
-This documentation provides a comprehensive guide for users and administrators of the Laravel-based Angular web application for inventory management for first responders. For further assistance, refer to the troubleshooting section or contact the development team.
-The Laravel-based Angular web application for inventory management represents a significant advancement in the operational capabilities of first responders. By combining the strengths of Laravel, Angular, and AWS services, the system provides a reliable and scalable solution for addressing the unique challenges faced in managing critical resources.
-We extend our gratitude to the developers, administrators, and first responders who contribute to the success of this system. As the needs of the users evolve, this application stands ready to adapt and support those on the front lines, ensuring they have the resources necessary to carry out their vital missions.
-Thank you for choosing IMS-App Inventory Management System, and we remain committed to supporting and enhancing this application for the benefit of first responders worldwide.
+<h2>6. A Message from the Developers</h2>
+<p>
+    This documentation provides a comprehensive guide for users and administrators of the Laravel-based Angular web application for inventory management for first responders. For further assistance, refer to the troubleshooting section or contact the development team. The Laravel-based Angular web application for inventory management represents a significant advancement in the operational capabilities of first responders. By combining the strengths of Laravel, Angular, and AWS services, the system provides a reliable and scalable solution for addressing the unique challenges faced in managing critical resources. We extend our gratitude to the developers, administrators, and first responders who contribute to the success of this system. As the needs of the users evolve, this application stands ready to adapt and support those on the front lines, ensuring they have the resources necessary to carry out their vital missions. Thank you for choosing IMS-App Inventory Management System, and we remain committed to supporting and enhancing this application for the benefit of first responders worldwide.
+</p>
+</body>
+</html>
