@@ -159,23 +159,47 @@ class AnalyticsController extends Controller
     public function dataView2()
     {
 
-        $transactionData = $this->getTransactionData();
-        $lowSupplyTrends = $transactionData["lowSupply"];
-        $restockSupplyTrends = $transactionData["restock"];
+        if (request()->has('itemLocID')) {
+
+            $transactionData = $this->getTransactionData();
+            $lowSupplyTrends = $transactionData["lowSupply"];
+            $restockSupplyTrends = $transactionData["restock"];
+
+            $inventoryData = $this->inventoryTraffic();
+
+            $inventoryTrafficData = $inventoryData["inventoryData"];
+            $avgInvLvl = $inventoryData["avgInvLevel"];
 
 
-        $evalData = $this->evaluateReorderQty($lowSupplyTrends);
-        $frequentItems = $this->getFrequentlyOrderedItems();
+            $evalData = $this->evaluateReorderQty($lowSupplyTrends);
+            $filterItems = $this->getPopularItems();
 
-        $data = [
-            "frequentItems" => $frequentItems,
-            "lowSupplyData" => $lowSupplyTrends,
-            "restockData" => $restockSupplyTrends,
-            'evalData' => $evalData,
-        ];
+            $data = [
+                "filterItems" => $filterItems,
+                "lowSupplyData" => $lowSupplyTrends,
+                "restockData" => $restockSupplyTrends,
+                "evalData" => $evalData,
+                "trafficFlow" => $inventoryTrafficData,
+                "sumTrafficFlow" => $avgInvLvl,
+            ];
 
-        return response()->json($data, Response::HTTP_OK);
+            return response()->json($data, Response::HTTP_OK);
+        } else {
 
+            $transactionData = $this->getTransactionData();
+            $lowSupplyTrends = $transactionData["lowSupply"];
+            $restockSupplyTrends = $transactionData["restock"];
+
+            $filterItems = $this->getPopularItems();
+
+            $data = [
+                "filterItems" => $filterItems,
+                "lowSupplyData" => $lowSupplyTrends,
+                "restockData" => $restockSupplyTrends,
+            ];
+
+            return response()->json($data, Response::HTTP_OK);
+        }
     }
 
     /**
@@ -220,7 +244,7 @@ class AnalyticsController extends Controller
             if ($i === 0) {
                 $endDate = $currentDate->copy()->endOfMonth();
             } else {
-                $endDate = $currentDate->copy()->subMonths($i - 1)->startOfMonth()->endOfMonth();
+                $endDate = $currentDate->copy()->subMonths($i - 1)->startOfMonth();
             }
 
             $lowSupplyTransactions = Transaction::when($validatedData, function ($query) use ($validatedData) {
@@ -229,6 +253,7 @@ class AnalyticsController extends Controller
                 ->whereBetween('transDate', [$startDate, $endDate])
                 ->where('itemQty', '<', 0)
                 ->count();
+
 
             $restockTransactions = Transaction::when($validatedData, function ($query) use ($validatedData) {
                 return $query->where('itemLocID', $validatedData['itemLocID']);
@@ -240,7 +265,6 @@ class AnalyticsController extends Controller
 
             $lowSupplyTrend[$startDate->format('M Y')] = $lowSupplyTransactions;
             $restockSupplyTrend[$startDate->format('M Y')] = $restockTransactions;
-
         }
 
         return ["lowSupply" => $lowSupplyTrend, "restock" => $restockSupplyTrend];
@@ -248,48 +272,34 @@ class AnalyticsController extends Controller
 
 
 
-    private function getFrequentlyOrderedItems()
+    private function getPopularItems()
     {
         //returns an array of arrays with key value pairs
         $groupTransactions = DB::table('transaction')
-            ->where('itemQty', '<', 0)
             ->select('itemLocID', DB::raw('COUNT(*) as count'))
             ->groupBy('itemLocID')
             ->orderByDesc('count')
             ->get();
 
-        $frequentItemData = [];
+        $filterItems = [];
 
         foreach ($groupTransactions as $group) {
             $itemLocID = $group->itemLocID;
-            $count = $group->count;
+            //$count = $group->count;
             $itemLoc = ItemLocation::find($itemLocID);
             $item = Item::find($itemLoc->itemNum);
             $itemName = $item->itemName;
 
-            $frequentItemData[] =
-                [
-                    'Item' => $itemName,
-                    'Transactions' => $count,
-                    'itemLocID' => $itemLocID,
-                ];
+            $filterItems[] = [
+                'itemName' => $itemName,
+                'itemLocID' => $itemLocID,
+            ];
         }
 
-        return $frequentItemData;
+        return $filterItems;
     }
 
 
-    /**
-     * Calculate the reorder count for a specific date range
-     */
-    private function calculateReorderCount($itemLocID, $startDate)
-    {
-        $reorderCount = Transaction::where('itemLocID', $itemLocID)
-            ->where('transDate', '>=', $startDate)
-            ->count();
-
-        return $reorderCount;
-    }
 
     /**
      * Endpoint to provide reorder counts
@@ -328,5 +338,47 @@ class AnalyticsController extends Controller
             0,
             0,
         ];
+    }
+
+    private function inventoryTraffic()
+    {
+
+        $request = Request();
+        // Retrieve filter parameters from the request
+        $timePeriods = [
+            '12_months' => 12,
+            '6_months' => 6,
+            '3_months' => 3,
+            '1_month' => 1,
+        ];
+
+        $currentDate = Carbon::now();
+        $requestedFilter = '12_months';
+
+        // If 'time_period' is present in the request and is a valid key in $timePeriods
+        if (request()->has('time_period')) {
+            $requestedFilter = request()->input('time_period');
+        }
+
+        $startDate = $currentDate->copy()->subMonths($timePeriods[$requestedFilter])->startOfMonth();
+
+        $transactions = Transaction::where('itemLocID', request()->itemLocID)
+            ->where('transDate', '>=', $startDate)
+            ->orderBy('transDate', 'asc')
+            ->get();
+
+        $inventoryTrafficData = [];
+
+        $avgInvLvl = 0;
+
+        foreach ($transactions as $transaction) {
+            $inventoryTrafficData[$transaction->transDate] = $transaction->itemQty;
+            $nextQty = $transaction->itemQty;
+            $avgInvLvl += $nextQty;
+        }
+
+
+
+        return ["inventoryData" => $inventoryTrafficData, "avgInvLevel" => $avgInvLvl];
     }
 }

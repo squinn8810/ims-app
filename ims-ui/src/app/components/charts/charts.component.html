@@ -2,28 +2,6 @@
   <div class="card text-center">
     <!-- Card Header -->
     <div class="card-header">
-      <h5 class="card-title">Recent Transactions</h5>
-    </div>
-
-    <!-- Show loading animation if loading is true -->
-    <div *ngIf="loading" class="card-body loading-animation">
-      <div class="spinner"></div>
-    </div>
-
-    <!-- Show charts if loading is false -->
-    <div *ngIf="!loading" class="card-body">
-      <div id="table_div" class="row my-3">
-        <!-- Table content goes here -->
-      </div>
-    </div>
-  </div>
-</div>
-
-
-<div class="container mt-5">
-  <div class="card text-center">
-    <!-- Card Header -->
-    <div class="card-header">
       <h5 class="card-title">Inventory Usage Data</h5>
     </div>
 
@@ -36,8 +14,9 @@
     <!-- Dropdown content -->
     <div *ngIf="!loading" class="row my-3">
       <div class="col-12 text-center">
-        <label for="timePeriod">Filter:</label>
+        <label for="timePeriod">Time Period:</label>
         <select id="timePeriod" [(ngModel)]="selectedTimePeriod" (change)="onDropdownChange()" class="custom-select">
+          <option value="">select</option> 
           <option value="12_months">1 year</option>
           <option value="6_months">6 months</option>
           <option value="3_months">3 months</option>

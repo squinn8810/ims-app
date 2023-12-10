@@ -27,19 +27,6 @@ Route::get('/about', function () {
     return view('about');
 });
 
-Route::group(['middleware' => ['auth', 'verified']], function () {
-    Route::get('/reports', [AnalyticsController::class, 'dataView1']);
-    Route::get('/reports/insights', [AnalyticsController::class, 'dataView2']);
-    
-    Route::get('/inventory', [DashboardController::class, 'index']);
-    Route::get('/inventory/items', [ItemController::class, 'index']);
-    Route::get('/inventory/locations', [LocationController::class, 'index']);
-    Route::get('/inventory/locations/{locID}/items', [ItemLocationController::class, 'index']);
-    Route::get('/inventory/transactions', [TransactionController::class, 'index']);
-});
-
-
-
 /**
  * All Routes passed to Angular except '/api', '/sanctum'
  */

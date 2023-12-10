@@ -1,6 +1,6 @@
 <div class="container">
     <div class="row text-center">
-        <h5>Scan to restock...</h5>
+        <h5>Scan to remove...</h5>
     </div>
     <div *ngIf="error" class="mt-3 alert alert-danger col-9" role="alert">
         {{error.error.message}}
@@ -33,23 +33,28 @@
     <div *ngIf="!notification && !scannerOpen" class="row col-9">
         <form nonvalidate (ngSubmit)="sendNotification(scanForm)" [formGroup]="scanForm">
             <div class="row">
-                <label for="itemQty" class="form-label" required>What is the quantity being added to inventory?</label>
+                <label for="itemQty" class="form-label" required>How many items are in stock?</label>
                 <input type="itemQty" formControlName="itemQty" class="form-control col-9">
                 <div *ngIf="scanForm.get('itemQty')?.hasError('required') && 
                             scanForm.get('itemQty')?.touched" class="error col-9">
-                    Quantity of item you're adding to inventory is required.
+                    Available quantity of scanned item is required.
                 </div>
                 <div *ngIf="scanForm.get('itemQty')?.hasError('itemQty') && 
                             scanForm.get('itemQty')?.touched" class="error col-9">
-                    Quantity should be a number. 
+                    Quantity should be a number.
                 </div>
                 <div class="btn btn-primary col-4">
                     <button *ngIf="!notification" type="submit" class="btn btn-primary col-4"
                         [disabled]="scanForm.invalid">Send Notification</button>
                 </div>
             </div>
+            <!-- <button *ngIf="!notification" class="btn btn-primary col-4" (click)="sendNotification()">Send
+                    Notification</button>
+                <div class="col-2"></div>  Add empty column for spacing
+                <button *ngIf="!scannerOpen" class="btn btn-primary col-4" (click)="openNewScanner()">Open
+                    Scanner</button> -->
         </form>
     </div>
 
-    <div id="qr-reader-restock"></div>
+    <div id="qr-reader"></div>
 </div>

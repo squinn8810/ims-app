@@ -5,7 +5,7 @@
   <div class="card text-center justify-content-center">
     <!-- Card Header -->
     <div class="card-header">
-      <h5 class="card-title">Reordering Effectiveness</h5>
+      <h5 class="card-title">Inventory Traffic</h5>
     </div>
 
     <!-- Show loading animation if loading is true -->
@@ -15,23 +15,34 @@
 
     <!-- Dropdown content -->
     <div *ngIf="!loading" class="row my-3">
-      <div class="col-12 text-center">
-        <label for="timePeriod">Filter:</label>
+      <div class="col-6 text-center">
+        <label for="timePeriod">Time Period:</label>
         <select id="timePeriod" [(ngModel)]="selectedTimePeriod" (change)="onDropdownChange()" class="custom-select">
+          <option value="">select</option> <!-- Add this line for the blank option -->  
           <option value="12_months">1 year</option>
           <option value="6_months">6 months</option>
           <option value="3_months">3 months</option>
           <option value="1_month">1 month</option>
         </select>
       </div>
+      <div class="col-6 text-center">
+        <label for="itemLocID">Item:</label>
+        <select id="itemLocID" [(ngModel)]="selectedItem" (change)="onDropdownChange()" class="custom-select">
+          <option value="">select</option>
+          <option *ngFor="let filterItem of filterItems" [value]="filterItem.itemLocID">{{ filterItem.itemName }}</option>
+        </select>
     </div>
 
     <!-- Show charts if loading is false -->
     <div *ngIf="!loading" class="card-body">
       <div id="combo_chart" class="row my-3" style="height: 400px; width: 90%;">
-        <!-- Table content goes here -->
       </div>
     </div>
+    <div *ngIf="!loading" class="card-body">
+      <div id="traffic_div" class="row my-3" style="height: 400px; width: 90%;">
+      </div>
+    </div>
+
   </div>
 </div>
 

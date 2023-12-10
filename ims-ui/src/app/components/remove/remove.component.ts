@@ -12,13 +12,13 @@ import { ScanForm } from 'src/app/models/scan-form/scan-form';
 
 @Component({
   standalone: true,
-  selector: 'app-restock',
-  templateUrl: './restock.component.html',
-  styleUrls: ['./restock.component.scss'],
+  selector: 'app-remove',
+  templateUrl: './remove.component.html',
+  styleUrls: ['./remove.component.scss'],
   imports: [ReactiveFormsModule, NgIf, NgFor],
 })
 
-export class RestockComponent implements OnInit {
+export class RemoveComponent implements OnInit {
   public codeScanner: Html5QrcodeScanner;
   private qrBoxSize: number;
   public error: GeneralError;
@@ -89,7 +89,7 @@ export class RestockComponent implements OnInit {
     if (!this.scannerOpen) {
       this.scanSuccess = false;
       this.codeScanner = new Html5QrcodeScanner(
-        'qr-reader-restock',
+        'qr-reader',
         { fps: 10, qrbox: { width: this.qrBoxSize, height: this.qrBoxSize } },
         /* verbose= */ false);
       this.codeScanner.render((text: string, result: Html5QrcodeResult) => this.onScanSuccess(text, result),
@@ -103,7 +103,7 @@ export class RestockComponent implements OnInit {
     let scanForm: ScanForm = new ScanForm(form.get('itemQty')?.value);
 
 
-    this.scannerService.sendRestockNotification(scanForm)
+    this.scannerService.sendLowSupplyNotification(scanForm)
       .subscribe(
         (response) => {
           console.log('Notification sent successfully. Response:', response);
@@ -123,4 +123,3 @@ export class RestockComponent implements OnInit {
 
 
 }
-
