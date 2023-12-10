@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Model for the "organization" table.
+ * Model representing the "organization" table.
  */
 class Organization extends Model
 {
@@ -46,18 +46,31 @@ class Organization extends Model
 
     /**
      * Get the superuser associated with the organization.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
     public function superuser()
     {
         return $this->hasOne(User::class, 'superuser');
     }
 
-    public function users() {
+    /**
+     * Get the users associated with the organization.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function users()
+    {
         return $this->hasMany(User::class, 'orgID');
     }
 
-    public function locations() {
+    /**
+     * Get the locations associated with the organization.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function locations()
+    {
         return $this->hasMany(Location::class, 'orgID');
     }
-
 }

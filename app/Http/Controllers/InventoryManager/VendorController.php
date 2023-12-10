@@ -3,11 +3,10 @@
 namespace App\Http\Controllers\InventoryManager;
 
 use App\Models\Vendor;
-use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\InventoryManager\VendorRequest;
 use App\Http\Resources\VendorResource;
-use App\Http\Resources\VendorCollection;
+use App\Http\Requests\InventoryManager\VendorRequest;
 
 /**
  * Controller for managing vendors.
@@ -22,7 +21,10 @@ class VendorController extends Controller
     public function index()
     {
         // Return a collection of all vendors as a JSON resource
-        return new VendorCollection(Vendor::all());
+        $data = VendorResource::collection(Vendor::all());
+
+        return response()->json($data, Response::HTTP_OK);
+
     }
 
     /**

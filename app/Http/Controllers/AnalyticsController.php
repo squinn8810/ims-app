@@ -9,22 +9,31 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
+/**
+ * Controller for managing analytics related to inventory and transactions.
+ */
 class AnalyticsController extends Controller
 {
 
-
-    public function dataView() {
+    /**
+     * Display a basic data view, including recent transactions.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function dataView()
+    {
         $recentTransactions = $this->getRecentTransactions();
         $data = [
             'recentTransactions' => $recentTransactions
         ];
 
         return response()->json($data, Response::HTTP_OK);
-
     }
 
     /**
-     * Returns a descriptive data view
+     * Display a descriptive data view including transaction trends and distribution.
+     *
+     * @return \Illuminate\Http\Response
      */
     public function dataView1()
     {
@@ -46,7 +55,9 @@ class AnalyticsController extends Controller
     }
 
     /**
-     * 
+     * Retrieve recent transactions.
+     *
+     * @return array
      */
     private function getRecentTransactions()
     {
@@ -60,7 +71,9 @@ class AnalyticsController extends Controller
     }
 
     /**
-     * 
+     * Retrieve transaction distribution data.
+     *
+     * @return array
      */
     private function getTransactionDistribution()
     {
@@ -104,7 +117,9 @@ class AnalyticsController extends Controller
 
 
     /**
-     * 
+     * Retrieve transaction trends data.
+     *
+     * @return array
      */
     public function getTransactionTrends()
     {
@@ -160,10 +175,11 @@ class AnalyticsController extends Controller
         return $trend;
     }
 
-    /******************************************************************************************************* */
 
     /**
-     * Returns a prescriptive/predictive data view
+     * Display a prescriptive/predictive data view.
+     *
+     * @return \Illuminate\Http\Response
      */
     public function dataView2()
     {
@@ -212,7 +228,9 @@ class AnalyticsController extends Controller
     }
 
     /**
-     * 
+     * Retrieve transaction data for low supply and restock trends.
+     *
+     * @return array
      */
     public function getTransactionData()
     {
@@ -280,7 +298,11 @@ class AnalyticsController extends Controller
     }
 
 
-
+    /**
+     * Retrieve popular items based on transaction count.
+     *
+     * @return array
+     */
     private function getPopularItems()
     {
         //returns an array of arrays with key value pairs
@@ -311,7 +333,10 @@ class AnalyticsController extends Controller
 
 
     /**
-     * Endpoint to provide reorder counts
+     * Evaluate reorder quantity based on historical data.
+     *
+     * @param array $transactionData
+     * @return array
      */
     private function evaluateReorderQty(array $transactionData)
     {
@@ -349,6 +374,11 @@ class AnalyticsController extends Controller
         ];
     }
 
+    /**
+     * Calculate inventory traffic flow and average inventory level.
+     *
+     * @return array
+     */
     private function inventoryTraffic()
     {
 

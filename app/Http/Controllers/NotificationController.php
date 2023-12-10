@@ -58,7 +58,7 @@ class NotificationController extends Controller
     }
 
 
-     /**
+    /**
      * Send restock notification.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -113,21 +113,21 @@ class NotificationController extends Controller
         foreach ($list as $scan) {
             $itemLocID = $scan->itemLocID;
 
-                $lastQty = $scan->itemQty;
-                $addedQty = (int)$request->itemQty;
+            $lastQty = $scan->itemQty;
+            $addedQty = (int)$request->itemQty;
 
-                $newQty = $lastQty + $addedQty;
+            $newQty = $lastQty + $addedQty;
 
-                $lastTransaction = Transaction::where('itemLocID', $itemLocID)
+            $lastTransaction = Transaction::where('itemLocID', $itemLocID)
                 ->latest('transDate')
                 ->first();
 
-                $lastTransaction->update(['status' => 'complete']);
+            $lastTransaction->update(['status' => 'complete']);
 
-                $scan->update(['itemQty' => $newQty]);
-                $transactions[] = $this->store($scan->itemLocID, $addedQty, 'complete');
-            } 
-    
+            $scan->update(['itemQty' => $newQty]);
+            $transactions[] = $this->store($scan->itemLocID, $addedQty, 'complete');
+        }
+
 
         return $transactions;
     }
@@ -204,7 +204,7 @@ class NotificationController extends Controller
         Mail::to("squinn8810@gmail.com")->send($email);
     }
 
-     /**
+    /**
      * Make and send the restock notification email.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -219,5 +219,4 @@ class NotificationController extends Controller
         // Update the recipient email address if needed
         Mail::to("squinn8810@gmail.com")->send($email);
     }
-
 }
