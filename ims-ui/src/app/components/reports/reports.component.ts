@@ -1,8 +1,7 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NgFor, NgIf } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
 import { ScannerService } from 'src/app/services/scanner/scanner.service';
-import { FormsModule, NgModel } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { ChartComponent } from '../charts/charts.component';
 
 
@@ -19,7 +18,6 @@ declare var google: any;
 export class ReportsComponent implements OnInit {
     data: any;
     google: any;
-    @Output() chartReady = new EventEmitter<any>();
     loading: boolean = true;
     selectedTimePeriod: string = '';
     selectedItem: string = '';
@@ -65,22 +63,20 @@ export class ReportsComponent implements OnInit {
 
 
     private drawComboChart(): void {
+        google.charts.load('current', {
+            'packages': ['corechart']
+        });
         const lowSupply: { [index: string]: any } = this.data.lowSupplyData;
         const restock: { [index: string]: any } = this.data.restockData;
         const evalData: number[] = this.data.evalData;
 
-        this.loading = false;
-
-        google.charts.load('current', {
-            'packages': ['corechart']
-        });
         google.charts.setOnLoadCallback(drawVisualization);
 
         function drawVisualization() {
             var data = new google.visualization.DataTable();
             data.addColumn('string', 'Date');
-            data.addColumn('number', 'Low Supply Scans');
             data.addColumn('number', 'Resupply Scans');
+            data.addColumn('number', 'Low Supply Scans');
 
             const keys = Object.keys(lowSupply);
 
@@ -99,7 +95,7 @@ export class ReportsComponent implements OnInit {
                 series: {
                     0: {
                         type: 'bars'
-                    }, 
+                    },
                     1: {
                         type: 'bars'
                     },
@@ -112,13 +108,11 @@ export class ReportsComponent implements OnInit {
     }
 
     private drawLineChart(): void {
+        
         const trafficFlow = this.data.trafficFlow;
         const sumTrafficFlow = this.data.sumTrafficFlow;
         const suggestedQty = this.data.evalData[1];
         const currentQty = this.data.evalData[0];
-
-        google.charts.load('current', { packages: ['corechart'] });
-
 
         google.charts.setOnLoadCallback(() => {
             const data = new google.visualization.DataTable();
@@ -135,7 +129,7 @@ export class ReportsComponent implements OnInit {
             });
 
             const options = {
-                title: 'Traffic Flow',
+                title: 'Item Traffic Flow',
                 width: '100%',
                 height: '100%',
                 hAxis: {
@@ -144,8 +138,8 @@ export class ReportsComponent implements OnInit {
                 }, vAxis: { gridlines: { count: 10 } },
                 curveType: 'function',
                 series: {
-                    3: {  
-                        lineDashStyle: [4, 4] 
+                    3: {
+                        lineDashStyle: [4, 4]
                     }
                 },
             };

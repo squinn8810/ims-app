@@ -46,6 +46,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
  * Routes executed by the inventory manager and reports.
  */
 Route::group(['middleware' => ['auth', 'verified']], function () {
+    Route::get('/recent_scans', [AnalyticsController::class, 'dataView']);
     Route::get('/reports', [AnalyticsController::class, 'dataView1']);
     Route::get('/reports/insights', [AnalyticsController::class, 'dataView2']);
     

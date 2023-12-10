@@ -34,6 +34,10 @@ export class ScannerService {
       );
   }
 
+  public getRecentTransactions(): Observable<any> {
+    return this.http.get('api/recent_scans');
+  }
+
   public getFilteredDataView1(param1: string): Observable<any> {
     let params = new HttpParams();
     if (param1.trim() !== '') {
@@ -56,7 +60,7 @@ export class ScannerService {
     return this.http.get('api/reports/insights', options);
   }
 
-  
+
   public getScannedList(): Observable<any> {
     return this.http.get('/api/scanned-list', this.options);
   }

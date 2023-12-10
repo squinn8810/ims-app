@@ -12,17 +12,26 @@ use Illuminate\Support\Facades\DB;
 class AnalyticsController extends Controller
 {
 
+
+    public function dataView() {
+        $recentTransactions = $this->getRecentTransactions();
+        $data = [
+            'recentTransactions' => $recentTransactions
+        ];
+
+        return response()->json($data, Response::HTTP_OK);
+
+    }
+
     /**
      * Returns a descriptive data view
      */
     public function dataView1()
     {
-        $recentTransactions = $this->getRecentTransactions();
         $transactionTrends = $this->getTransactionTrends();
         $distributionData = $this->getTransactionDistribution();
 
         $data = [
-            'recentTransactions' => $recentTransactions,
             'transactionTrends' => $transactionTrends,
             'transactionDistribution' => $distributionData,
         ];

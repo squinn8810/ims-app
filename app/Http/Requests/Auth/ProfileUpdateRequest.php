@@ -19,7 +19,6 @@ class ProfileUpdateRequest extends FormRequest
             'firstName' => 'required|max:32',
             'lastName' => 'required|max:32',
             'email' => 'required|max:32',
-            'id' => 'required|unique:item|integer'
         ];
     }
 }

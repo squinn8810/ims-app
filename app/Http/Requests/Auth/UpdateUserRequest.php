@@ -25,7 +25,7 @@ class UpdateUserRequest extends FormRequest
             'lastName' => 'required|max:32',
             'email' => 'required|max:32',
             'is_admin' => 'required', 
-            'id' => 'required|unique:item|integer'
+            'id' => 'required|unique:users|integer'
         ];
         
     }

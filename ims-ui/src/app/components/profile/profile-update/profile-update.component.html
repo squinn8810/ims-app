@@ -25,7 +25,7 @@
                     Last Name is required
                 </div>
             </div>
-            <div class="row mb-3">
+           <!-- <div class="row mb-3">
                 <label for="id" class="form-label" required>Employee ID</label>
                 <input type="text" class="form-control" formControlName="id">
                 <div *ngIf="profileForm.get('id')?.hasError('required') &&
@@ -40,7 +40,7 @@
                         profileForm.get('id')?.touched" class="error">
                     Max length of 32 exceeded
                 </div>
-            </div>
+            </div>-->
             <div class="row mb-3">
                 <label for="email" class="form-label" required>Email address</label>
                 <input type="email" formControlName="email" class="form-control">

@@ -29,7 +29,7 @@ export class ProfileUpdateComponent implements OnInit{
     this.profileForm = this.formBuilder.group({
       firstName: new FormControl('', [Validators.required, Validators.maxLength(32)]),
       lastName: new FormControl('', [Validators.required, Validators.maxLength(32)]),
-      id: new FormControl('', [Validators.required, Validators.pattern(new RegExp('[0-9]+')), Validators.maxLength(32)]),
+      //id: new FormControl('', [Validators.required, Validators.pattern(new RegExp('[0-9]+')), Validators.maxLength(32)]),
       email: new FormControl('', [Validators.email, Validators.required, Validators.maxLength(32)]),
     });
 
@@ -37,7 +37,7 @@ export class ProfileUpdateComponent implements OnInit{
       ({currentUser}) => {
         this.profileForm.controls['firstName'].setValue(currentUser.first_name);
         this.profileForm.controls['lastName'].setValue(currentUser.last_name);
-        this.profileForm.controls['id'].setValue(currentUser.employee_id);
+        //this.profileForm.controls['id'].setValue(currentUser.employee_id);
         this.profileForm.controls['email'].setValue(currentUser.email);
       });
   }

@@ -30,9 +30,8 @@ class ProfileController extends Controller
     public function update(ProfileUpdateRequest $request)
     {
         // Update the user attributes
-        $request->user->update($request->only(['firstName', 'lastName', 'email', 'id']));
+        $request->user()->update($request->only(['firstName', 'lastName', 'email']));
 
-        // $request->user()->fill($request->validated());
 
         if ($request->user()->isDirty('email')) {
             $request->user()->email_verified_at = null;

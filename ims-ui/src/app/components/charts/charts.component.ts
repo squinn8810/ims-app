@@ -1,6 +1,5 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NgIf } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
 import { ScannerService } from 'src/app/services/scanner/scanner.service';
 import { FormsModule } from '@angular/forms';
 
@@ -18,10 +17,6 @@ declare var google: any;
 export class ChartComponent implements OnInit {
     data: any;
     google: any;
-    //@Input() recentTransactions: any;
-    //@Input() transactionDistribution: any;
-    //@Input() transactionTrends: any;
-    @Output() chartReady = new EventEmitter<any>();
     loading: boolean = true;
     selectedTimePeriod: string = '';
 
@@ -60,16 +55,16 @@ export class ChartComponent implements OnInit {
     }
 
     private drawLineChart(): void {
-        const jsonData2 = this.data.transactionTrends;
+        const trendData = this.data.transactionTrends;
         google.charts.load('current', { packages: ['corechart'] });
         google.charts.setOnLoadCallback(() => {
             const data = new google.visualization.DataTable();
             data.addColumn('string', 'Date');
             data.addColumn('number', 'Transactions');
 
-            const keys = Object.keys(jsonData2);
+            const keys = Object.keys(trendData);
             keys.forEach((key) => {
-                const value = jsonData2[key];
+                const value = trendData[key];
                 data.addRow([key, value]);
             });
 
@@ -88,17 +83,17 @@ export class ChartComponent implements OnInit {
     }
 
     private drawPieChart(): void {
-        const jsonData3 = this.data.transactionDistribution;
+        const pieData = this.data.transactionDistribution;
         google.charts.load('current', { packages: ['corechart'] });
         google.charts.setOnLoadCallback(() => {
             const data = new google.visualization.DataTable();
             data.addColumn('string', 'Item');
             data.addColumn('number', 'Reorders');
 
-            const keys = Object.keys(jsonData3);
+            const keys = Object.keys(pieData);
 
             keys.forEach((key) => {
-                const value = jsonData3[key];
+                const value = pieData[key];
                 data.addRow([key, value]);
             });
 

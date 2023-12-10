@@ -1,6 +1,5 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NgIf } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
 import { ScannerService } from 'src/app/services/scanner/scanner.service';
 import { FormsModule } from '@angular/forms';
 
@@ -18,12 +17,7 @@ declare var google: any;
 export class TransactionComponent implements OnInit {
     data: any;
     google: any;
-    //@Input() recentTransactions: any;
-    //@Input() transactionDistribution: any;
-    //@Input() transactionTrends: any;
-    @Output() chartReady = new EventEmitter<any>();
     loading: boolean = true;
-    selectedTimePeriod: string = '';
 
 
     constructor(
@@ -32,7 +26,7 @@ export class TransactionComponent implements OnInit {
 
 
     ngOnInit(): void {
-        this.getFilteredDataView(this.selectedTimePeriod);
+        this.getTransactions();
 
         setTimeout(() => {
             this.loading = false;
@@ -40,8 +34,8 @@ export class TransactionComponent implements OnInit {
 
     }
 
-    getFilteredDataView(timePeriod: string): void {
-        this.scannerService.getFilteredDataView1(timePeriod).subscribe(
+    getTransactions(): void {
+        this.scannerService.getRecentTransactions().subscribe(
             (response) => {
                 this.data = response;
                 this.loading = false;
@@ -55,20 +49,20 @@ export class TransactionComponent implements OnInit {
 
 
     private drawTableChart(): void {
-        const jsonData: any[] = this.data.recentTransactions; // Declare the type explicitly
+        const tableData: any[] = this.data.recentTransactions; // Declare the type explicitly
         google.charts.load('current', { packages: ['table'] });
         
         this.loading = false;
         
         google.charts.setOnLoadCallback(() => {
             const data = new google.visualization.DataTable();
-            const keys = Object.keys(jsonData[0]);
+            const keys = Object.keys(tableData[0]);
 
             keys.forEach((key) => {
-                data.addColumn(typeof jsonData[0][key], key);
+                data.addColumn(typeof tableData[0][key], key);
             });
 
-            jsonData.forEach((item) => {
+            tableData.forEach((item) => {
                 const row = keys.map((key) => item[key]);
                 data.addRow(row);
             });
