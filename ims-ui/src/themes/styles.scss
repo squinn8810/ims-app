@@ -1,0 +1,43 @@
+// Custom.scss
+// $blue: #2c728f;
+// $red: #da3c34;
+// $cyan: #0c817d;
+// $green: #07a556;
+// $gray-100: #f9f9fa;
+// $gray-200: #eff0f3;
+// $gray-300: #e0e1e7;
+// $gray-500: #c0c3ce;
+// $white: #ffffff;
+// $gray-400: #d0d2da;
+// $gray-600: #90929b;
+// $gray-700: #606267;
+// $gray-800: #303134;
+// $gray-900: #1d1d1f;
+// $dark: #232b52;
+// $light: #747F97;
+// $secondary: #cfd222;
+// $body-bg: $dark;
+// $body-color: $gray-200;
+// $yiq-text-light: $white;
+// $yiq-text-dark: $dark;
+// $link-color: $secondary;
+// $card-bg: $light;
+// $card-border-color: rgba($secondary, 3);
+// $card-color: $yiq-text-light;
+// // $table-bg: $cee6e5;
+// // $table-color: $gray-200;
+// // $table-bg-level: -2;
+// $input-bg: $white;
+// $jumbotron-color: $yiq-text-dark;
+// $jumbotron-bg: $gray-200;
+// $list-group-color: $yiq-text-dark;
+// $modal-content-color: $gray-800;
+// $modal-content-bg: $gray-200;
+// $modal-content-border-color: rgba($secondary, 1);
+
+
+// @import "../node_modules/bootstrap/scss/bootstrap";
+@import "./variables";
+@import "../../node_modules/bootstrap/scss/bootstrap";
+@import "./bootswatch";
+/*# sourceMappingURL=styles.css.map */
