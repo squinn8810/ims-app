@@ -36,7 +36,7 @@ export class ChartComponent implements OnInit {
 
         setTimeout(() => {
             this.loading = false;
-        }, 10000);
+        }, 20000);
 
     }
 
@@ -45,8 +45,6 @@ export class ChartComponent implements OnInit {
             (response) => {
                 this.data = response;
                 this.loading = false;
-                // Draw charts
-                this.drawTableChart();
                 this.drawLineChart();
                 this.drawPieChart();
             },
@@ -59,35 +57,6 @@ export class ChartComponent implements OnInit {
     onDropdownChange() {
 
         this.getFilteredDataView(this.selectedTimePeriod);
-    }
-
-
-    private drawTableChart(): void {
-        const jsonData: any[] = this.data.recentTransactions; // Declare the type explicitly
-        google.charts.load('current', { packages: ['table'] });
-        google.charts.setOnLoadCallback(() => {
-            const data = new google.visualization.DataTable();
-            const keys = Object.keys(jsonData[0]);
-
-            keys.forEach((key) => {
-                data.addColumn(typeof jsonData[0][key], key);
-            });
-
-            jsonData.forEach((item) => {
-                const row = keys.map((key) => item[key]);
-                data.addRow(row);
-            });
-
-            const options = {
-                title: 'Recent Removals',
-                showRowNumber: true,
-                width: '100%',
-                height: '100%',
-            };
-
-            const table = new google.visualization.Table(document.getElementById('table_div'));
-            table.draw(data, options);
-        });
     }
 
     private drawLineChart(): void {

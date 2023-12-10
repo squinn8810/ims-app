@@ -67,7 +67,7 @@ class Transaction extends Model
     
     public function getDateAttribute($value)
     {
-        return Carbon::parse($value)->format('F d, Y');
+        return Carbon::parse($value)->format('M d, y');
     }
     
     public function getItemName() {

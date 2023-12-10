@@ -34,6 +34,13 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'remove',
+        loadComponent: () =>
+          import('./components/remove/remove.component').then(
+            (component) => component.RemoveComponent
+          ),
+      },
+      {
         path: 'restock',
         loadComponent: () =>
           import('./components/restock/restock.component').then(

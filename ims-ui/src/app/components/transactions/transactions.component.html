@@ -1,0 +1,20 @@
+<div class="container mt-5">
+  <div class="card text-center">
+    <!-- Card Header -->
+    <div class="card-header">
+      <h5 class="card-title">Recent Transactions</h5>
+    </div>
+
+    <!-- Show loading animation if loading is true -->
+    <div *ngIf="loading" class="card-body loading-animation">
+      <div class="spinner"></div>
+    </div>
+
+    <!-- Show charts if loading is false -->
+    <div *ngIf="!loading" class="card-body">
+      <div id="table_div" class="row my-3">
+        <!-- Table content goes here -->
+      </div>
+    </div>
+  </div>
+</div>
